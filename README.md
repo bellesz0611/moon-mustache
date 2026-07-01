@@ -37,6 +37,13 @@ The first milestone focuses on:
 - file-oriented rendering helpers
 - a small CLI for local template rendering
 
+## Repository layout
+
+- `src/`: library source files
+- `cli/`: command-line entry point
+- `examples/`: usage snippets and sample flows
+- `docs/`: proposal, design, and roadmap notes
+
 ## Reference projects
 
 - [mustache.js](https://github.com/janl/mustache.js)
