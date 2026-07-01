@@ -46,9 +46,9 @@ def draw_block(draw, x, y, text, font, fill, line_gap, block_gap):
 
 
 def main():
-    regular_font = load_font(r"C:\Windows\Fonts\msyh.ttc", 25)
-    section_font = load_font(r"C:\Windows\Fonts\msyhbd.ttc", 29)
-    title_font = load_font(r"C:\Windows\Fonts\msyhbd.ttc", 42)
+    regular_font = load_font(r"C:\Windows\Fonts\msyh.ttc", 22)
+    section_font = load_font(r"C:\Windows\Fonts\msyhbd.ttc", 24)
+    title_font = load_font(r"C:\Windows\Fonts\msyhbd.ttc", 38)
 
     image = Image.new("RGB", (PAGE_W, PAGE_H), "white")
     draw = ImageDraw.Draw(image)
@@ -57,67 +57,74 @@ def main():
     title = "Moon Mustache 项目申报书"
     title_w = draw.textlength(title, font=title_font)
     draw.text(((PAGE_W - title_w) / 2, y), title, font=title_font, fill="black")
-    y += 86
+    y += 72
 
     blocks = [
         (
             "body",
-            "项目名称：Moon Mustache：MoonBit 的 Mustache 模板渲染引擎\n"
-            "参赛者：[填写姓名]    联系方式：[填写手机号 / 邮箱]\n"
-            "GitHub：[填写 GitHub 仓库链接]\n"
-            "Gitlink：[填写 Gitlink 仓库链接]\n"
-            "项目方向：MoonBit 模板渲染基础库 / 工程基础设施\n"
-            "是否为移植项目：是（参考成熟项目并进行 MoonBit 化重写）",
+            "项目名称：Moon Mustache：Mustache 模板引擎的 MoonBit 实现\n"
+            "参赛者：左嘉倩    联系方式：15929201039\n"
+            "GitHub：https://github.com/bellesz0611/moon-mustache\n"
+            "Gitlink：https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt\n"
+            "项目方向：MoonBit 模板渲染基础库 / 工程基础设施    是否为移植项目：是",
         ),
         ("section", "项目简介"),
         (
             "body",
-            "Moon Mustache 计划将 Mustache 模板渲染能力系统化引入 MoonBit 生态，"
-            "为脚手架、代码生成、配置生成、静态页面、邮件 / 消息模板等场景提供轻量、稳定、可嵌入的模板引擎。"
-            "项目面向 MoonBit 工具开发者、库作者和应用开发者，提供模板解析、上下文绑定、渲染执行、"
-            "Partial 组合、文件输入输出及命令行接口，并通过对照 Mustache 规范测试集提升兼容性与可迁移性。"
+            "Moon Mustache 计划将 Mustache 模板渲染能力引入 MoonBit 生态，为脚手架生成、代码生成、"
+            "配置文件渲染、静态内容拼装、邮件模板和消息正文生成等场景提供一个轻量、稳定、可复用的模板引擎。"
+            "项目面向需要在 MoonBit 中生成字符串输出、构建可复用文本模板能力的库作者、工具开发者和应用开发者。"
         ),
-        ("section", "适用场景"),
+        ("section", "项目方向与适用场景"),
         (
             "body",
-            "1. MoonBit CLI 或构建工具中的代码与配置生成\n"
-            "2. 静态页面、文档片段、提示词模板的批量渲染\n"
-            "3. 应用中的邮件、通知、消息正文模板生成\n"
-            "4. 其他 MoonBit 库或框架的可复用模板能力底座"
+            "1. 为 CLI、脚手架或构建辅助工具生成样板代码与配置文件\n"
+            "2. 为静态页面、文档片段、提示词模板或站点内容做批量渲染\n"
+            "3. 为业务应用统一生成邮件、通知、消息正文等模板文本\n"
+            "4. 为其他 MoonBit 库和示例工程提供可复用的模板层能力"
         ),
-        ("section", "核心功能"),
+        ("section", "拟实现的核心功能"),
         (
             "body",
-            "1. 提供 Mustache 模板的词法分析、语法解析与抽象表示\n"
+            "1. 提供 Mustache 模板的词法分析、语法解析和中间表示\n"
             "2. 支持变量插值、Section、Inverted Section、Comment、Partial、Set Delimiter 等核心语法\n"
-            "3. 提供上下文栈与路径查找机制，支持常见数据结构绑定\n"
-            "4. 提供安全 HTML escaping 与原样输出能力\n"
-            "5. 提供库接口，如 render_string、render_file、parse_template，以及简单 CLI 工具\n"
-            "6. 提供规范兼容测试、示例、README 与持续集成配置"
+            "3. 提供上下文栈、路径查找和值解析机制，支持常见数据结构绑定\n"
+            "4. 提供 HTML escaping 与原样输出能力，覆盖常见安全需求\n"
+            "5. 提供 parse_template、render_string、render_file 等基础接口\n"
+            "6. 提供简单 CLI 工具、兼容性测试、README、示例和持续集成配置"
         ),
-        ("section", "移植与新增价值"),
+        ("section", "移植或参考说明"),
         (
             "body",
-            "主要参考项目：mustache.js（MIT License），并对照 mustache/spec 进行兼容实现。"
-            "本项目不会直接复刻 JavaScript 工程形态，而是采用 MoonBit 原生包结构、类型系统、错误处理与测试方式重写；"
-            "以可嵌入库 + CLI 工具为主要交付形式，优先保证接口清晰、便于二次集成，并通过规范测试、示例项目和迁移说明降低接入门槛。"
+            "原项目名称：mustache.js；原项目链接：https://github.com/janl/mustache.js；"
+            "参考规范：https://github.com/mustache/spec；原项目许可证：MIT License；本项目许可证：MIT License。"
         ),
-        ("section", "计划与交付"),
+        ("section", "与原项目相比的简化和重写"),
         (
             "body",
-            "第一阶段完成仓库初始化、基础 API 设计、解析器原型、示例与早期测试，形成 10-20 次有效提交；"
-            "第二阶段补全核心语法支持、上下文解析、渲染流程、CLI 工具、README、CI 与回归测试。"
-            "最终交付可公开复用的 MoonBit 模板渲染库、配套命令行工具、完整文档与测试。"
+            "采用 MoonBit 原生包结构、类型系统和测试方式组织代码，而不是复刻 JavaScript 工程组织；"
+            "优先实现适合 MoonBit 工程场景的核心模板能力，弱化浏览器或 Node.js 运行环境假设；"
+            "以可嵌入库和命令行工具作为主要交付形式，方便接入 MoonBit CLI、脚手架和自动化流程。"
+        ),
+        ("section", "计划实现与最终交付"),
+        (
+            "body",
+            "第一阶段完成仓库初始化、基础数据结构、解析器原型、最小渲染链路、示例与早期测试，并形成 10-20 次有效提交；"
+            "第二阶段补全核心语法支持、Partial、文件接口、CLI、README、持续集成和回归测试；"
+            "最终交付公开可复用的 MoonBit 模板渲染库、命令行工具、测试集、示例和开发文档。"
         ),
         ("section", "项目规模预估"),
-        ("body", "预计为 4k-6k 行有效 MoonBit 代码，另包含测试、示例、文档与 CI 配置。"),
+        (
+            "body",
+            "预计主体实现约为 4k-6k 行有效 MoonBit 代码，另包含测试、示例、文档和 CI 配置，整体规模控制在赛事建议区间内。"
+        ),
     ]
 
     for kind, text in blocks:
         if kind == "section":
-            y = draw_block(draw, MARGIN_X, y, text, section_font, "black", line_gap=8, block_gap=10)
+            y = draw_block(draw, MARGIN_X, y, text, section_font, "black", line_gap=5, block_gap=8)
         else:
-            y = draw_block(draw, MARGIN_X, y, text, regular_font, "black", line_gap=8, block_gap=12)
+            y = draw_block(draw, MARGIN_X, y, text, regular_font, "black", line_gap=5, block_gap=9)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     image.save(OUT, "PDF", resolution=200.0)
