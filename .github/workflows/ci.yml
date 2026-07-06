@@ -10,6 +10,11 @@ on:
 jobs:
   check-and-test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - wasm-gc
+          - js
 
     steps:
       - name: Checkout
@@ -24,7 +29,37 @@ jobs:
         run: moon version --all
 
       - name: Run moon check
-        run: moon check
+        run: moon check --target ${{ matrix.target }}
 
       - name: Run moon test
-        run: moon test
+        run: moon test --target ${{ matrix.target }}
+
+      - name: Run showcase smoke test
+        run: moon run --target ${{ matrix.target }} showcase
+
+      - name: Run scaffold demo smoke test
+        run: moon run --target ${{ matrix.target }} scaffold_demo
+
+      - name: Run spec report smoke test
+        run: moon run --target ${{ matrix.target }} spec_report
+
+      - name: Run official spec report smoke test
+        run: moon run --target ${{ matrix.target }} official_spec_report
+
+      - name: Run scenario report smoke test
+        run: moon run --target ${{ matrix.target }} scenario_report
+
+      - name: Run downstream consumer smoke test
+        run: moon run --target ${{ matrix.target }} downstream_consumer
+
+      - name: Run benchmark smoke test
+        if: matrix.target == 'wasm-gc'
+        run: moon run --target ${{ matrix.target }} benchmarks
+
+      - name: Run CLI file-flow smoke test
+        if: matrix.target == 'js'
+        run: moon run --target js cli --template-file examples/files/template.mustache --json-file examples/files/context.json --partials-json-file examples/files/partials.json
+
+      - name: Run CLI bundle validation smoke test
+        if: matrix.target == 'js'
+        run: moon run --target js cli --bundle-manifest-file examples/bundle/manifest.json --bundle-profile dev --json-file examples/bundle/context.json --bundle-check-only --bundle-validation-file _ci_bundle/validation.md --bundle-plan-file _ci_bundle/plan.md
