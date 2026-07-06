@@ -1,111 +1,401 @@
 # Moon Mustache
 
-Moon Mustache is a Mustache template engine implementation for MoonBit.
+[![CI](https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml/badge.svg)](https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-0.1.0-blue)
 
-Moon Mustache 是一个面向 MoonBit 生态的 Mustache 模板引擎实现，目标是提供轻量、稳定、可复用的模板渲染基础能力，服务于脚手架生成、配置文件渲染、静态内容拼装、邮件模板和消息正文生成等场景。
+Moon Mustache is a reusable Mustache template engine for MoonBit.
 
-## Why this project
+Moon Mustache 面向 MoonBit 生态提供一套轻量、稳定、可嵌入的模板渲染能力，重点服务于脚手架生成、配置文件拼装、静态内容渲染、邮件与通知模板、代码生成辅助等真实工程场景。
 
-MoonBit already has a strong language core and toolchain, but reusable template
-rendering is still a missing piece in the ecosystem. Many practical tools need
-to turn structured data into text output:
+## Repository
 
-- project scaffolding
-- configuration generation
-- static content rendering
-- email and notification templates
-- code generation helpers
+- GitHub: <https://github.com/bellesz0611/moon-mustache>
+- GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
+- MoonBit package: `bellesz0611/moon-mustache`
+- current release status: source repository ready, mooncakes.io publishing planned next
 
-This project focuses on a small, stable, reusable core instead of building a
-feature-heavy template language.
+## Project positioning
 
-## 目前要解决的问题
+MoonBit 已经具备出色的语言设计和统一工具链，但“把结构化数据可靠地转成文本输出”这类基础能力仍然比较稀缺。很多项目都会重复造一层简单模板系统，而 Mustache 恰好是一种边界清晰、跨语言生态广泛存在、适合作为通用基础库移植到 MoonBit 的方案。
 
-MoonBit 生态当前已经具备不错的语言设计和统一工具链，但在很多项目会反复遇到的通用基础能力上仍然有补齐空间。模板渲染正是其中很典型的一类需求：
+Moon Mustache 选择以 Mustache 规范为核心，优先把最常用、最稳定、最容易复用的能力做好，而不是扩展成一个语法复杂的新模板语言。
 
-- 工程脚手架生成时需要把变量填入模板文件
-- 配置生成工具需要把结构化数据转成文本
-- 文档、静态页面和提示词片段需要批量渲染
-- 邮件、通知和消息正文通常需要统一模板层
+## Current status
 
-Moon Mustache 计划优先把这些场景需要的核心能力做扎实，而不是扩展成一个功能过重、边界不清的大模板语言。
+当前版本已经不是启动壳仓库，而是一个具备核心渲染能力、CLI 工具链、规范测试、基准、场景报告和多文件生成演示的可运行项目。
 
-## Stage-one scope
+代码规模口径拆分如下：
 
-The first milestone focuses on:
+- 手写 MoonBit 代码约 `4519` 行
+- 导入上游 fixture 后生成的 MoonBit 测试资产约 `1511` 行
+- 合计 `6030` 行 MoonBit 代码
 
-- repository and module scaffolding
-- parser and renderer architecture
-- core Mustache syntax coverage planning
-- early examples and compatibility notes
-- test layout for spec-driven development
+也就是说，这个仓库不是靠“纯导入文件”撑规模；仅手写实现与演示部分也已经进入赛事建议体量区间。当前重点能力包括：
 
-## 当前阶段交付
+- 模板扫描、Token 化与 AST 解析
+- HTML 转义变量与非转义变量
+- Section / Inverted Section
+- Comment
+- Partial
+- Delimiter change
+- standalone line trimming for section-like tags
+- dotted lookup
+- array iteration
+- `{{.}}` 当前上下文访问
+- JSON 上下文转换
+- `RenderOptions` 严格模式与缺失变量诊断
+- dotted assignment 上下文构造与上下文合并
+- 多文件 bundle 渲染接口
+- manifest profile 解析与批量模板工程生成
+- bundle path normalization、validation 和 generation plan
+- bundle render report / scenario report 导出
+- CLI 文件输入与输出流程
+- spec compatibility report
+- official `mustache/spec` fixture import and report generation
+- 独立 downstream consumer 包示例
+- benchmark 入口与真实脚手架 demo
+- 61 个自动化测试
+- 覆盖 `check / test / showcase / scaffold_demo / spec_report / official_spec_report / scenario_report / downstream_consumer / benchmarks / cli-file-flow / bundle-check-only` 的 CI
 
-当前仓库处于第一阶段启动状态，已经完成：
+## Quick start
 
-- 仓库初始化与许可证配置
-- MoonBit 模块与包配置骨架
-- token / AST / scanner / parser / renderer 的初始结构
-- 早期测试入口
-- CLI 占位入口和示例文档
-- 项目申报材料、架构说明和路线图
+Start here:
 
-后续会继续补齐扫描器、解析器、上下文查找、Partial 支持、文件接口和规范兼容测试。
+- fastest first run: `moon run cli`
+- command cookbook: `moon run cli --examples`
+- copy the built-in demo template: `moon run cli --print-default-template`
+- inspect the sample bundle manifest: `moon run cli --print-sample-manifest`
+- detailed onboarding: `docs/QUICKSTART.md`
 
-## Planned features
+Prerequisites:
 
-- tokenization and parsing for Mustache templates
-- AST-based rendering pipeline
-- context stack and dotted path lookup
-- sections, inverted sections, comments, partials, and delimiter changes
-- escaped and unescaped value rendering
-- file-oriented rendering helpers
-- a small CLI for local template rendering
+- MoonBit toolchain
+- Node.js when running file-based CLI flows on `js` target
 
-## Planned public API
+Verify the repository:
 
-The project is currently planned around a small public surface:
+```bash
+moon check
+moon test
+```
 
-- `parse_template`
-- `render_string`
-- `render_file`
-- a CLI entry point for local rendering
+Run the most direct demos:
 
-The intent is to keep the API small and predictable so it can be embedded into
-other MoonBit tools without dragging in unnecessary complexity.
+```bash
+moon run showcase
+moon run scenario_report
+moon run official_spec_report
+```
+
+Use the file-oriented CLI flow:
+
+```bash
+moon run --target js cli --template-file "examples/files/template.mustache" --json-file "examples/files/context.json" --partials-json-file "examples/files/partials.json"
+```
+
+If you are deciding between library embedding and CLI usage, read [docs/QUICKSTART.md](D:/CCF/moonbit/docs/QUICKSTART.md).
+
+## Target support
+
+- core parsing and rendering library: `wasm-gc` and `js`
+- scenario, report, and benchmark entrypoints: validated in CI
+- file-backed CLI workflows: currently rely on the `js` target through the Node.js bridge
+
+## Supported syntax
+
+| Syntax | Meaning | Status |
+| --- | --- | --- |
+| `{{name}}` | escaped variable | supported |
+| `{{{name}}}` / `{{& name}}` | unescaped variable | supported |
+| `{{#items}}...{{/items}}` | section | supported |
+| `{{^empty}}...{{/empty}}` | inverted section | supported |
+| `{{! note }}` | comment | supported |
+| `{{> card}}` | partial | supported |
+| `{{=<% %>=}}` | delimiter change | supported |
+| standalone section/comment/partial lines | whitespace trimming | supported |
+| `{{user.name}}` | dotted lookup | supported |
+| `{{.}}` | current context | supported |
+
+## Example
+
+Template:
+
+```mustache
+{{#users}}
+- {{name}} <{{email}}>
+{{/users}}
+{{^users}}
+No users found.
+{{/users}}
+{{> footer}}
+```
+
+Context:
+
+```json
+{
+  "users": [
+    { "name": "Alice", "email": "alice@example.com" },
+    { "name": "Bob", "email": "bob@example.com" }
+  ]
+}
+```
+
+Partials:
+
+```json
+{
+  "footer": "Generated by Moon Mustache."
+}
+```
+
+Output:
+
+```text
+- Alice <alice@example.com>
+- Bob <bob@example.com>
+Generated by Moon Mustache.
+```
+
+## Public API
+
+当前接口分成两层，避免把“稳定核心库能力”和“比赛展示/工作流辅助能力”混在一起理解。
+
+Core library API:
+
+- `parse(template)`
+- `render(template, context)`
+- `render_with_partials(template, context, partials)`
+- `render_checked(template, context)`
+- `render_with_partials_checked(template, context, partials)`
+- `render_checked_with_options(template, context, options)`
+- `render_with_partials_checked_with_options(template, context, partials, options)`
+- `parse_json_context(json)`
+- `render_json(...)` / `render_json_checked(...)`
+- `render_json_checked_with_options(...)`
+- `parse_json_partials_checked(json)`
+- `render_json_bundle_checked(template, context_json, partials_json)`
+- `render_json_bundle_checked_with_options(...)`
+- `object_from_string_entries(entries)` / `merge_values(base, incoming)`
+- `render_template_bundle_checked(bundle, context, options)`
+- `render_template_bundle_json_checked(bundle, context_json, options)`
+- `parse_bundle_manifest_json(json)`
+- `resolve_bundle_manifest_profile(manifest, runtime_context, profile_name)`
+- `render_bundle_manifest_checked(...)`
+- `validate_template_bundle(bundle)` / `validate_bundle_manifest(manifest)`
+- `build_bundle_plan(bundle_name, render_result, validation_result)`
+
+Companion workflow/report helpers:
+
+- `format_bundle_result_markdown(...)` / `format_bundle_result_json(...)`
+- `format_validation_report_markdown(...)`
+- `format_bundle_plan_markdown(...)`
+- `run_official_spec_report()` / `format_official_spec_report_markdown(...)`
+- `run_scenario_report()` / `format_scenario_report_markdown(...)`
+
+这种设计更适合作为其他 MoonBit 工具链和应用层库的基础依赖，而不会把上层项目绑死在一个过重的模板框架里。
+
+## Compatibility direction
+
+项目当前同时维护两层兼容性验证：
+
+- 仓库内 hand-written spec-style suite，用于快速回归和行为补充
+- 从官方 `mustache/spec` 直接导入的 fixture，用于上游语义对齐
+
+当前 spec-style suite 覆盖：
+
+- interpolation
+- comments
+- sections
+- inverted sections
+- partials
+- delimiters
+- standalone lines
+- whitespace-sensitive cases
+- diagnostics cases
+
+当前共有：
+
+- `47` 个仓库内 spec-style case，分布在 `9` 个 suite 中，全部通过
+- `136` 个官方导入 fixture，全部通过
+- 上游 fixture 的原始 JSON 与许可证已归档在 `third_party/mustache-spec/`
+
+这让仓库的测试不只是“我们自己觉得对”，而是能直接对照上游 Mustache 规范资产。
+
+## CLI demo
+
+仓库内提供了一个轻量 CLI，用于快速演示模板渲染能力。
+
+Run the built-in demo:
+
+```bash
+moon run cli
+```
+
+Render an inline template:
+
+```bash
+moon run cli --template "Hello {{name}}" --var name=MoonBit
+```
+
+Render with partials:
+
+```bash
+moon run cli --template "{{> card}}" --partial "card={{name}} builds tooling." --var name=MoonBit
+```
+
+Render with dotted variables and typed values:
+
+```bash
+moon run cli --template "{{user.name}}/{{enabled}}/{{count}}" --var user.name=Alice --var enabled=true --var count=3
+```
+
+Render with strict diagnostics:
+
+```bash
+moon run cli --template "A{{> missing}}B" --strict
+```
+
+Print a short cookbook of common commands:
+
+```bash
+moon run cli --examples
+```
+
+Track missing variables as diagnostics:
+
+```bash
+moon run cli --template "Hello {{name}}" --strict --strict-missing
+```
+
+Render a bundle manifest into an output directory:
+
+```bash
+moon run --target js cli --bundle-manifest-file "examples/bundle/manifest.json" --json-file "examples/bundle/context.json" --bundle-output-dir "out_bundle_demo"
+```
+
+Render a profile-specific bundle and emit a JSON report:
+
+```bash
+moon run --target js cli --bundle-manifest-file "examples/bundle/manifest.json" --bundle-profile prod --json-file "examples/bundle/context.json" --bundle-output-dir "out_bundle_demo" --bundle-report-file "out_bundle_demo/report.json" --bundle-report-format json
+```
+
+Validate and plan a bundle without writing generated files:
+
+```bash
+moon run --target js cli --bundle-manifest-file "examples/bundle/manifest.json" --bundle-profile dev --json-file "examples/bundle/context.json" --bundle-check-only --bundle-validation-file "out_bundle_check/validation.md" --bundle-plan-file "out_bundle_check/plan.md"
+```
+
+Render with JSON context:
+
+```bash
+moon run cli --json "{\"name\":\"MoonBit\",\"role\":\"renderer\"}" --template "Hello {{name}}, core={{role}}"
+```
+
+PowerShell-friendly JSON input:
+
+```bash
+$json='{"name":"MoonBit","role":"renderer"}'
+$encoded=[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($json))
+moon run cli --json-base64 $encoded --template "Hello {{name}}, core={{role}}"
+```
+
+Render from files:
+
+```bash
+moon run --target js cli --template-file "examples/files/template.mustache" --json-file "examples/files/context.json" --partials-json-file "examples/files/partials.json"
+```
+
+Write output to a file:
+
+```bash
+moon run --target js cli --template-file "examples/files/template.mustache" --json-file "examples/files/context.json" --partials-json-file "examples/files/partials.json" --output "rendered.txt"
+```
+
+说明：
+
+- 默认 `moon run cli` 适合直接传字符串参数的演示场景
+- 文件读写能力当前通过 Node.js 文件桥接提供，因此请使用 `moon run --target js cli ...`
+
+## Demo entrypoints
+
+Quick project demos shipped in the repo:
+
+- `moon run showcase`
+  展示配置生成、邮件模板、HTML 片段和项目摘要四类场景。
+- `moon run scaffold_demo`
+  展示多文件脚手架生成，输出 `.env`、`compose.yaml`、`README.generated.md`。
+- `moon run spec_report`
+  输出 Markdown 兼容性报告。
+- `moon run official_spec_report`
+  输出基于官方 `mustache/spec` 导入 fixture 的兼容性报告。
+- `moon run scenario_report`
+  输出“真实工作流是否跑通”的场景报告，适合展示项目落地性。
+- `moon run benchmarks`
+  输出核心渲染路径的 benchmark 摘要。
+- `moon run --target js cli --bundle-check-only ...`
+  可直接作为 bundle manifest 的校验和生成计划入口，适合接 CI。
+- `moon run downstream_consumer`
+  运行独立 downstream consumer 包，证明公开 API 可以被其他 MoonBit 包直接复用。
 
 ## Repository layout
 
-- `src/`: library source files
-- `cli/`: command-line entry point
-- `examples/`: usage snippets and sample flows
-- `docs/`: proposal, design, and roadmap notes
+- `src/`: core scanner, parser, context, renderer, bundle APIs, spec suites, and tests
+- `cli/`: demo command-line renderer
+- `showcase/`: quick scenario-oriented demos
+- `scaffold_demo/`: multi-file project generation demo
+- `spec_report/`: compatibility report entrypoint
+- `official_spec_report/`: upstream fixture compatibility report entrypoint
+- `scenario_report/`: workflow-style scenario report entrypoint
+- `downstream_consumer/`: separate package proving public API reuse
+- `benchmarks/`: performance smoke benchmarks
+- `examples/`: sample templates and expected output
+- `third_party/mustache-spec/`: imported upstream official spec fixtures
+- `THIRD_PARTY_NOTICES.md`: source and license notes for imported third-party assets
+- `docs/`: architecture notes, roadmap, and competition materials
+- `docs/EVALUATION_SUMMARY.md`: concise evaluator-facing project strengths
+- `docs/QUICKSTART.md`: user-oriented onboarding guide
+- `docs/STABILITY.md`: API stability tiers and versioning direction
+- `docs/BENCHMARKS.md`: benchmark interpretation and next steps
 - `.github/workflows/`: CI configuration
 
-## Development plan
+## License and third-party assets
 
-Near-term work is planned in roughly this order:
+- repository license: MIT
+- imported upstream fixture source: `mustache/spec` under MIT
+- third-party notice file: `THIRD_PARTY_NOTICES.md`
+- preserved upstream license text: `third_party/mustache-spec/LICENSE`
 
-1. improve the scanner so it can split plain text and tag segments correctly
-2. flesh out parser branches for sections, comments, partials, and delimiter changes
-3. stabilize the context lookup model and rendering behavior
-4. add more spec-aligned tests and examples
-5. wire file-based rendering helpers and improve the CLI
-6. prepare for mooncakes.io publishing once the package API is stable
+## Stability and release posture
 
-## CI status
+- current package stage: pre-`1.0`
+- core library APIs are the main long-term compatibility target
+- report helpers and CLI UX can still evolve faster than the rendering core
+- versioning and public-surface expectations are documented in [docs/STABILITY.md](D:/CCF/moonbit/docs/STABILITY.md)
+- publishing and release preparation notes live in [docs/PUBLISHING.md](D:/CCF/moonbit/docs/PUBLISHING.md)
 
-The repository includes a bootstrap CI workflow intended to run basic checks
-and tests once the MoonBit toolchain is available in the CI environment.
+## Engineering direction
+
+项目后续会继续沿着“可复用基础库”方向完善，而不是只为了比赛提交一个一次性 Demo。下一步重点包括：
+
+- 保持与 upstream `mustache/spec` 的同步更新流程
+- 引入 target-agnostic 的文件级生成和写出能力
+- 补充更细粒度的 diagnostics 分类与报告导出
+- 丰富 bundle API、manifest profile 和脚手架场景中的使用样例
+- 准备面向 mooncakes.io 的发布、版本化和包说明
 
 ## Reference projects
 
-- [mustache.js](https://github.com/janl/mustache.js)
 - [mustache/spec](https://github.com/mustache/spec)
+- [mustache.js](https://github.com/janl/mustache.js)
 
-## Repository status
+## Why this matters for MoonBit
 
-This repository is in active bootstrap. Early commits focus on project
-structure, design notes, and minimal MoonBit code skeletons that will be
-expanded into a reusable library.
+这个项目的价值不只是“能渲染字符串”，而是为 MoonBit 生态补上一块很多工具都会复用的底层积木：
+
+- 脚手架工具可以直接复用
+- 配置生成和文本生成类工具可以减少重复造轮子
+- 静态站点、文档工具、消息系统可以复用统一模板能力
+- 多文件生成器可以直接基于 bundle API 构建
+- 后续如果做代码生成器、邮件渲染器、站点构建器，也能直接建立在这套核心库之上

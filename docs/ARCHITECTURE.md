@@ -2,7 +2,7 @@
 
 ## Core pipeline
 
-Moon Mustache is planned around a small pipeline:
+Moon Mustache is built around a small, explicit pipeline:
 
 1. scan template text into tokens
 2. parse tokens into a tree-like intermediate representation
@@ -16,13 +16,46 @@ Moon Mustache is planned around a small pipeline:
 - `scanner.mbt`: low-level tag scanning
 - `parser.mbt`: structural parsing of sections and partials
 - `context.mbt`: path lookup and stack operations
+- `json_value.mbt`: JSON-to-template-context adapter
 - `escape.mbt`: HTML escaping helpers
 - `renderer.mbt`: final rendering entry points
+- `bundle*.mbt`: multi-file rendering, manifest parsing, validation, and plan output
+- `official_spec_*.mbt`: imported upstream fixture execution and reporting
+- `scenario_report.mbt`: workflow-level scenario execution
+- `cli/node_fs.mbt`: Node.js-backed file bridge for CLI file workflows
 
 ## Design choices
 
-- Keep the public API small and file-oriented.
-- Make parsing and rendering separable for testing.
+- Keep the public API small and easy to embed.
+- Make scanning, parsing, and rendering separable for testing.
 - Treat spec compatibility as a first-class goal.
 - Prefer explicit data structures over hidden runtime magic.
+- Use a context stack so sections and `{{.}}` behave predictably.
+- Support partial expansion in the renderer instead of baking it into parsing.
+- Separate permissive rendering from checked rendering so library users can choose ergonomics or diagnostics.
 
+## Current behavior
+
+当前实现已经支持：
+
+- escaped / unescaped variables
+- section and inverted section rendering
+- dotted name lookup across context stack layers
+- array iteration with current-context rebinding
+- partial rendering with depth limit protection
+- delimiter switching during scanning
+- JSON context parsing for CLI and embedding scenarios
+- checked rendering results that surface parse and partial diagnostics
+- file-backed CLI rendering flows when running under the `js` target
+- standalone-line handling in the scanner for section-like tags
+- partial indentation behavior aligned with imported official fixtures
+- bundle manifest validation and path normalization checks
+- separate downstream package proving public API reuse
+
+## Near-term architecture work
+
+接下来会继续补强：
+
+- file-oriented adapters on top of the core string API
+- automated synchronization against upstream Mustache fixtures
+- more structured diagnostic categories for tooling integrations
