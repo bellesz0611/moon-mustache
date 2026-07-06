@@ -1,0 +1,14 @@
+{
+  "project": {
+    "name": "moon-mustache-app",
+    "port": 8080
+  },
+  "owner": {
+    "name": "Alice"
+  },
+  "features": [
+    "bundle manifests",
+    "spec reports",
+    "CLI diagnostics"
+  ]
+}
