@@ -71,6 +71,7 @@ Start here:
 Prerequisites:
 
 - MoonBit toolchain
+  - recommended competition baseline: `0.10.3`
 - Node.js when running file-based CLI flows on `js` target
 
 Verify the repository:
