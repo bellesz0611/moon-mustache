@@ -88,6 +88,14 @@ moon run scenario_report
 moon run official_spec_report
 ```
 
+Run the Vue playground locally:
+
+```bash
+cd playground
+npm install
+npm run dev
+```
+
 Use the file-oriented CLI flow:
 
 ```bash
@@ -101,6 +109,7 @@ If you are deciding between library embedding and CLI usage, read [docs/QUICKSTA
 - core parsing and rendering library: `wasm-gc` and `js`
 - scenario, report, and benchmark entrypoints: validated in CI
 - file-backed CLI workflows: currently rely on the `js` target through the Node.js bridge
+- the Vue playground uses a local Node render bridge that calls the repository's own MoonBit engine
 
 ## Supported syntax
 
@@ -263,6 +272,11 @@ Print a short cookbook of common commands:
 moon run cli --examples
 ```
 
+Front-end playground:
+
+- `playground/` provides a Vue + Vite demo surface for judges and users
+- it renders through a dedicated `playground_bridge` MoonBit entrypoint instead of a third-party Mustache implementation
+
 Track missing variables as diagnostics:
 
 ```bash
@@ -350,6 +364,8 @@ Quick project demos shipped in the repo:
 - `scenario_report/`: workflow-style scenario report entrypoint
 - `downstream_consumer/`: separate package proving public API reuse
 - `benchmarks/`: performance smoke benchmarks
+- `playground/`: Vue playground for interactive template rendering demos
+- `playground_bridge/`: MoonBit JSON bridge used by the playground API
 - `examples/`: sample templates and expected output
 - `third_party/mustache-spec/`: imported upstream official spec fixtures
 - `THIRD_PARTY_NOTICES.md`: source and license notes for imported third-party assets
