@@ -146,6 +146,44 @@ test "render_string renders partials inside sections" {
 }
 
 ///|
+test "scan_template_variables collects data lookups in traversal order" {
+  let names = scan_template_variables(
+    "{{#user}}{{name}}{{/user}}{{^enabled}}{{message}}{{/enabled}}{{#items}}{{.}}{{/items}}",
+  )
+  inspect(names.length(), content="5")
+  inspect(names[0], content="user")
+  inspect(names[1], content="name")
+  inspect(names[2], content="enabled")
+  inspect(names[3], content="message")
+  inspect(names[4], content="items")
+}
+
+///|
+test "scan_template_references reports partials delimiters and dotted names" {
+  let result = scan_template_references(
+    "{{=<% %>=}}<%#items%><%user.name%><%/items%><%> card%>",
+  )
+  inspect(result.data_names.length(), content="2")
+  inspect(result.data_names[0], content="items")
+  inspect(result.data_names[1], content="user.name")
+  inspect(result.partial_names.length(), content="1")
+  inspect(result.partial_names[0], content="card")
+  inspect(result.references.length(), content="3")
+  inspect(result.uses_dotted_names, content="true")
+  inspect(result.uses_current_context, content="false")
+  inspect(result.delimiter_change_count.to_string(), content="1")
+  inspect(result.parse_errors.length(), content="0")
+}
+
+///|
+test "scan_template_references preserves parse diagnostics" {
+  let result = scan_template_references("{{#user}}{{name}}")
+  inspect(result.data_names.length(), content="2")
+  inspect(result.parse_errors.length(), content="1")
+  inspect(result.parse_errors[0], content="unterminated section: user")
+}
+
+///|
 test "render_string skips missing partials" {
   let actual = render_with_partials("A{{> missing}}B", Value::empty_object(), {})
   inspect(actual, content="AB")

@@ -33,11 +33,15 @@ jobs:
       - name: Run moon fmt check
         run: moon fmt --check
 
-      - name: Run moon check
-        run: moon check --target ${{ matrix.target }}
+      - name: Run moon info
+        if: matrix.target == 'wasm-gc'
+        run: moon info --target all
 
-      - name: Run moon test
-        run: moon test --target ${{ matrix.target }}
+      - name: Run moon check with deny-warn
+        run: moon check --deny-warn --target ${{ matrix.target }}
+
+      - name: Run moon test with deny-warn
+        run: moon test --deny-warn --target ${{ matrix.target }}
 
       - name: Run showcase smoke test
         run: moon run --target ${{ matrix.target }} showcase
@@ -64,6 +68,10 @@ jobs:
       - name: Run CLI file-flow smoke test
         if: matrix.target == 'js'
         run: moon run --target js cli --template-file examples/files/template.mustache --json-file examples/files/context.json --partials-json-file examples/files/partials.json
+
+      - name: Run CLI scan smoke test
+        if: matrix.target == 'js'
+        run: moon run --target js cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
 
       - name: Run CLI bundle validation smoke test
         if: matrix.target == 'js'

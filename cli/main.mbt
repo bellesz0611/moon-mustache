@@ -143,6 +143,11 @@ fn print_cli_examples() -> Unit {
     "  moon run --target js cli --bundle-manifest-file examples/bundle/manifest.json --bundle-profile dev --json-file examples/bundle/context.json --bundle-check-only --bundle-validation-file out_bundle_check/validation.md --bundle-plan-file out_bundle_check/plan.md",
   )
   println("")
+  println("Scan template variables")
+  println(
+    "  moon run cli --template \"{{#user}}{{name}}{{/user}}{{> footer}}\" --scan",
+  )
+  println("")
 }
 
 ///|
@@ -337,6 +342,39 @@ fn effective_argv() -> ArrayView[String] {
 ///|
 fn print_sample_manifest() -> Unit {
   println(@src.sample_bundle_manifest_json())
+}
+
+///|
+fn print_scan_result(result : @src.TemplateScanResult) -> Unit {
+  let current_context_usage = if result.uses_current_context {
+    "yes"
+  } else {
+    "no"
+  }
+  let dotted_name_usage = if result.uses_dotted_names { "yes" } else { "no" }
+  println("Template scan summary")
+  println("")
+  println("Data names (" + result.data_names.length().to_string() + ")")
+  for name in result.data_names {
+    println("- " + name)
+  }
+  println("")
+  println("Partial names (" + result.partial_names.length().to_string() + ")")
+  for name in result.partial_names {
+    println("- " + name)
+  }
+  println("")
+  println("Reference count: " + result.references.length().to_string())
+  println("Uses current context: " + current_context_usage)
+  println("Uses dotted names: " + dotted_name_usage)
+  println("Delimiter changes: " + result.delimiter_change_count.to_string())
+  if result.parse_errors.length() > 0 {
+    println("")
+    println("Parse diagnostics")
+    for error in result.parse_errors {
+      println("- " + error)
+    }
+  }
 }
 
 ///|
@@ -741,6 +779,11 @@ fn main {
         about="Print a short cookbook of common CLI commands.",
       ),
       FlagArg(
+        "scan",
+        long="scan",
+        about="Scan a template and print referenced data names, partials, and delimiter usage.",
+      ),
+      FlagArg(
         "print-default-template",
         long="print-default-template",
         about="Print the built-in demo template and exit.",
@@ -773,6 +816,15 @@ fn main {
   }
   if effective_argv().length() == 0 {
     print_quickstart_banner()
+  }
+  if flag_enabled(matches, "scan") {
+    let (template, template_errors) = build_template(matches)
+    if template_errors.length() > 0 {
+      print_diagnostics(template_errors)
+      return
+    }
+    print_scan_result(@src.scan_template_references(template))
+    return
   }
   let (context, context_errors) = build_context(matches)
   let (partials, partial_errors) = build_partials(matches)

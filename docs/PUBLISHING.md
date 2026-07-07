@@ -18,6 +18,8 @@
 7. Run the `js` CLI smoke tests for file and bundle flows
 8. Update `CHANGELOG.md`
 9. Tag the release
+10. Run `moon login`
+11. Run `moon publish`
 
 ## Current release-quality evidence
 
@@ -39,6 +41,11 @@ Before publishing to mooncakes.io, keep these aligned:
 - `docs/EVALUATION_SUMMARY.md`
 - `docs/STABILITY.md`
 - `docs/BENCHMARKS.md`
+
+## Mooncakes note
+
+- local packaging is ready once `moon fmt --check`, `moon info`, `moon check --deny-warn`, and `moon test --deny-warn` all pass
+- actual `moon publish` requires a valid local credentials file created by `moon login`
 
 ## SemVer direction
 

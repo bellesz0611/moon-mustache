@@ -13,6 +13,12 @@ For versioning expectations, also read `docs/STABILITY.md`.
 
 - `parse(template)`
   Parses a template into a `ParseResult`.
+- `scan_template_variables(template)`
+  Collects unique data lookup names referenced by variables and section tags.
+- `scan_template_partials(template)`
+  Collects unique partial names referenced by the template.
+- `scan_template_references(template)`
+  Returns a richer `TemplateScanResult` summary, including parse diagnostics and delimiter-change counts.
 - `ParseResult.nodes`
   Parsed AST nodes.
 - `ParseResult.errors`
