@@ -1,25 +1,24 @@
+///|
 fn first_value(matches : @argparse.Matches, name : String) -> String? {
   match matches.values.get(name) {
-    Some(values) =>
-      if values.length() > 0 {
-        Some(values[0])
-      } else {
-        None
-      }
+    Some(values) => if values.length() > 0 { Some(values[0]) } else { None }
     None => None
   }
 }
 
+///|
 fn flag_enabled(matches : @argparse.Matches, name : String) -> Bool {
   matches.flags.get_or_default(name, false)
 }
 
+///|
 fn push_all(target : Array[String], incoming : Array[String]) -> Unit {
   for item in incoming {
     target.push(item)
   }
 }
 
+///|
 fn parse_assignment(entry : String) -> (String, String)? {
   match entry.split_once("=") {
     Some((name, value)) => Some((name.to_owned(), value.to_owned()))
@@ -27,6 +26,7 @@ fn parse_assignment(entry : String) -> (String, String)? {
   }
 }
 
+///|
 fn unique_diagnostics(errors : Array[String]) -> Array[String] {
   let unique : Array[String] = []
   let seen : Map[String, Bool] = {}
@@ -39,48 +39,78 @@ fn unique_diagnostics(errors : Array[String]) -> Array[String] {
   unique
 }
 
+///|
 fn diagnostic_tip(message : String) -> String? {
   if message.contains("invalid --var assignment") {
-    Some("Use --var key=value. Dotted keys such as user.name=Alice are supported.")
+    Some(
+      "Use --var key=value. Dotted keys such as user.name=Alice are supported.",
+    )
   } else if message.contains("invalid --partial assignment") {
-    Some("Use --partial name=template, or load multiple partials with --partials-json-file.")
+    Some(
+      "Use --partial name=template, or load multiple partials with --partials-json-file.",
+    )
   } else if message.contains("missing partial:") {
-    Some("Add the partial inline with --partial name=..., or load a JSON partial map with --partials-json-file.")
+    Some(
+      "Add the partial inline with --partial name=..., or load a JSON partial map with --partials-json-file.",
+    )
   } else if message.contains("missing variable:") {
-    Some("Provide the value through --var, --json, --json-file, or the selected bundle profile context.")
+    Some(
+      "Provide the value through --var, --json, --json-file, or the selected bundle profile context.",
+    )
   } else if message.contains("invalid JSON context") {
-    Some("Check shell quoting first. On PowerShell, --json-base64 is often the easiest way to pass JSON safely.")
+    Some(
+      "Check shell quoting first. On PowerShell, --json-base64 is often the easiest way to pass JSON safely.",
+    )
   } else if message.contains("invalid partials JSON") {
-    Some("The partials file must be a JSON object that maps partial names to template strings.")
+    Some(
+      "The partials file must be a JSON object that maps partial names to template strings.",
+    )
   } else if message.contains("failed to read template file") ||
     message.contains("failed to read JSON context file") ||
     message.contains("failed to read partials file") ||
     message.contains("failed to read bundle manifest file") {
-    Some("Double-check the path, and use --target js for file-backed CLI flows.")
-  } else if message.contains("file IO is only supported when running the CLI with --target js") {
-    Some("Re-run the command as moon run --target js cli ... when reading or writing files.")
+    Some(
+      "Double-check the path, and use --target js for file-backed CLI flows.",
+    )
+  } else if message.contains(
+      "file IO is only supported when running the CLI with --target js",
+    ) {
+    Some(
+      "Re-run the command as moon run --target js cli ... when reading or writing files.",
+    )
   } else if message.contains("invalid bundle manifest:") {
-    Some("Validate the manifest shape first, or print the sample manifest with --print-sample-manifest.")
+    Some(
+      "Validate the manifest shape first, or print the sample manifest with --print-sample-manifest.",
+    )
   } else if message.contains("unsupported bundle report format") {
     Some("Use --bundle-report-format markdown or --bundle-report-format json.")
   } else if message.contains("parent traversal") ||
     message.contains("invalid-output-path") {
-    Some("Bundle output paths must stay inside the generated project tree and cannot use parent traversal segments.")
+    Some(
+      "Bundle output paths must stay inside the generated project tree and cannot use parent traversal segments.",
+    )
   } else if message.contains("unterminated section:") {
-    Some("Every {{#name}} or {{^name}} block needs a matching closing tag such as {{/name}}.")
+    Some(
+      "Every {{#name}} or {{^name}} block needs a matching closing tag such as {{/name}}.",
+    )
   } else if message.contains("partial depth limit exceeded:") {
-    Some("This usually means recursive partial expansion. Check whether a partial includes itself directly or indirectly.")
+    Some(
+      "This usually means recursive partial expansion. Check whether a partial includes itself directly or indirectly.",
+    )
   } else {
     None
   }
 }
 
+///|
 fn print_diagnostics(errors : Array[String]) -> Unit {
   let unique = unique_diagnostics(errors)
   if unique.length() == 0 {
     return
   }
-  println("moon-mustache found " + unique.length().to_string() + " diagnostic(s):")
+  println(
+    "moon-mustache found " + unique.length().to_string() + " diagnostic(s):",
+  )
   for error in unique {
     println("- " + error)
     match diagnostic_tip(error) {
@@ -91,6 +121,7 @@ fn print_diagnostics(errors : Array[String]) -> Unit {
   println("")
 }
 
+///|
 fn print_cli_examples() -> Unit {
   println("Moon Mustache examples")
   println("")
@@ -98,16 +129,23 @@ fn print_cli_examples() -> Unit {
   println("  moon run cli --template \"Hello {{name}}\" --var name=MoonBit")
   println("")
   println("JSON context")
-  println("  moon run cli --json \"{\\\"project\\\":{\\\"name\\\":\\\"moon-mustache\\\"}}\" --template \"{{project.name}}\"")
+  println(
+    "  moon run cli --json \"{\\\"project\\\":{\\\"name\\\":\\\"moon-mustache\\\"}}\" --template \"{{project.name}}\"",
+  )
   println("")
   println("File-backed render (js target)")
-  println("  moon run --target js cli --template-file examples/files/template.mustache --json-file examples/files/context.json --partials-json-file examples/files/partials.json")
+  println(
+    "  moon run --target js cli --template-file examples/files/template.mustache --json-file examples/files/context.json --partials-json-file examples/files/partials.json",
+  )
   println("")
   println("Bundle manifest validation without writing files")
-  println("  moon run --target js cli --bundle-manifest-file examples/bundle/manifest.json --bundle-profile dev --json-file examples/bundle/context.json --bundle-check-only --bundle-validation-file out_bundle_check/validation.md --bundle-plan-file out_bundle_check/plan.md")
+  println(
+    "  moon run --target js cli --bundle-manifest-file examples/bundle/manifest.json --bundle-profile dev --json-file examples/bundle/context.json --bundle-check-only --bundle-validation-file out_bundle_check/validation.md --bundle-plan-file out_bundle_check/plan.md",
+  )
   println("")
 }
 
+///|
 fn print_quickstart_banner() -> Unit {
   println("Moon Mustache quick start")
   println("")
@@ -121,15 +159,15 @@ fn print_quickstart_banner() -> Unit {
   println("")
 }
 
+///|
 fn parse_json_input(input : String) -> (@src.Value, Array[String]) {
   (@src.parse_json_context(input), ([] : Array[String])) catch {
-    err => (
-      @src.Value::empty_object(),
-      ["invalid JSON context: " + err.to_string()],
-    )
+    err =>
+      (@src.Value::empty_object(), ["invalid JSON context: " + err.to_string()])
   }
 }
 
+///|
 fn build_template(matches : @argparse.Matches) -> (String, Array[String]) {
   match first_value(matches, "template-file") {
     Some(path) =>
@@ -145,6 +183,7 @@ fn build_template(matches : @argparse.Matches) -> (String, Array[String]) {
   }
 }
 
+///|
 fn has_explicit_context(matches : @argparse.Matches) -> Bool {
   first_value(matches, "json-file") is Some(_) ||
   first_value(matches, "json-base64") is Some(_) ||
@@ -152,7 +191,10 @@ fn has_explicit_context(matches : @argparse.Matches) -> Bool {
   matches.values.get("var") is Some(_)
 }
 
-fn build_base_context(matches : @argparse.Matches) -> (@src.Value, Array[String]) {
+///|
+fn build_base_context(
+  matches : @argparse.Matches,
+) -> (@src.Value, Array[String]) {
   match first_value(matches, "json-file") {
     Some(path) =>
       match read_text_file(path) {
@@ -169,17 +211,10 @@ fn build_base_context(matches : @argparse.Matches) -> (@src.Value, Array[String]
     Some(encoded) => {
       let decoded = @base64.decode(encoded) catch {
         _ =>
-          return (
-            @src.Value::empty_object(),
-            ["invalid Base64 JSON context"],
-          )
+          return (@src.Value::empty_object(), ["invalid Base64 JSON context"])
       }
       let json_input = @utf8.decode(decoded) catch {
-        _ =>
-          return (
-            @src.Value::empty_object(),
-            ["invalid UTF-8 JSON context"],
-          )
+        _ => return (@src.Value::empty_object(), ["invalid UTF-8 JSON context"])
       }
       return parse_json_input(json_input)
     }
@@ -191,7 +226,10 @@ fn build_base_context(matches : @argparse.Matches) -> (@src.Value, Array[String]
   }
 }
 
-fn build_context_from_assignments(matches : @argparse.Matches) -> (@src.Value, Array[String]) {
+///|
+fn build_context_from_assignments(
+  matches : @argparse.Matches,
+) -> (@src.Value, Array[String]) {
   let entries : Array[(String, String)] = []
   let errors : Array[String] = []
   match matches.values.get("var") {
@@ -200,7 +238,9 @@ fn build_context_from_assignments(matches : @argparse.Matches) -> (@src.Value, A
         match parse_assignment(entry) {
           Some((name, value)) => entries.push((name, value))
           None =>
-            errors.push("invalid --var assignment (expected key=value): " + entry)
+            errors.push(
+              "invalid --var assignment (expected key=value): " + entry,
+            )
         }
       }
     None => ()
@@ -210,9 +250,12 @@ fn build_context_from_assignments(matches : @argparse.Matches) -> (@src.Value, A
   (context, errors)
 }
 
+///|
 fn build_context(matches : @argparse.Matches) -> (@src.Value, Array[String]) {
   let (base_context, base_errors) = build_base_context(matches)
-  let (override_context, override_errors) = build_context_from_assignments(matches)
+  let (override_context, override_errors) = build_context_from_assignments(
+    matches,
+  )
   let merged_context = @src.merge_values(base_context, override_context)
   let merged_errors = base_errors.copy()
   for error in override_errors {
@@ -228,7 +271,10 @@ fn build_context(matches : @argparse.Matches) -> (@src.Value, Array[String]) {
   (merged_context, merged_errors)
 }
 
-fn build_partials(matches : @argparse.Matches) -> (Map[String, String], Array[String]) {
+///|
+fn build_partials(
+  matches : @argparse.Matches,
+) -> (Map[String, String], Array[String]) {
   let partials : Map[String, String] = {}
   let errors : Array[String] = []
   match first_value(matches, "partials-json-file") {
@@ -252,7 +298,9 @@ fn build_partials(matches : @argparse.Matches) -> (Map[String, String], Array[St
         match parse_assignment(entry) {
           Some((name, value)) => partials[name] = value
           None =>
-            errors.push("invalid --partial assignment (expected name=template): " + entry)
+            errors.push(
+              "invalid --partial assignment (expected name=template): " + entry,
+            )
         }
       }
     None => ()
@@ -260,6 +308,7 @@ fn build_partials(matches : @argparse.Matches) -> (Map[String, String], Array[St
   (partials, errors)
 }
 
+///|
 fn build_render_options(matches : @argparse.Matches) -> @src.RenderOptions {
   if flag_enabled(matches, "strict-missing") {
     @src.RenderOptions::strict()
@@ -268,10 +317,12 @@ fn build_render_options(matches : @argparse.Matches) -> @src.RenderOptions {
   }
 }
 
+///|
 fn default_template() -> String {
   "Project {{name}} builds a {{role}}.\n{{> footer}}"
 }
 
+///|
 fn effective_argv() -> ArrayView[String] {
   let args = @env.args()
   if args.length() > 2 && args[1].strip_suffix(".js") is Some(_) {
@@ -283,14 +334,17 @@ fn effective_argv() -> ArrayView[String] {
   }
 }
 
+///|
 fn print_sample_manifest() -> Unit {
   println(@src.sample_bundle_manifest_json())
 }
 
+///|
 fn bundle_manifest_enabled(matches : @argparse.Matches) -> Bool {
   first_value(matches, "bundle-manifest-file") is Some(_)
 }
 
+///|
 fn merge_partial_maps(
   base : Map[String, String],
   incoming : Map[String, String],
@@ -305,6 +359,7 @@ fn merge_partial_maps(
   merged
 }
 
+///|
 fn join_output_path(root : String, relative : String) -> String {
   if root == "" {
     relative
@@ -313,12 +368,14 @@ fn join_output_path(root : String, relative : String) -> String {
   }
 }
 
+///|
 fn print_generated_file(file : @src.GeneratedFile) -> Unit {
   println("== " + file.path + " ==")
   println(file.output)
   println("")
 }
 
+///|
 fn build_bundle_manifest(
   matches : @argparse.Matches,
 ) -> (@src.BundleManifest?, Array[String]) {
@@ -330,12 +387,14 @@ fn build_bundle_manifest(
             Ok(manifest) => (Some(manifest), [])
             Err(message) => (None, ["invalid bundle manifest: " + message])
           }
-        Err(message) => (None, ["failed to read bundle manifest file: " + message])
+        Err(message) =>
+          (None, ["failed to read bundle manifest file: " + message])
       }
     None => (None, [])
   }
 }
 
+///|
 fn build_bundle_report_output(
   format : String,
   bundle_name : String,
@@ -350,6 +409,7 @@ fn build_bundle_report_output(
   }
 }
 
+///|
 fn build_bundle_plan_output(
   bundle_name : String,
   render_result : @src.BundleRenderResult,
@@ -360,15 +420,23 @@ fn build_bundle_plan_output(
   )
 }
 
+///|
 fn validation_issue_diagnostic(issue : @src.BundleValidationIssue) -> String {
-  let severity =
-    match issue.severity {
-      Error => "error"
-      Warning => "warning"
-    }
-  "bundle " + severity + " [" + issue.code + "] " + issue.target + ": " + issue.message
+  let severity = match issue.severity {
+    Error => "error"
+    Warning => "warning"
+  }
+  "bundle " +
+  severity +
+  " [" +
+  issue.code +
+  "] " +
+  issue.target +
+  ": " +
+  issue.message
 }
 
+///|
 fn handle_bundle_mode(
   matches : @argparse.Matches,
   context : @src.Value,
@@ -396,11 +464,8 @@ fn handle_bundle_mode(
     Some(value) => value
     None => ""
   }
-  let resolved = match @src.resolve_bundle_manifest_profile(
-    manifest,
-    context,
-    profile_name=profile_name,
-  ) {
+  let resolved = match
+    @src.resolve_bundle_manifest_profile(manifest, context, profile_name~) {
     Ok(value) => value
     Err(message) => {
       print_diagnostics([message])
@@ -408,7 +473,10 @@ fn handle_bundle_mode(
     }
   }
   let merged_partials = merge_partial_maps(resolved.bundle.partials, partials)
-  let final_bundle = @src.TemplateBundle::new(resolved.bundle.files, merged_partials)
+  let final_bundle = @src.TemplateBundle::new(
+    resolved.bundle.files,
+    merged_partials,
+  )
   let result = @src.render_template_bundle_checked(
     final_bundle,
     resolved.context,
@@ -422,8 +490,11 @@ fn handle_bundle_mode(
   }
   if all_errors.length() > 0 {
     print_diagnostics(all_errors)
-    if flag_enabled(matches, "strict") || @src.validation_has_errors(validation_result) {
-      println("No bundle files were written because strict mode or validation errors blocked output.")
+    if flag_enabled(matches, "strict") ||
+      @src.validation_has_errors(validation_result) {
+      println(
+        "No bundle files were written because strict mode or validation errors blocked output.",
+      )
       return
     }
   }
@@ -466,25 +537,34 @@ fn handle_bundle_mode(
   }
   match first_value(matches, "bundle-validation-file") {
     Some(path) =>
-      match write_text_file(
-        path,
-        @src.format_validation_report_markdown(manifest.name, validation_result),
-      ) {
+      match
+        write_text_file(
+          path,
+          @src.format_validation_report_markdown(
+            manifest.name,
+            validation_result,
+          ),
+        ) {
         Ok(_) => println("Wrote bundle validation report to " + path)
         Err(message) =>
-          print_diagnostics(["failed to write bundle validation report: " + message])
+          print_diagnostics([
+            "failed to write bundle validation report: " + message,
+          ])
       }
     None => ()
   }
   match first_value(matches, "bundle-plan-file") {
     Some(path) =>
-      match write_text_file(
-        path,
-        build_bundle_plan_output(manifest.name, result, validation_result),
-      ) {
+      match
+        write_text_file(
+          path,
+          build_bundle_plan_output(manifest.name, result, validation_result),
+        ) {
         Ok(_) => println("Wrote bundle generation plan to " + path)
         Err(message) =>
-          print_diagnostics(["failed to write bundle generation plan: " + message])
+          print_diagnostics([
+            "failed to write bundle generation plan: " + message,
+          ])
       }
     None => ()
   }
@@ -493,6 +573,7 @@ fn handle_bundle_mode(
   }
 }
 
+///|
 fn handle_single_template_mode(
   matches : @argparse.Matches,
   context : @src.Value,
@@ -502,20 +583,14 @@ fn handle_single_template_mode(
   render_options : @src.RenderOptions,
 ) -> Unit {
   let (template, template_errors) = build_template(matches)
-  let resolved_partials =
-    if partials.length() == 0 {
-      {
-        "footer": "Rendered by moon-mustache."
-      }
-    } else {
-      partials
-    }
+  let resolved_partials = if partials.length() == 0 {
+    { "footer": "Rendered by moon-mustache." }
+  } else {
+    partials
+  }
 
   let result = @src.render_with_partials_checked_with_options(
-    template,
-    context,
-    resolved_partials,
-    render_options,
+    template, context, resolved_partials, render_options,
   )
   let all_errors = template_errors.copy()
   for error in context_errors {
@@ -543,12 +618,14 @@ fn handle_single_template_mode(
     Some(path) =>
       match write_text_file(path, result.output) {
         Ok(_) => println("Wrote rendered output to " + path)
-        Err(message) => print_diagnostics(["failed to write output file: " + message])
+        Err(message) =>
+          print_diagnostics(["failed to write output file: " + message])
       }
     None => println(result.output)
   }
 }
 
+///|
 fn main {
   let command = @argparse.Command(
     "moon-mustache",
@@ -702,21 +779,11 @@ fn main {
   let render_options = build_render_options(matches)
   if bundle_manifest_enabled(matches) {
     handle_bundle_mode(
-      matches,
-      context,
-      context_errors,
-      partials,
-      partial_errors,
-      render_options,
+      matches, context, context_errors, partials, partial_errors, render_options,
     )
   } else {
     handle_single_template_mode(
-      matches,
-      context,
-      context_errors,
-      partials,
-      partial_errors,
-      render_options,
+      matches, context, context_errors, partials, partial_errors, render_options,
     )
   }
 }

@@ -1,3 +1,4 @@
+///|
 pub struct SpecCaseResult {
   suite_name : String
   case_name : String
@@ -8,6 +9,7 @@ pub struct SpecCaseResult {
   actual_errors : Array[String]
 }
 
+///|
 pub struct SpecSuiteResult {
   suite_name : String
   pass_count : Int
@@ -15,6 +17,7 @@ pub struct SpecSuiteResult {
   case_results : Array[SpecCaseResult]
 }
 
+///|
 fn same_string_arrays(left : Array[String], right : Array[String]) -> Bool {
   if left.length() != right.length() {
     return false
@@ -29,6 +32,7 @@ fn same_string_arrays(left : Array[String], right : Array[String]) -> Bool {
   true
 }
 
+///|
 fn format_string_list(items : Array[String]) -> String {
   if items.length() == 0 {
     return "[]"
@@ -47,14 +51,14 @@ fn format_string_list(items : Array[String]) -> String {
   builder.to_string()
 }
 
+///|
 pub fn run_spec_case(suite_name : String, case_ : SpecCase) -> SpecCaseResult {
   let result = render_json_bundle_checked(
     case_.template,
     case_.data_json,
     case_.partials_json,
   )
-  let passed =
-    result.output == case_.expected_output &&
+  let passed = result.output == case_.expected_output &&
     same_string_arrays(result.errors, case_.expected_errors)
   {
     suite_name,
@@ -67,6 +71,7 @@ pub fn run_spec_case(suite_name : String, case_ : SpecCase) -> SpecCaseResult {
   }
 }
 
+///|
 pub fn run_spec_suite(suite : SpecSuite) -> SpecSuiteResult {
   let case_results : Array[SpecCaseResult] = []
   let mut pass_count = 0
@@ -85,6 +90,7 @@ pub fn run_spec_suite(suite : SpecSuite) -> SpecSuiteResult {
   }
 }
 
+///|
 pub fn run_all_spec_suites() -> Array[SpecSuiteResult] {
   let results : Array[SpecSuiteResult] = []
   for suite in all_spec_suites() {
@@ -93,10 +99,12 @@ pub fn run_all_spec_suites() -> Array[SpecSuiteResult] {
   results
 }
 
+///|
 pub fn suite_failed_count(result : SpecSuiteResult) -> Int {
   result.total_count - result.pass_count
 }
 
+///|
 pub fn format_spec_suite_markdown(result : SpecSuiteResult) -> String {
   let builder = StringBuilder::new()
   builder.write_string("## ")
@@ -142,6 +150,7 @@ pub fn format_spec_suite_markdown(result : SpecSuiteResult) -> String {
   builder.to_string()
 }
 
+///|
 pub fn format_spec_report_markdown(results : Array[SpecSuiteResult]) -> String {
   let builder = StringBuilder::new()
   builder.write_string("# Moon Mustache Spec Compatibility Report\n\n")

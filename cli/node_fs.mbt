@@ -1,3 +1,4 @@
+///|
 #cfg(target="js")
 extern "js" fn node_fs_read_text_file_raw(path : String) -> String =
   #|(path) => {
@@ -7,11 +8,15 @@ extern "js" fn node_fs_read_text_file_raw(path : String) -> String =
   #|  } catch (error) {
   #|    const message = error && error.message ? error.message : String(error)
   #|    return JSON.stringify([false, "", message])
-#|  }
-#|}
+  #|  }
+  #|}
 
+///|
 #cfg(target="js")
-extern "js" fn node_fs_write_text_file_raw(path : String, content : String) -> String =
+extern "js" fn node_fs_write_text_file_raw(
+  path : String,
+  content : String,
+) -> String =
   #|(path, content) => {
   #|  const fs = require('node:fs')
   #|  const nodePath = require('node:path')
@@ -24,10 +29,11 @@ extern "js" fn node_fs_write_text_file_raw(path : String, content : String) -> S
   #|    return JSON.stringify([true, null])
   #|  } catch (error) {
   #|    const message = error && error.message ? error.message : String(error)
-#|    return JSON.stringify([false, message])
-#|  }
-#|}
+  #|    return JSON.stringify([false, message])
+  #|  }
+  #|}
 
+///|
 #cfg(target="js")
 fn decode_bridge_read_result(raw : String) -> Result[String, String] {
   let parsed = @json.parse(raw) catch {
@@ -43,6 +49,7 @@ fn decode_bridge_read_result(raw : String) -> Result[String, String] {
   }
 }
 
+///|
 #cfg(target="js")
 fn decode_bridge_write_result(raw : String) -> Result[Unit, String] {
   let parsed = @json.parse(raw) catch {
@@ -58,21 +65,25 @@ fn decode_bridge_write_result(raw : String) -> Result[Unit, String] {
   }
 }
 
+///|
 #cfg(target="js")
 fn read_text_file(path : String) -> Result[String, String] {
   decode_bridge_read_result(node_fs_read_text_file_raw(path))
 }
 
+///|
 #cfg(target="js")
 fn write_text_file(path : String, content : String) -> Result[Unit, String] {
   decode_bridge_write_result(node_fs_write_text_file_raw(path, content))
 }
 
+///|
 #cfg(not(target="js"))
 fn read_text_file(_path : String) -> Result[String, String] {
   Err("file IO is only supported when running the CLI with --target js")
 }
 
+///|
 #cfg(not(target="js"))
 fn write_text_file(_path : String, _content : String) -> Result[Unit, String] {
   Err("file IO is only supported when running the CLI with --target js")

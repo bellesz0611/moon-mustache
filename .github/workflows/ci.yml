@@ -30,6 +30,9 @@ jobs:
       - name: Show MoonBit version
         run: moon version --all
 
+      - name: Run moon fmt check
+        run: moon fmt --check
+
       - name: Run moon check
         run: moon check --target ${{ matrix.target }}
 

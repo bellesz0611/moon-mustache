@@ -1,8 +1,10 @@
+///|
 pub struct BundleProfile {
   context : Value
   partials : Map[String, String]
 }
 
+///|
 pub struct BundleManifest {
   name : String
   bundle : TemplateBundle
@@ -10,11 +12,13 @@ pub struct BundleManifest {
   profiles : Map[String, BundleProfile]
 }
 
+///|
 pub struct ResolvedBundleManifest {
   bundle : TemplateBundle
   context : Value
 }
 
+///|
 fn json_string_field(
   object : Map[String, Json],
   name : String,
@@ -26,6 +30,7 @@ fn json_string_field(
   }
 }
 
+///|
 fn optional_json_string_field(
   object : Map[String, Json],
   name : String,
@@ -38,6 +43,7 @@ fn optional_json_string_field(
   }
 }
 
+///|
 fn parse_json_value_field(
   object : Map[String, Json],
   name : String,
@@ -49,6 +55,7 @@ fn parse_json_value_field(
   }
 }
 
+///|
 fn parse_partial_map_json(json : Json) -> Result[Map[String, String], String] {
   let partials : Map[String, String] = @json.from_json(json) catch {
     err => return Err(err.to_string())
@@ -56,6 +63,7 @@ fn parse_partial_map_json(json : Json) -> Result[Map[String, String], String] {
   Ok(partials)
 }
 
+///|
 fn parse_manifest_file_entry(json : Json) -> Result[TemplateFile, String] {
   let object = match json {
     Object(entries) => entries
@@ -72,14 +80,18 @@ fn parse_manifest_file_entry(json : Json) -> Result[TemplateFile, String] {
   Ok(TemplateFile::new(path, template))
 }
 
-fn parse_manifest_files_field(object : Map[String, Json]) -> Result[Array[TemplateFile], String] {
+///|
+fn parse_manifest_files_field(
+  object : Map[String, Json],
+) -> Result[Array[TemplateFile], String] {
   match object.get("files") {
     Some(Array(items)) => {
       let files : Array[TemplateFile] = []
       for item in items {
         match parse_manifest_file_entry(item) {
           Ok(file) => files.push(file)
-          Err(message) => return Err("invalid bundle manifest file entry: " + message)
+          Err(message) =>
+            return Err("invalid bundle manifest file entry: " + message)
         }
       }
       Ok(files)
@@ -89,6 +101,7 @@ fn parse_manifest_files_field(object : Map[String, Json]) -> Result[Array[Templa
   }
 }
 
+///|
 fn parse_manifest_partials_field(
   object : Map[String, Json],
 ) -> Result[Map[String, String], String] {
@@ -102,27 +115,29 @@ fn parse_manifest_partials_field(
   }
 }
 
+///|
 fn parse_bundle_profile_entry(json : Json) -> Result[BundleProfile, String] {
   let object = match json {
     Object(entries) => entries
     _ => return Err("bundle profile entry must be an object")
   }
-  let context = match parse_json_value_field(object, "context", Value::empty_object()) {
+  let context = match
+    parse_json_value_field(object, "context", Value::empty_object()) {
     Ok(value) => value
     Err(message) => return Err(message)
   }
-  let partials =
-    match object.get("partials") {
-      Some(partials_json) =>
-        match parse_partial_map_json(partials_json) {
-          Ok(value) => value
-          Err(message) => return Err("invalid profile partials: " + message)
-        }
-      None => {}
-    }
+  let partials = match object.get("partials") {
+    Some(partials_json) =>
+      match parse_partial_map_json(partials_json) {
+        Ok(value) => value
+        Err(message) => return Err("invalid profile partials: " + message)
+      }
+    None => {}
+  }
   Ok({ context, partials })
 }
 
+///|
 fn parse_manifest_profiles_field(
   object : Map[String, Json],
 ) -> Result[Map[String, BundleProfile], String] {
@@ -132,7 +147,8 @@ fn parse_manifest_profiles_field(
       for name, value in entries {
         match parse_bundle_profile_entry(value) {
           Ok(profile) => profiles[name] = profile
-          Err(message) => return Err("invalid profile `" + name + "`: " + message)
+          Err(message) =>
+            return Err("invalid profile `" + name + "`: " + message)
         }
       }
       Ok(profiles)
@@ -142,7 +158,10 @@ fn parse_manifest_profiles_field(
   }
 }
 
-pub fn parse_bundle_manifest_json(input : String) -> Result[BundleManifest, String] {
+///|
+pub fn parse_bundle_manifest_json(
+  input : String,
+) -> Result[BundleManifest, String] {
   let parsed = @json.parse(input) catch {
     err => return Err("invalid bundle manifest JSON: " + err.to_string())
   }
@@ -162,7 +181,8 @@ pub fn parse_bundle_manifest_json(input : String) -> Result[BundleManifest, Stri
     Ok(value) => value
     Err(message) => return Err(message)
   }
-  let base_context = match parse_json_value_field(object, "context", Value::empty_object()) {
+  let base_context = match
+    parse_json_value_field(object, "context", Value::empty_object()) {
     Ok(value) => value
     Err(message) => return Err(message)
   }
@@ -178,6 +198,7 @@ pub fn parse_bundle_manifest_json(input : String) -> Result[BundleManifest, Stri
   })
 }
 
+///|
 fn merge_partial_maps(
   base : Map[String, String],
   incoming : Map[String, String],
@@ -192,6 +213,7 @@ fn merge_partial_maps(
   merged
 }
 
+///|
 pub fn resolve_bundle_manifest_profile(
   manifest : BundleManifest,
   runtime_context : Value,
@@ -199,15 +221,15 @@ pub fn resolve_bundle_manifest_profile(
 ) -> Result[ResolvedBundleManifest, String] {
   let resolved_context = merge_values(manifest.base_context, runtime_context)
   if profile_name == "" {
-    return Ok({
-      bundle: manifest.bundle,
-      context: resolved_context,
-    })
+    return Ok({ bundle: manifest.bundle, context: resolved_context })
   }
   match manifest.profiles.get(profile_name) {
     Some(profile) => {
       let merged_context = merge_values(resolved_context, profile.context)
-      let merged_partials = merge_partial_maps(manifest.bundle.partials, profile.partials)
+      let merged_partials = merge_partial_maps(
+        manifest.bundle.partials,
+        profile.partials,
+      )
       Ok({
         bundle: TemplateBundle::new(manifest.bundle.files, merged_partials),
         context: merged_context,
@@ -217,41 +239,33 @@ pub fn resolve_bundle_manifest_profile(
   }
 }
 
+///|
 pub fn render_bundle_manifest_checked(
   manifest : BundleManifest,
   runtime_context : Value,
   options : RenderOptions,
   profile_name? : String = "",
 ) -> Result[BundleRenderResult, String] {
-  let resolved = match resolve_bundle_manifest_profile(
-    manifest,
-    runtime_context,
-    profile_name=profile_name,
-  ) {
+  let resolved = match
+    resolve_bundle_manifest_profile(manifest, runtime_context, profile_name~) {
     Ok(value) => value
     Err(message) => return Err(message)
   }
-  Ok(
-    render_template_bundle_checked(
-      resolved.bundle,
-      resolved.context,
-      options,
-    ),
-  )
+  Ok(render_template_bundle_checked(resolved.bundle, resolved.context, options))
 }
 
+///|
 pub fn render_bundle_manifest_json_checked(
   manifest_json : String,
   context_json : String,
   options : RenderOptions,
 ) -> Result[BundleRenderResult, String] {
   render_bundle_manifest_json_with_profile_checked(
-    manifest_json,
-    context_json,
-    options,
+    manifest_json, context_json, options,
   )
 }
 
+///|
 pub fn render_bundle_manifest_json_with_profile_checked(
   manifest_json : String,
   context_json : String,
@@ -269,10 +283,11 @@ pub fn render_bundle_manifest_json_with_profile_checked(
     manifest,
     runtime_context,
     options,
-    profile_name=profile_name,
+    profile_name~,
   )
 }
 
+///|
 pub fn sample_bundle_manifest_json() -> String {
   let sample =
     #|{

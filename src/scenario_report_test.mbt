@@ -1,3 +1,4 @@
+///|
 test "scenario report stays green" {
   let results = run_scenario_report()
   inspect(results.length(), content="9")
@@ -10,6 +11,7 @@ test "scenario report stays green" {
   inspect(passed.to_string(), content="9")
 }
 
+///|
 test "scenario report markdown contains headers" {
   let report = format_scenario_report_markdown(run_scenario_report())
   inspect(report.contains("# Moon Mustache Scenario Report"), content="true")

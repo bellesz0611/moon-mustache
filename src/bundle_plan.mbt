@@ -1,3 +1,4 @@
+///|
 pub struct BundlePlanFile {
   original_path : String
   normalized_path : String
@@ -7,6 +8,7 @@ pub struct BundlePlanFile {
   missing_variables : Int
 }
 
+///|
 pub struct BundlePlan {
   bundle_name : String
   files : Array[BundlePlanFile]
@@ -14,6 +16,7 @@ pub struct BundlePlan {
   validation_warnings : Int
 }
 
+///|
 pub fn build_bundle_plan(
   bundle_name : String,
   render_result : BundleRenderResult,
@@ -21,11 +24,11 @@ pub fn build_bundle_plan(
 ) -> BundlePlan {
   let files : Array[BundlePlanFile] = []
   for file in render_result.files {
-    let normalized_path =
-      match validation_result.normalized_paths.get(file.path) {
-        Some(value) => value
-        None => file.path
-      }
+    let normalized_path = match
+      validation_result.normalized_paths.get(file.path) {
+      Some(value) => value
+      None => file.path
+    }
     files.push({
       original_path: file.path,
       normalized_path,
@@ -43,6 +46,7 @@ pub fn build_bundle_plan(
   }
 }
 
+///|
 pub fn format_bundle_plan_markdown(plan : BundlePlan) -> String {
   let builder = StringBuilder::new()
   builder.write_string("# Bundle Generation Plan\n\n")
@@ -58,7 +62,9 @@ pub fn format_bundle_plan_markdown(plan : BundlePlan) -> String {
   builder.write_string("- validation warnings: ")
   builder.write_string(plan.validation_warnings.to_string())
   builder.write_string("\n\n")
-  builder.write_string("| File | Normalized path | Chars | Lines | Errors | Missing variables |\n")
+  builder.write_string(
+    "| File | Normalized path | Chars | Lines | Errors | Missing variables |\n",
+  )
   builder.write_string("| --- | --- | ---: | ---: | ---: | ---: |\n")
   for file in plan.files {
     builder.write_string("| ")

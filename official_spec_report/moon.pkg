@@ -1,0 +1,7 @@
+import {
+  "bellesz0611/moon-mustache/src",
+}
+
+options(
+  "is-main": true,
+)

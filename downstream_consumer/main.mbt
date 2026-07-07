@@ -1,3 +1,4 @@
+///|
 fn consumer_manifest_json() -> String {
   let manifest =
     #|{
@@ -40,6 +41,7 @@ fn consumer_manifest_json() -> String {
   manifest
 }
 
+///|
 fn consumer_context() -> @src.Value {
   @src.Value::object({
     "product": @src.Value::object({
@@ -55,12 +57,14 @@ fn consumer_context() -> @src.Value {
   })
 }
 
+///|
 fn print_file(label : String, content : String) -> Unit {
   println("== " + label + " ==")
   println(content)
   println("")
 }
 
+///|
 fn main {
   let manifest = @src.parse_bundle_manifest_json(consumer_manifest_json()).unwrap()
   let validation = @src.validate_bundle_manifest(manifest)
@@ -71,7 +75,9 @@ fn main {
     profile_name="enterprise",
   ).unwrap()
   let plan = @src.build_bundle_plan("release-comms-kit", result, validation)
-  println(@src.format_validation_report_markdown("release-comms-kit", validation))
+  println(
+    @src.format_validation_report_markdown("release-comms-kit", validation),
+  )
   println("")
   println(@src.format_bundle_plan_markdown(plan))
   println("")

@@ -1,3 +1,4 @@
+///|
 fn benchmark_context() -> @src.Value {
   let users : Array[@src.Value] = [
     @src.Value::object({
@@ -20,66 +21,50 @@ fn benchmark_context() -> @src.Value {
   })
 }
 
+///|
 fn bench_plain_render(bencher : @bench.Bench) -> Unit {
   let context = benchmark_context()
-  bencher.bench(
-    name="plain_render",
-    count=10,
-    fn() {
-      let output = @src.render("Hello {{service}}!", context)
-      bencher.keep(output)
-    },
-  )
+  bencher.bench(name="plain_render", count=10, fn() {
+    let output = @src.render("Hello {{service}}!", context)
+    bencher.keep(output)
+  })
 }
 
+///|
 fn bench_section_render(bencher : @bench.Bench) -> Unit {
   let context = benchmark_context()
   let template = "{{#users}}{{name}}:{{role}};{{/users}}"
-  bencher.bench(
-    name="section_render",
-    count=10,
-    fn() {
-      let output = @src.render(template, context)
-      bencher.keep(output)
-    },
-  )
+  bencher.bench(name="section_render", count=10, fn() {
+    let output = @src.render(template, context)
+    bencher.keep(output)
+  })
 }
 
+///|
 fn bench_partial_render(bencher : @bench.Bench) -> Unit {
   let context = benchmark_context()
-  let partials : Map[String, String] = {
-    "user": "[{{name}}:{{role}}]"
-  }
+  let partials : Map[String, String] = { "user": "[{{name}}:{{role}}]" }
   let template = "{{#users}}{{> user}}{{/users}}"
-  bencher.bench(
-    name="partial_render",
-    count=10,
-    fn() {
-      let output = @src.render_with_partials(template, context, partials)
-      bencher.keep(output)
-    },
-  )
+  bencher.bench(name="partial_render", count=10, fn() {
+    let output = @src.render_with_partials(template, context, partials)
+    bencher.keep(output)
+  })
 }
 
+///|
 fn bench_json_bundle_render(bencher : @bench.Bench) -> Unit {
   let template = "{{#users}}{{> user}}{{/users}}"
-  let context_json =
-    "{\"users\":[{\"name\":\"Alice\",\"role\":\"admin\"},{\"name\":\"Bob\",\"role\":\"developer\"}]}"
+  let context_json = "{\"users\":[{\"name\":\"Alice\",\"role\":\"admin\"},{\"name\":\"Bob\",\"role\":\"developer\"}]}"
   let partials_json = "{\"user\":\"[{{name}}:{{role}}]\"}"
-  bencher.bench(
-    name="json_bundle_render",
-    count=10,
-    fn() {
-      let result = @src.render_json_bundle_checked(
-        template,
-        context_json,
-        partials_json,
-      )
-      bencher.keep(result.output)
-    },
-  )
+  bencher.bench(name="json_bundle_render", count=10, fn() {
+    let result = @src.render_json_bundle_checked(
+      template, context_json, partials_json,
+    )
+    bencher.keep(result.output)
+  })
 }
 
+///|
 fn main {
   let bencher = @bench.Bench()
   bench_plain_render(bencher)

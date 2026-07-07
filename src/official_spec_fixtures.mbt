@@ -1,3 +1,4 @@
+///|
 pub struct OfficialSpecCase {
   suite_name : String
   case_name : String
@@ -10,6 +11,7 @@ pub struct OfficialSpecCase {
   skip_reason : String?
 }
 
+///|
 pub fn official_spec_cases() -> Array[OfficialSpecCase] {
   [
     {

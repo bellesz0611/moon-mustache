@@ -1,8 +1,10 @@
+///|
 pub struct RenderOptions {
   partial_depth_limit : Int
   report_missing_variables : Bool
 }
 
+///|
 pub fn RenderOptions::default() -> RenderOptions {
   {
     partial_depth_limit: default_partial_depth_limit,
@@ -10,6 +12,7 @@ pub fn RenderOptions::default() -> RenderOptions {
   }
 }
 
+///|
 pub fn RenderOptions::strict() -> RenderOptions {
   {
     partial_depth_limit: default_partial_depth_limit,

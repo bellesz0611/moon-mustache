@@ -1,11 +1,18 @@
+///|
 fn is_windows_drive_path(path : String) -> Bool {
   path.length() >= 2 && path[1] == ':'
 }
 
+///|
 fn normalize_path_separator(char : Char) -> Char {
-  if char == '\\' { '/' } else { char }
+  if char == '\\' {
+    '/'
+  } else {
+    char
+  }
 }
 
+///|
 fn split_path_segments(path : String) -> Array[String] {
   let segments : Array[String] = []
   let mut current = ""
@@ -22,6 +29,7 @@ fn split_path_segments(path : String) -> Array[String] {
   segments
 }
 
+///|
 fn join_path_segments(segments : Array[String]) -> String {
   if segments.length() == 0 {
     return ""
@@ -38,6 +46,7 @@ fn join_path_segments(segments : Array[String]) -> String {
   builder.to_string()
 }
 
+///|
 pub fn normalize_bundle_path(path : String) -> Result[String, String] {
   if path == "" {
     return Err("path must not be empty")
@@ -64,6 +73,7 @@ pub fn normalize_bundle_path(path : String) -> Result[String, String] {
   Ok(join_path_segments(normalized_segments))
 }
 
+///|
 pub fn path_line_count(content : String) -> Int {
   if content == "" {
     return 0

@@ -1,3 +1,4 @@
+///|
 pub struct ScenarioResult {
   name : String
   description : String
@@ -5,6 +6,7 @@ pub struct ScenarioResult {
   summary : String
 }
 
+///|
 fn build_demo_context() -> Value {
   let project = Value::object({
     "name": Value::string("moon-mustache"),
@@ -31,6 +33,7 @@ fn build_demo_context() -> Value {
   })
 }
 
+///|
 fn scenario_plain_render() -> ScenarioResult {
   let output = render(
     "Project {{project.name}} listens on {{project.port}}",
@@ -44,6 +47,7 @@ fn scenario_plain_render() -> ScenarioResult {
   }
 }
 
+///|
 fn scenario_checked_missing_variables() -> ScenarioResult {
   let result = render_checked_with_options(
     "Hello {{project.name}} from {{missing}}",
@@ -54,11 +58,12 @@ fn scenario_checked_missing_variables() -> ScenarioResult {
     name: "strict_missing",
     description: "Checked rendering collects missing variables without changing output semantics.",
     passed: result.missing_variables.length() == 1 &&
-      result.missing_variables[0] == "missing",
+    result.missing_variables[0] == "missing",
     summary: "missing=" + result.missing_variables.length().to_string(),
   }
 }
 
+///|
 fn scenario_bundle_render() -> ScenarioResult {
   let bundle = TemplateBundle::new(
     [
@@ -76,12 +81,13 @@ fn scenario_bundle_render() -> ScenarioResult {
     name: "bundle_render",
     description: "Bundle APIs render multiple generated files from one shared context.",
     passed: result.files.length() == 2 &&
-      result.files[0].output == "APP=moon-mustache" &&
-      result.files[1].output == "# moon-mustache",
+    result.files[0].output == "APP=moon-mustache" &&
+    result.files[1].output == "# moon-mustache",
     summary: "files=" + result.files.length().to_string(),
   }
 }
 
+///|
 fn scenario_manifest_profile() -> ScenarioResult {
   let result = render_bundle_manifest_json_with_profile_checked(
     sample_bundle_manifest_json(),
@@ -96,19 +102,21 @@ fn scenario_manifest_profile() -> ScenarioResult {
         name: "manifest_profile",
         description: "Bundle manifests can switch behavior by profile for real scaffolding workflows.",
         passed: output.contains("APP_PORT=8080") &&
-          output.contains("NETWORK=sample-net"),
+        output.contains("NETWORK=sample-net"),
         summary: output,
       }
     }
-    Err(message) => {
-      name: "manifest_profile",
-      description: "Bundle manifests can switch behavior by profile for real scaffolding workflows.",
-      passed: false,
-      summary: message,
-    }
+    Err(message) =>
+      {
+        name: "manifest_profile",
+        description: "Bundle manifests can switch behavior by profile for real scaffolding workflows.",
+        passed: false,
+        summary: message,
+      }
   }
 }
 
+///|
 fn scenario_spec_report() -> ScenarioResult {
   let report = format_spec_report_markdown(run_all_spec_suites())
   {
@@ -119,11 +127,10 @@ fn scenario_spec_report() -> ScenarioResult {
   }
 }
 
+///|
 fn scenario_bundle_report() -> ScenarioResult {
   let bundle = TemplateBundle::new(
-    [
-      TemplateFile::new("README.md", "# {{project.name}}"),
-    ],
+    [TemplateFile::new("README.md", "# {{project.name}}")],
     {},
   )
   let result = render_template_bundle_checked(
@@ -136,11 +143,12 @@ fn scenario_bundle_report() -> ScenarioResult {
     name: "bundle_report",
     description: "Bundle generation can emit a human-readable render report.",
     passed: report.contains("# Bundle Render Report") &&
-      report.contains("## README.md"),
+    report.contains("## README.md"),
     summary: "report_chars=" + report.length().to_string(),
   }
 }
 
+///|
 fn scenario_dotted_entry_builder() -> ScenarioResult {
   let (context, errors) = object_from_string_entries([
     ("project.name", "moon-mustache"),
@@ -156,22 +164,20 @@ fn scenario_dotted_entry_builder() -> ScenarioResult {
   }
 }
 
+///|
 fn scenario_partial_recursion_guard() -> ScenarioResult {
-  let partials = {
-    "node": "{{> node}}"
-  }
+  let partials = { "node": "{{> node}}" }
   let result = render_with_partials_checked_with_options(
     "{{> node}}",
     Value::empty_object(),
     partials,
     RenderOptions::default(),
   )
-  let summary =
-    if result.errors.length() > 0 {
-      result.errors[0]
-    } else {
-      "no recursion error reported"
-    }
+  let summary = if result.errors.length() > 0 {
+    result.errors[0]
+  } else {
+    "no recursion error reported"
+  }
   {
     name: "recursion_guard",
     description: "Recursive partial expansion is guarded by a depth limit.",
@@ -180,6 +186,7 @@ fn scenario_partial_recursion_guard() -> ScenarioResult {
   }
 }
 
+///|
 fn scenario_bundle_validation_and_plan() -> ScenarioResult {
   let bundle = TemplateBundle::new(
     [
@@ -200,11 +207,12 @@ fn scenario_bundle_validation_and_plan() -> ScenarioResult {
     name: "bundle_validation_plan",
     description: "Bundles can be validated and converted into generation plans before any files are written.",
     passed: validation_error_count(validation_result) == 0 &&
-      report.contains("deploy/config.toml"),
+    report.contains("deploy/config.toml"),
     summary: "files=" + plan.files.length().to_string(),
   }
 }
 
+///|
 pub fn run_scenario_report() -> Array[ScenarioResult] {
   [
     scenario_plain_render(),
@@ -219,7 +227,10 @@ pub fn run_scenario_report() -> Array[ScenarioResult] {
   ]
 }
 
-pub fn format_scenario_report_markdown(results : Array[ScenarioResult]) -> String {
+///|
+pub fn format_scenario_report_markdown(
+  results : Array[ScenarioResult],
+) -> String {
   let builder = StringBuilder::new()
   builder.write_string("# Moon Mustache Scenario Report\n\n")
   builder.write_string("| Scenario | Status | Description |\n")

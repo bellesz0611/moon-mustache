@@ -1,3 +1,4 @@
+///|
 pub enum Value {
   NullValue
   BoolValue(Bool)
@@ -7,34 +8,42 @@ pub enum Value {
   ArrayValue(Array[Value])
 }
 
+///|
 pub fn Value::null() -> Value {
   NullValue
 }
 
+///|
 pub fn Value::bool(value : Bool) -> Value {
   BoolValue(value)
 }
 
+///|
 pub fn Value::number(value : Double) -> Value {
   NumberValue(value)
 }
 
+///|
 pub fn Value::string(value : String) -> Value {
   StringValue(value)
 }
 
+///|
 pub fn Value::object(entries : Map[String, Value]) -> Value {
   ObjectValue(entries)
 }
 
+///|
 pub fn Value::empty_object() -> Value {
   ObjectValue({})
 }
 
+///|
 pub fn Value::array(items : Array[Value]) -> Value {
   ArrayValue(items)
 }
 
+///|
 fn lookup_single(value : Value, name : String) -> Value? {
   match value {
     ObjectValue(map) => map.get(name)
@@ -42,6 +51,7 @@ fn lookup_single(value : Value, name : String) -> Value? {
   }
 }
 
+///|
 fn lookup_path_in_value(value : Value, name : String) -> Value? {
   if name == "." {
     return Some(value)
@@ -56,6 +66,7 @@ fn lookup_path_in_value(value : Value, name : String) -> Value? {
   }
 }
 
+///|
 fn lookup_head_in_stack(stack : Array[Value], name : String) -> Value? {
   let mut index = stack.length()
   while index > 0 {
@@ -69,6 +80,7 @@ fn lookup_head_in_stack(stack : Array[Value], name : String) -> Value? {
   None
 }
 
+///|
 pub fn lookup_name(stack : Array[Value], name : String) -> Value? {
   if stack.length() == 0 {
     return None
@@ -87,6 +99,7 @@ pub fn lookup_name(stack : Array[Value], name : String) -> Value? {
   }
 }
 
+///|
 pub fn push_context(stack : Array[Value], value : Value) -> Array[Value] {
   let next = Array::new(capacity=stack.length() + 1)
   for item in stack {
@@ -96,6 +109,7 @@ pub fn push_context(stack : Array[Value], value : Value) -> Array[Value] {
   next
 }
 
+///|
 pub fn is_truthy(value : Value) -> Bool {
   match value {
     NullValue => false
@@ -105,6 +119,7 @@ pub fn is_truthy(value : Value) -> Bool {
   }
 }
 
+///|
 pub fn value_to_string(value : Value) -> String {
   match value {
     NullValue => ""

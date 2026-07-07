@@ -27,6 +27,6 @@
 ## Before mooncakes.io publishing
 
 - stabilize public API names
-- confirm package metadata in `moon.mod.json`
+- confirm package metadata in `moon.mod`
 - document supported targets and current file IO limitations
 - prepare semver policy and changelog notes

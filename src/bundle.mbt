@@ -1,13 +1,16 @@
+///|
 pub struct TemplateFile {
   path : String
   template : String
 }
 
+///|
 pub struct TemplateBundle {
   files : Array[TemplateFile]
   partials : Map[String, String]
 }
 
+///|
 pub struct GeneratedFile {
   path : String
   output : String
@@ -15,16 +18,19 @@ pub struct GeneratedFile {
   missing_variables : Array[String]
 }
 
+///|
 pub struct BundleRenderResult {
   files : Array[GeneratedFile]
   errors : Array[String]
   missing_variables : Array[String]
 }
 
+///|
 pub fn TemplateFile::new(path : String, template : String) -> TemplateFile {
   { path, template }
 }
 
+///|
 pub fn TemplateBundle::new(
   files : Array[TemplateFile],
   partials : Map[String, String],
@@ -32,6 +38,7 @@ pub fn TemplateBundle::new(
   { files, partials }
 }
 
+///|
 fn record_unique_name(items : Array[String], name : String) -> Unit {
   for existing in items {
     if existing == name {
@@ -41,6 +48,7 @@ fn record_unique_name(items : Array[String], name : String) -> Unit {
   items.push(name)
 }
 
+///|
 pub fn render_template_file_checked(
   file : TemplateFile,
   context : Value,
@@ -61,6 +69,7 @@ pub fn render_template_file_checked(
   }
 }
 
+///|
 pub fn render_template_bundle_checked(
   bundle : TemplateBundle,
   context : Value,
@@ -91,6 +100,7 @@ pub fn render_template_bundle_checked(
   }
 }
 
+///|
 pub fn render_template_bundle_json_checked(
   bundle : TemplateBundle,
   context_json : String,
@@ -107,6 +117,7 @@ pub fn render_template_bundle_json_checked(
   render_template_bundle_checked(bundle, context, options)
 }
 
+///|
 pub fn bundle_has_issues(result : BundleRenderResult) -> Bool {
   result.errors.length() > 0 || result.missing_variables.length() > 0
 }

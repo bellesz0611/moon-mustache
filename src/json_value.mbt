@@ -1,3 +1,4 @@
+///|
 pub fn value_from_json(json : Json) -> Value {
   match json {
     Null => Value::null()
@@ -16,6 +17,7 @@ pub fn value_from_json(json : Json) -> Value {
   }
 }
 
+///|
 pub fn value_from_json_string(input : String) -> Value raise @json.ParseError {
   value_from_json(@json.parse(input))
 }

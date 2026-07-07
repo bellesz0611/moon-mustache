@@ -1,13 +1,16 @@
+///|
 pub struct ParseResult {
   nodes : Array[Node]
   errors : Array[String]
 }
 
+///|
 pub fn parse_template(input : String) -> ParseResult {
   let tokens = scan_template(input)
   parse_tokens(tokens)
 }
 
+///|
 fn parse_nodes(
   tokens : Array[Token],
   start : Int,
@@ -69,7 +72,10 @@ fn parse_nodes(
           Some(name) => {
             if token.lexeme != name {
               errors.push(
-                "section end mismatch: expected " + name + ", got " + token.lexeme,
+                "section end mismatch: expected " +
+                name +
+                ", got " +
+                token.lexeme,
               )
             }
             return (nodes, index + 1, errors)
@@ -79,9 +85,7 @@ fn parse_nodes(
             index = index + 1
           }
         }
-      SetDelimiter => {
-        index = index + 1
-      }
+      SetDelimiter => index = index + 1
     }
   }
 
@@ -93,6 +97,7 @@ fn parse_nodes(
   (nodes, index, errors)
 }
 
+///|
 pub fn parse_tokens(tokens : Array[Token]) -> ParseResult {
   let (nodes, _, errors) = parse_nodes(tokens, 0, None)
   { nodes, errors }

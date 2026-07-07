@@ -31,7 +31,7 @@
 
 Before publishing to mooncakes.io, keep these aligned:
 
-- `moon.mod.json`
+- `moon.mod`
 - `README.md`
 - `CHANGELOG.md`
 - `docs/COMPATIBILITY.md`

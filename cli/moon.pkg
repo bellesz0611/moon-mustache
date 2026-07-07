@@ -1,0 +1,12 @@
+import {
+  "moonbitlang/core/argparse",
+  "moonbitlang/core/env",
+  "moonbitlang/core/json",
+  "moonbitlang/core/encoding/base64",
+  "moonbitlang/core/encoding/utf8",
+  "bellesz0611/moon-mustache/src",
+}
+
+options(
+  "is-main": true,
+)

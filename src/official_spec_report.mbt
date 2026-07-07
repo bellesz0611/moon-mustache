@@ -1,9 +1,11 @@
+///|
 pub enum OfficialSpecStatus {
   Passed
   Failed
   Skipped
 }
 
+///|
 pub struct OfficialSpecCaseResult {
   suite_name : String
   case_name : String
@@ -13,6 +15,7 @@ pub struct OfficialSpecCaseResult {
   skip_reason : String?
 }
 
+///|
 pub struct OfficialSpecSuiteResult {
   suite_name : String
   passed : Int
@@ -21,6 +24,7 @@ pub struct OfficialSpecSuiteResult {
   cases : Array[OfficialSpecCaseResult]
 }
 
+///|
 fn parse_official_partials(input : String) -> Map[String, String] {
   let parsed = parse_json_partials_checked(input)
   match parsed {
@@ -29,7 +33,11 @@ fn parse_official_partials(input : String) -> Map[String, String] {
   }
 }
 
-fn official_case_result_for_skip(case_ : OfficialSpecCase, reason : String) -> OfficialSpecCaseResult {
+///|
+fn official_case_result_for_skip(
+  case_ : OfficialSpecCase,
+  reason : String,
+) -> OfficialSpecCaseResult {
   {
     suite_name: case_.suite_name,
     case_name: case_.case_name,
@@ -40,6 +48,7 @@ fn official_case_result_for_skip(case_ : OfficialSpecCase, reason : String) -> O
   }
 }
 
+///|
 fn run_official_spec_case(case_ : OfficialSpecCase) -> OfficialSpecCaseResult {
   match case_.skip_reason {
     Some(reason) => official_case_result_for_skip(case_, reason)
@@ -63,7 +72,11 @@ fn run_official_spec_case(case_ : OfficialSpecCase) -> OfficialSpecCaseResult {
       {
         suite_name: case_.suite_name,
         case_name: case_.case_name,
-        status: if actual == case_.expected_output { Passed } else { Failed },
+        status: if actual == case_.expected_output {
+          Passed
+        } else {
+          Failed
+        },
         expected_output: case_.expected_output,
         actual_output: actual,
         skip_reason: None,
@@ -72,6 +85,7 @@ fn run_official_spec_case(case_ : OfficialSpecCase) -> OfficialSpecCaseResult {
   }
 }
 
+///|
 fn official_suite_names() -> Array[String] {
   let names : Array[String] = []
   for case_ in official_spec_cases() {
@@ -88,6 +102,7 @@ fn official_suite_names() -> Array[String] {
   names
 }
 
+///|
 pub fn run_official_spec_report() -> Array[OfficialSpecSuiteResult] {
   let results : Array[OfficialSpecSuiteResult] = []
   for suite_name in official_suite_names() {
@@ -107,18 +122,15 @@ pub fn run_official_spec_report() -> Array[OfficialSpecSuiteResult] {
       }
       cases.push(result)
     }
-    results.push({
-      suite_name,
-      passed,
-      failed,
-      skipped,
-      cases,
-    })
+    results.push({ suite_name, passed, failed, skipped, cases })
   }
   results
 }
 
-pub fn official_spec_total_cases(results : Array[OfficialSpecSuiteResult]) -> Int {
+///|
+pub fn official_spec_total_cases(
+  results : Array[OfficialSpecSuiteResult],
+) -> Int {
   let mut total = 0
   for result in results {
     total = total + result.cases.length()
@@ -126,7 +138,10 @@ pub fn official_spec_total_cases(results : Array[OfficialSpecSuiteResult]) -> In
   total
 }
 
-pub fn official_spec_total_failures(results : Array[OfficialSpecSuiteResult]) -> Int {
+///|
+pub fn official_spec_total_failures(
+  results : Array[OfficialSpecSuiteResult],
+) -> Int {
   let mut total = 0
   for result in results {
     total = total + result.failed
@@ -134,7 +149,10 @@ pub fn official_spec_total_failures(results : Array[OfficialSpecSuiteResult]) ->
   total
 }
 
-pub fn official_spec_total_skips(results : Array[OfficialSpecSuiteResult]) -> Int {
+///|
+pub fn official_spec_total_skips(
+  results : Array[OfficialSpecSuiteResult],
+) -> Int {
   let mut total = 0
   for result in results {
     total = total + result.skipped
@@ -142,6 +160,7 @@ pub fn official_spec_total_skips(results : Array[OfficialSpecSuiteResult]) -> In
   total
 }
 
+///|
 pub fn format_official_spec_report_markdown(
   results : Array[OfficialSpecSuiteResult],
 ) -> String {
@@ -177,12 +196,11 @@ pub fn format_official_spec_report_markdown(
     builder.write_string("| Case | Status |\n")
     builder.write_string("| --- | --- |\n")
     for case_result in result.cases {
-      let status =
-        match case_result.status {
-          Passed => "pass"
-          Failed => "fail"
-          Skipped => "skip"
-        }
+      let status = match case_result.status {
+        Passed => "pass"
+        Failed => "fail"
+        Skipped => "skip"
+      }
       builder.write_string("| ")
       builder.write_string(case_result.case_name)
       builder.write_string(" | ")

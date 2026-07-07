@@ -1,3 +1,4 @@
+///|
 fn make_object(entries : Array[(String, Value)]) -> Value {
   let map : Map[String, Value] = {}
   for entry in entries {
@@ -6,6 +7,7 @@ fn make_object(entries : Array[(String, Value)]) -> Value {
   Value::object(map)
 }
 
+///|
 fn run_spec_case(
   template : String,
   data_json : String,
@@ -17,185 +19,196 @@ fn run_spec_case(
   inspect(result.errors.length(), content="0")
 }
 
+///|
 test "escape_html handles reserved characters" {
   let actual = escape_html("<tag>&\"'")
   inspect(actual, content="&lt;tag&gt;&amp;&quot;&#39;")
 }
 
+///|
 test "render_string keeps plain text" {
   let actual = render("hello", Value::empty_object())
   inspect(actual, content="hello")
 }
 
+///|
 test "render_string renders escaped variables" {
-  let context = make_object([
-    ("name", Value::string("<MoonBit>")),
-  ])
+  let context = make_object([("name", Value::string("<MoonBit>"))])
   let actual = render("hello {{name}}", context)
   inspect(actual, content="hello &lt;MoonBit&gt;")
 }
 
+///|
 test "render_string renders triple mustache without escaping" {
-  let context = make_object([
-    ("name", Value::string("<MoonBit>")),
-  ])
+  let context = make_object([("name", Value::string("<MoonBit>"))])
   let actual = render("hello {{{name}}}", context)
   inspect(actual, content="hello <MoonBit>")
 }
 
+///|
 test "render_string renders ampersand variables without escaping" {
-  let context = make_object([
-    ("name", Value::string("<MoonBit>")),
-  ])
+  let context = make_object([("name", Value::string("<MoonBit>"))])
   let actual = render("hello {{& name}}", context)
   inspect(actual, content="hello <MoonBit>")
 }
 
+///|
 test "render_string supports dotted lookup" {
-  let user = make_object([
-    ("name", Value::string("Moon")),
-  ])
-  let context = make_object([
-    ("user", user),
-  ])
+  let user = make_object([("name", Value::string("Moon"))])
+  let context = make_object([("user", user)])
   let actual = render("hello {{user.name}}", context)
   inspect(actual, content="hello Moon")
 }
 
+///|
 test "render_string ignores comments" {
   let actual = render("A{{! hidden }}B", Value::empty_object())
   inspect(actual, content="AB")
 }
 
+///|
 test "truthy section renders children once" {
-  let profile = make_object([
-    ("name", Value::string("MoonBit")),
-  ])
-  let context = make_object([
-    ("profile", profile),
-  ])
+  let profile = make_object([("name", Value::string("MoonBit"))])
+  let context = make_object([("profile", profile)])
   let actual = render("{{#profile}}Hi {{name}}!{{/profile}}", context)
   inspect(actual, content="Hi MoonBit!")
 }
 
+///|
 test "inverted section renders when value is false" {
-  let context = make_object([
-    ("enabled", Value::bool(false)),
-  ])
+  let context = make_object([("enabled", Value::bool(false))])
   let actual = render("{{^enabled}}disabled{{/enabled}}", context)
   inspect(actual, content="disabled")
 }
 
+///|
 test "array section iterates items and supports current context" {
   let items = Value::array([
     Value::string("a"),
     Value::string("b"),
     Value::string("c"),
   ])
-  let context = make_object([
-    ("items", items),
-  ])
+  let context = make_object([("items", items)])
   let actual = render("{{#items}}[{{.}}]{{/items}}", context)
   inspect(actual, content="[a][b][c]")
 }
 
+///|
 test "array section can still read parent scope values" {
   let context = make_object([
     ("category", Value::string("core")),
-    ("items", Value::array([
-      make_object([("name", Value::string("scanner"))]),
-      make_object([("name", Value::string("renderer"))]),
-    ])),
+    (
+      "items",
+      Value::array([
+        make_object([("name", Value::string("scanner"))]),
+        make_object([("name", Value::string("renderer"))]),
+      ]),
+    ),
   ])
   let actual = render("{{#items}}{{category}}/{{name}};{{/items}}", context)
   inspect(actual, content="core/scanner;core/renderer;")
 }
 
+///|
 test "scanner supports delimiter changes" {
-  let context = make_object([
-    ("name", Value::string("MoonBit")),
-  ])
+  let context = make_object([("name", Value::string("MoonBit"))])
   let actual = render("{{=<% %>=}}Hello, <%name%>!", context)
   inspect(actual, content="Hello, MoonBit!")
 }
 
+///|
 test "render_string renders partials with current context" {
   let context = make_object([
     ("name", Value::string("MoonBit")),
     ("role", Value::string("template engine")),
   ])
-  let partials : Map[String, String] = {
-    "card": "{{name}} builds a {{role}}."
-  }
+  let partials : Map[String, String] = { "card": "{{name}} builds a {{role}}." }
   let actual = render_with_partials("Project: {{> card}}", context, partials)
   inspect(actual, content="Project: MoonBit builds a template engine.")
 }
 
+///|
 test "render_string renders partials inside sections" {
   let context = make_object([
-    ("items", Value::array([
-      make_object([("name", Value::string("scanner"))]),
-      make_object([("name", Value::string("renderer"))]),
-    ])),
+    (
+      "items",
+      Value::array([
+        make_object([("name", Value::string("scanner"))]),
+        make_object([("name", Value::string("renderer"))]),
+      ]),
+    ),
   ])
-  let partials : Map[String, String] = {
-    "item": "- {{name}}\n"
-  }
-  let actual = render_with_partials("{{#items}}{{> item}}{{/items}}", context, partials)
+  let partials : Map[String, String] = { "item": "- {{name}}\n" }
+  let actual = render_with_partials(
+    "{{#items}}{{> item}}{{/items}}", context, partials,
+  )
   inspect(actual, content="- scanner\n- renderer\n")
 }
 
+///|
 test "render_string skips missing partials" {
   let actual = render_with_partials("A{{> missing}}B", Value::empty_object(), {})
   inspect(actual, content="AB")
 }
 
+///|
 test "render_checked reports missing partials" {
-  let result = render_with_partials_checked("A{{> missing}}B", Value::empty_object(), {})
+  let result = render_with_partials_checked(
+    "A{{> missing}}B",
+    Value::empty_object(),
+    {},
+  )
   inspect(result.output, content="AB")
   inspect(result.errors.length(), content="1")
   inspect(result.errors[0], content="missing partial: missing")
 }
 
+///|
 test "render_checked reports parse errors" {
   let result = render_checked("{{#user}}Hello", Value::empty_object())
   inspect(result.errors.length(), content="1")
   inspect(result.errors[0], content="unterminated section: user")
 }
 
+///|
 test "render_checked reports malformed partial templates" {
-  let partials : Map[String, String] = {
-    "broken": "{{#user}}Hello"
-  }
-  let result = render_with_partials_checked("A{{> broken}}B", Value::empty_object(), partials)
+  let partials : Map[String, String] = { "broken": "{{#user}}Hello" }
+  let result = render_with_partials_checked(
+    "A{{> broken}}B",
+    Value::empty_object(),
+    partials,
+  )
   inspect(result.output, content="AB")
   inspect(result.errors.length(), content="1")
-  inspect(result.errors[0], content="partial broken: unterminated section: user")
+  inspect(
+    result.errors[0],
+    content="partial broken: unterminated section: user",
+  )
 }
 
+///|
 test "parse_json_context supports nested objects and arrays" {
   let context = parse_json_context(
     "{\"user\":{\"name\":\"MoonBit\"},\"items\":[\"scanner\",\"renderer\"]}",
   ) catch {
     _ => panic()
   }
-  let actual = render(
-    "{{user.name}}:{{#items}} {{.}}{{/items}}",
-    context,
-  )
+  let actual = render("{{user.name}}:{{#items}} {{.}}{{/items}}", context)
   inspect(actual, content="MoonBit: scanner renderer")
 }
 
+///|
 test "parse_json_context supports booleans and inverted sections" {
-  let context = parse_json_context("{\"enabled\":false}") catch {
-    _ => panic()
-  }
+  let context = parse_json_context("{\"enabled\":false}") catch { _ => panic() }
   let actual = render("{{^enabled}}disabled{{/enabled}}", context)
   inspect(actual, content="disabled")
 }
 
+///|
 test "parse_json_partials_checked parses partial maps" {
-  let parsed = parse_json_partials_checked("{\"card\":\"{{name}} builds tooling.\"}")
+  let parsed = parse_json_partials_checked(
+    "{\"card\":\"{{name}} builds tooling.\"}",
+  )
   match parsed {
     Ok(partials) => {
       inspect(partials.length(), content="1")
@@ -205,16 +218,16 @@ test "parse_json_partials_checked parses partial maps" {
   }
 }
 
+///|
 test "render_json_bundle_checked renders template with partial JSON" {
   let result = render_json_bundle_checked(
-    "Project: {{> card}}",
-    "{\"name\":\"MoonBit\"}",
-    "{\"card\":\"{{name}} builds tooling.\"}",
+    "Project: {{> card}}", "{\"name\":\"MoonBit\"}", "{\"card\":\"{{name}} builds tooling.\"}",
   )
   inspect(result.output, content="Project: MoonBit builds tooling.")
   inspect(result.errors.length(), content="0")
 }
 
+///|
 test "object_from_string_entries supports dotted names and typed values" {
   let (context, errors) = object_from_string_entries([
     ("user.name", "Alice"),
@@ -222,13 +235,11 @@ test "object_from_string_entries supports dotted names and typed values" {
     ("count", "3"),
   ])
   inspect(errors.length(), content="0")
-  let actual = render(
-    "{{user.name}}/{{enabled}}/{{count}}",
-    context,
-  )
+  let actual = render("{{user.name}}/{{enabled}}/{{count}}", context)
   inspect(actual, content="Alice/true/3")
 }
 
+///|
 test "merge_values merges nested objects" {
   let base = make_object([
     (
@@ -240,18 +251,14 @@ test "merge_values merges nested objects" {
     ),
   ])
   let incoming = make_object([
-    (
-      "project",
-      make_object([
-        ("owner", Value::string("Alice")),
-      ]),
-    ),
+    ("project", make_object([("owner", Value::string("Alice"))])),
   ])
   let merged = merge_values(base, incoming)
   let actual = render("{{project.name}}/{{project.owner}}", merged)
   inspect(actual, content="moon-mustache/Alice")
 }
 
+///|
 test "render_checked_with_options reports missing variables" {
   let result = render_checked_with_options(
     "Hello {{name}} from {{project}}",
@@ -265,6 +272,7 @@ test "render_checked_with_options reports missing variables" {
   inspect(result.missing_variables[1], content="project")
 }
 
+///|
 test "render_json_checked_with_options preserves parse diagnostics" {
   let result = render_json_checked_with_options(
     "{{name}}",
@@ -277,6 +285,7 @@ test "render_json_checked_with_options preserves parse diagnostics" {
   inspect(result.missing_variables.length(), content="0")
 }
 
+///|
 test "render_template_bundle_checked renders multiple files" {
   let bundle = TemplateBundle::new(
     [
@@ -285,9 +294,7 @@ test "render_template_bundle_checked renders multiple files" {
     ],
     {},
   )
-  let context = make_object([
-    ("name", Value::string("moon-mustache")),
-  ])
+  let context = make_object([("name", Value::string("moon-mustache"))])
   let result = render_template_bundle_checked(
     bundle,
     context,
@@ -299,6 +306,7 @@ test "render_template_bundle_checked renders multiple files" {
   inspect(result.files[1].output, content="APP_NAME=moon-mustache")
 }
 
+///|
 test "render_template_bundle_checked aggregates missing variables" {
   let bundle = TemplateBundle::new(
     [
@@ -318,6 +326,7 @@ test "render_template_bundle_checked aggregates missing variables" {
   inspect(result.missing_variables[1], content="owner")
 }
 
+///|
 test "parse_bundle_manifest_json parses file list and partials" {
   let manifest_json =
     #|{
@@ -334,9 +343,7 @@ test "parse_bundle_manifest_json parses file list and partials" {
     #|    { "path": ".env", "template": "APP={{name}}" }
     #|  ]
     #|}
-  let parsed = parse_bundle_manifest_json(
-    manifest_json,
-  )
+  let parsed = parse_bundle_manifest_json(manifest_json)
   match parsed {
     Ok(manifest) => {
       inspect(manifest.name, content="demo")
@@ -348,10 +355,10 @@ test "parse_bundle_manifest_json parses file list and partials" {
   }
 }
 
+///|
 test "render_bundle_manifest_json_checked renders manifest bundle" {
   let manifest = sample_bundle_manifest_json()
-  let context_json =
-    "{\"project\":{\"name\":\"moon-mustache\",\"port\":8080},\"features\":[\"cli\",\"spec report\"]}"
+  let context_json = "{\"project\":{\"name\":\"moon-mustache\",\"port\":8080},\"features\":[\"cli\",\"spec report\"]}"
   let result = render_bundle_manifest_json_checked(
     manifest,
     context_json,
@@ -367,21 +374,12 @@ test "render_bundle_manifest_json_checked renders manifest bundle" {
   }
 }
 
+///|
 test "resolve_bundle_manifest_profile merges base and profile context" {
   let manifest = parse_bundle_manifest_json(sample_bundle_manifest_json()).unwrap()
   let runtime_context = make_object([
-    (
-      "project",
-      make_object([
-        ("name", Value::string("moon-mustache")),
-      ]),
-    ),
-    (
-      "features",
-      Value::array([
-        Value::string("cli"),
-      ]),
-    ),
+    ("project", make_object([("name", Value::string("moon-mustache"))])),
+    ("features", Value::array([Value::string("cli")])),
   ])
   let resolved = resolve_bundle_manifest_profile(
     manifest,
@@ -398,9 +396,9 @@ test "resolve_bundle_manifest_profile merges base and profile context" {
   inspect(result.files[0].output.contains("NETWORK=sample-net"), content="true")
 }
 
+///|
 test "render_bundle_manifest_json_with_profile_checked applies profile partials" {
-  let context_json =
-    "{\"project\":{\"name\":\"moon-mustache\"},\"features\":[\"bundle\"]}"
+  let context_json = "{\"project\":{\"name\":\"moon-mustache\"},\"features\":[\"bundle\"]}"
   let result = render_bundle_manifest_json_with_profile_checked(
     sample_bundle_manifest_json(),
     context_json,
@@ -410,7 +408,10 @@ test "render_bundle_manifest_json_with_profile_checked applies profile partials"
   match result {
     Ok(bundle_result) => {
       inspect(bundle_result.files.length(), content="2")
-      inspect(bundle_result.files[0].output.contains("APP_PORT=8080"), content="true")
+      inspect(
+        bundle_result.files[0].output.contains("APP_PORT=8080"),
+        content="true",
+      )
       inspect(
         bundle_result.files[1].output.contains("# Generated for production"),
         content="true",
@@ -420,16 +421,13 @@ test "render_bundle_manifest_json_with_profile_checked applies profile partials"
   }
 }
 
+///|
 test "format_bundle_result_markdown includes file sections" {
   let bundle = TemplateBundle::new(
-    [
-      TemplateFile::new("README.md", "# {{name}}"),
-    ],
+    [TemplateFile::new("README.md", "# {{name}}")],
     {},
   )
-  let context = make_object([
-    ("name", Value::string("moon-mustache")),
-  ])
+  let context = make_object([("name", Value::string("moon-mustache"))])
   let result = render_template_bundle_checked(
     bundle,
     context,
@@ -440,16 +438,13 @@ test "format_bundle_result_markdown includes file sections" {
   inspect(markdown.contains("## README.md"), content="true")
 }
 
+///|
 test "format_bundle_result_json includes bundle name" {
   let bundle = TemplateBundle::new(
-    [
-      TemplateFile::new("README.md", "# {{name}}"),
-    ],
+    [TemplateFile::new("README.md", "# {{name}}")],
     {},
   )
-  let context = make_object([
-    ("name", Value::string("moon-mustache")),
-  ])
+  let context = make_object([("name", Value::string("moon-mustache"))])
   let result = render_template_bundle_checked(
     bundle,
     context,
@@ -460,16 +455,19 @@ test "format_bundle_result_json includes bundle name" {
   inspect(json.contains("\"path\":\"README.md\""), content="true")
 }
 
+///|
 test "normalize_bundle_path rewrites separators and rejects traversal" {
   let normalized = normalize_bundle_path("deploy\\config/./app.toml").unwrap()
   inspect(normalized, content="deploy/config/app.toml")
   let invalid = normalize_bundle_path("../secret.txt")
   match invalid {
     Ok(_) => panic()
-    Err(message) => inspect(message.contains("parent traversal"), content="true")
+    Err(message) =>
+      inspect(message.contains("parent traversal"), content="true")
   }
 }
 
+///|
 test "validate_template_bundle detects duplicate normalized paths" {
   let bundle = TemplateBundle::new(
     [
@@ -484,6 +482,7 @@ test "validate_template_bundle detects duplicate normalized paths" {
   inspect(result.issues.length() >= 2, content="true")
 }
 
+///|
 test "validate_bundle_manifest reports empty profile partials as warnings" {
   let manifest_json =
     #|{
@@ -504,16 +503,13 @@ test "validate_bundle_manifest reports empty profile partials as warnings" {
   inspect(validation_warning_count(result), content="1")
 }
 
+///|
 test "build_bundle_plan includes normalized paths and counts" {
   let bundle = TemplateBundle::new(
-    [
-      TemplateFile::new("deploy\\config.toml", "service={{name}}\n"),
-    ],
+    [TemplateFile::new("deploy\\config.toml", "service={{name}}\n")],
     {},
   )
-  let context = make_object([
-    ("name", Value::string("moon-mustache")),
-  ])
+  let context = make_object([("name", Value::string("moon-mustache"))])
   let render_result = render_template_bundle_checked(
     bundle,
     context,
@@ -526,29 +522,22 @@ test "build_bundle_plan includes normalized paths and counts" {
   inspect(plan.files[0].output_lines.to_string(), content="2")
 }
 
+///|
 test "format_validation_report_markdown includes table rows" {
-  let bundle = TemplateBundle::new(
-    [
-      TemplateFile::new("", ""),
-    ],
-    {},
-  )
+  let bundle = TemplateBundle::new([TemplateFile::new("", "")], {})
   let result = validate_template_bundle(bundle)
   let report = format_validation_report_markdown("demo", result)
   inspect(report.contains("# Bundle Validation Report"), content="true")
   inspect(report.contains("| error | invalid-output-path |"), content="true")
 }
 
+///|
 test "format_bundle_plan_markdown includes normalized path column" {
   let bundle = TemplateBundle::new(
-    [
-      TemplateFile::new("README.md", "# {{name}}"),
-    ],
+    [TemplateFile::new("README.md", "# {{name}}")],
     {},
   )
-  let context = make_object([
-    ("name", Value::string("moon-mustache")),
-  ])
+  let context = make_object([("name", Value::string("moon-mustache"))])
   let render_result = render_template_bundle_checked(
     bundle,
     context,
@@ -561,30 +550,28 @@ test "format_bundle_plan_markdown includes normalized path column" {
   inspect(report.contains("Normalized path"), content="true")
 }
 
+///|
 test "spec style: sections standalone lines trim surrounding whitespace" {
   run_spec_case(
-    "| This Is\n{{#boolean}}\n|\n{{/boolean}}\n| A Line\n",
-    "{\"boolean\":true}",
+    "| This Is\n{{#boolean}}\n|\n{{/boolean}}\n| A Line\n", "{\"boolean\":true}",
     "| This Is\n|\n| A Line\n",
   )
 }
 
+///|
 test "spec style: inverted sections standalone lines trim surrounding whitespace" {
   run_spec_case(
-    "| This Is\n{{^boolean}}\n|\n{{/boolean}}\n| A Line\n",
-    "{\"boolean\":false}",
+    "| This Is\n{{^boolean}}\n|\n{{/boolean}}\n| A Line\n", "{\"boolean\":false}",
     "| This Is\n|\n| A Line\n",
   )
 }
 
+///|
 test "spec style: comments standalone lines are removed cleanly" {
-  run_spec_case(
-    "Begin.\n{{! Comment Block! }}\nEnd.\n",
-    "{}",
-    "Begin.\nEnd.\n",
-  )
+  run_spec_case("Begin.\n{{! Comment Block! }}\nEnd.\n", "{}", "Begin.\nEnd.\n")
 }
 
+///|
 test "spec style: partial recursion renders nested expansion" {
   run_spec_case(
     "{{> node}}",
@@ -594,17 +581,20 @@ test "spec style: partial recursion renders nested expansion" {
   )
 }
 
+///|
 test "parse_template builds section tree without errors" {
   let parsed = parse("{{#user}}Hi {{name}}{{/user}}")
   inspect(parsed.errors.length(), content="0")
   inspect(parsed.nodes.length(), content="1")
 }
 
+///|
 test "parse_template reports unterminated sections" {
   let parsed = parse("{{#user}}Hi")
   inspect(parsed.errors.length(), content="1")
 }
 
+///|
 test "value_to_string handles string values" {
   let actual = value_to_string(Value::string("moonbit"))
   inspect(actual, content="moonbit")

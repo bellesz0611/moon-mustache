@@ -1,3 +1,4 @@
+///|
 fn first_value(args : Array[String], name : String) -> String? {
   let mut index = 0
   while index < args.length() {
@@ -9,11 +10,16 @@ fn first_value(args : Array[String], name : String) -> String? {
   None
 }
 
+///|
 fn flag_enabled(args : Array[String], name : String) -> Bool {
   args.any(value => value == name)
 }
 
-fn decode_base64_text(encoded : String, label : String) -> Result[String, String] {
+///|
+fn decode_base64_text(
+  encoded : String,
+  label : String,
+) -> Result[String, String] {
   let decoded = @base64.decode(encoded) catch {
     _ => return Err("invalid Base64 " + label)
   }
@@ -23,6 +29,7 @@ fn decode_base64_text(encoded : String, label : String) -> Result[String, String
   Ok(text)
 }
 
+///|
 fn escape_json_string(input : String) -> String {
   let builder = StringBuilder::new()
   for char in input {
@@ -38,6 +45,7 @@ fn escape_json_string(input : String) -> String {
   builder.to_string()
 }
 
+///|
 fn string_list_json(items : Array[String]) -> String {
   let builder = StringBuilder::new()
   builder.write_string("[")
@@ -55,6 +63,7 @@ fn string_list_json(items : Array[String]) -> String {
   builder.to_string()
 }
 
+///|
 fn render_response_json(
   output : String,
   errors : Array[String],
@@ -74,10 +83,12 @@ fn render_response_json(
   builder.to_string()
 }
 
+///|
 fn error_response_json(message : String) -> String {
   render_response_json("", [message], [])
 }
 
+///|
 fn effective_argv() -> Array[String] {
   let args = @env.args()
   if args.length() > 2 && args[1].strip_suffix(".js") is Some(_) {
@@ -89,26 +100,33 @@ fn effective_argv() -> Array[String] {
   }
 }
 
+///|
 fn main {
   let args = effective_argv()
   let template_base64 = match first_value(args, "--template-base64") {
     Some(value) => value
     None => {
-      println(error_response_json("missing required argument: --template-base64"))
+      println(
+        error_response_json("missing required argument: --template-base64"),
+      )
       return
     }
   }
   let context_base64 = match first_value(args, "--context-base64") {
     Some(value) => value
     None => {
-      println(error_response_json("missing required argument: --context-base64"))
+      println(
+        error_response_json("missing required argument: --context-base64"),
+      )
       return
     }
   }
   let partials_base64 = match first_value(args, "--partials-base64") {
     Some(value) => value
     None => {
-      println(error_response_json("missing required argument: --partials-base64"))
+      println(
+        error_response_json("missing required argument: --partials-base64"),
+      )
       return
     }
   }
@@ -127,7 +145,8 @@ fn main {
       return
     }
   }
-  let partials_json = match decode_base64_text(partials_base64, "partials JSON") {
+  let partials_json = match
+    decode_base64_text(partials_base64, "partials JSON") {
     Ok(value) => value
     Err(message) => {
       println(error_response_json(message))
@@ -143,18 +162,16 @@ fn main {
     }
   }
 
-  let render_options =
-    if flag_enabled(args, "--strict-missing") {
-      @src.RenderOptions::strict()
-    } else {
-      @src.RenderOptions::default()
-    }
+  let render_options = if flag_enabled(args, "--strict-missing") {
+    @src.RenderOptions::strict()
+  } else {
+    @src.RenderOptions::default()
+  }
 
   let result = @src.render_json_checked_with_options(
-    template,
-    context_json,
-    partials,
-    render_options,
+    template, context_json, partials, render_options,
   )
-  println(render_response_json(result.output, result.errors, result.missing_variables))
+  println(
+    render_response_json(result.output, result.errors, result.missing_variables),
+  )
 }

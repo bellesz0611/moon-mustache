@@ -1,3 +1,4 @@
+///|
 pub fn format_bundle_result_markdown(
   bundle_name : String,
   result : BundleRenderResult,
@@ -61,6 +62,7 @@ pub fn format_bundle_result_markdown(
   builder.to_string()
 }
 
+///|
 fn escape_json_string(input : String) -> String {
   let builder = StringBuilder::new()
   for char in input {
@@ -76,6 +78,7 @@ fn escape_json_string(input : String) -> String {
   builder.to_string()
 }
 
+///|
 fn string_list_json(items : Array[String]) -> String {
   let builder = StringBuilder::new()
   builder.write_string("[")
@@ -93,6 +96,7 @@ fn string_list_json(items : Array[String]) -> String {
   builder.to_string()
 }
 
+///|
 pub fn format_bundle_result_json(
   bundle_name : String,
   result : BundleRenderResult,

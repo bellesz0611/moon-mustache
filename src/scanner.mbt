@@ -1,17 +1,21 @@
+///|
 pub struct ScanState {
   open_delim : String
   close_delim : String
 }
 
+///|
 pub fn default_scan_state() -> ScanState {
   { open_delim: "{{", close_delim: "}}" }
 }
 
+///|
 pub fn scan_template(input : String) -> Array[Token] {
   let state = default_scan_state()
   scan_with_state(input, state)
 }
 
+///|
 fn push_text_token(
   tokens : Array[Token],
   input : String,
@@ -24,17 +28,25 @@ fn push_text_token(
   }
 }
 
+///|
 fn slice_owned(input : String, start : Int, end_ : Int) -> String {
   input[:].view(start_offset=start, end_offset=end_).to_owned()
 }
 
+///|
 fn is_standalone_candidate(kind : TokenKind) -> Bool {
   match kind {
-    SectionStart | SectionEnd | InvertedSectionStart | Partial | Comment | SetDelimiter => true
+    SectionStart
+    | SectionEnd
+    | InvertedSectionStart
+    | Partial
+    | Comment
+    | SetDelimiter => true
     _ => false
   }
 }
 
+///|
 fn is_standalone_whitespace(input : String, start : Int, end_ : Int) -> Bool {
   let mut index = start
   while index < end_ {
@@ -47,6 +59,7 @@ fn is_standalone_whitespace(input : String, start : Int, end_ : Int) -> Bool {
   true
 }
 
+///|
 fn line_start_index(input : String, index : Int) -> Int {
   let mut cursor = index
   while cursor > 0 {
@@ -59,6 +72,7 @@ fn line_start_index(input : String, index : Int) -> Int {
   cursor
 }
 
+///|
 fn standalone_line_end(input : String, start : Int) -> Int? {
   let mut cursor = start
   while cursor < input.length() {
@@ -81,6 +95,7 @@ fn standalone_line_end(input : String, start : Int) -> Int? {
   Some(cursor)
 }
 
+///|
 fn parse_set_delimiters(spec : String, state : ScanState) -> ScanState {
   match spec.split_once(" ") {
     Some((open, close)) => {
@@ -96,6 +111,7 @@ fn parse_set_delimiters(spec : String, state : ScanState) -> ScanState {
   }
 }
 
+///|
 fn classify_tag(
   content : String,
   start : Int,
@@ -108,12 +124,66 @@ fn classify_tag(
   }
   let first = trimmed.unsafe_get(0)
   match first {
-    '#' => (Token::new(SectionStart, trimmed.view(start_offset=1).trim().to_owned(), start, end_), state)
-    '^' => (Token::new(InvertedSectionStart, trimmed.view(start_offset=1).trim().to_owned(), start, end_), state)
-    '/' => (Token::new(SectionEnd, trimmed.view(start_offset=1).trim().to_owned(), start, end_), state)
-    '!' => (Token::new(Comment, trimmed.view(start_offset=1).trim().to_owned(), start, end_), state)
-    '>' => (Token::new(Partial, trimmed.view(start_offset=1).trim().to_owned(), start, end_), state)
-    '&' => (Token::new(UnescapedVariable, trimmed.view(start_offset=1).trim().to_owned(), start, end_), state)
+    '#' =>
+      (
+        Token::new(
+          SectionStart,
+          trimmed.view(start_offset=1).trim().to_owned(),
+          start,
+          end_,
+        ),
+        state,
+      )
+    '^' =>
+      (
+        Token::new(
+          InvertedSectionStart,
+          trimmed.view(start_offset=1).trim().to_owned(),
+          start,
+          end_,
+        ),
+        state,
+      )
+    '/' =>
+      (
+        Token::new(
+          SectionEnd,
+          trimmed.view(start_offset=1).trim().to_owned(),
+          start,
+          end_,
+        ),
+        state,
+      )
+    '!' =>
+      (
+        Token::new(
+          Comment,
+          trimmed.view(start_offset=1).trim().to_owned(),
+          start,
+          end_,
+        ),
+        state,
+      )
+    '>' =>
+      (
+        Token::new(
+          Partial,
+          trimmed.view(start_offset=1).trim().to_owned(),
+          start,
+          end_,
+        ),
+        state,
+      )
+    '&' =>
+      (
+        Token::new(
+          UnescapedVariable,
+          trimmed.view(start_offset=1).trim().to_owned(),
+          start,
+          end_,
+        ),
+        state,
+      )
     _ =>
       match trimmed.strip_prefix("=") {
         Some(rest) =>
@@ -123,13 +193,15 @@ fn classify_tag(
               let next_state = parse_set_delimiters(spec, state)
               (Token::new(SetDelimiter, spec, start, end_), next_state)
             }
-            None => (Token::new(Variable, trimmed.to_owned(), start, end_), state)
+            None =>
+              (Token::new(Variable, trimmed.to_owned(), start, end_), state)
           }
         None => (Token::new(Variable, trimmed.to_owned(), start, end_), state)
       }
   }
 }
 
+///|
 pub fn scan_with_state(input : String, state : ScanState) -> Array[Token] {
   let tokens : Array[Token] = []
   let mut cursor = 0
@@ -149,7 +221,8 @@ pub fn scan_with_state(input : String, state : ScanState) -> Array[Token] {
 
         let is_triple_brace = open_delim == "{{" &&
           open_index + 3 <= input.length() &&
-          input[:].view(start_offset=open_index, end_offset=open_index + 3) == "{{{"
+          input[:].view(start_offset=open_index, end_offset=open_index + 3) ==
+          "{{{"
 
         if is_triple_brace {
           push_text_token(tokens, input, cursor, open_index)
@@ -166,12 +239,7 @@ pub fn scan_with_state(input : String, state : ScanState) -> Array[Token] {
                 .trim()
                 .to_owned()
               tokens.push(
-                Token::new(
-                  UnescapedVariable,
-                  name,
-                  open_index,
-                  close_index + 3,
-                ),
+                Token::new(UnescapedVariable, name, open_index, close_index + 3),
               )
               cursor = close_index + 3
               continue
@@ -210,18 +278,17 @@ pub fn scan_with_state(input : String, state : ScanState) -> Array[Token] {
               None => open_index
             }
             push_text_token(tokens, input, cursor, text_end)
-            let final_token =
-              match (token.kind, standalone_end) {
-                (Partial, Some(_)) =>
-                  Token::with_indentation(
-                    token.kind,
-                    token.lexeme,
-                    token.start,
-                    token.end_,
-                    Some(slice_owned(input, line_start, open_index)),
-                  )
-                _ => token
-              }
+            let final_token = match (token.kind, standalone_end) {
+              (Partial, Some(_)) =>
+                Token::with_indentation(
+                  token.kind,
+                  token.lexeme,
+                  token.start,
+                  token.end_,
+                  Some(slice_owned(input, line_start, open_index)),
+                )
+              _ => token
+            }
             tokens.push(final_token)
             current_state = next_state
             cursor = match standalone_end {

@@ -1,11 +1,14 @@
+///|
 pub fn parse(template : String) -> ParseResult {
   parse_template(template)
 }
 
+///|
 pub fn render(template : String, context : Value) -> String {
   render_string(template, context)
 }
 
+///|
 pub fn render_with_partials(
   template : String,
   context : Value,
@@ -14,10 +17,12 @@ pub fn render_with_partials(
   render_string_with_partials(template, context, partials)
 }
 
+///|
 pub fn render_checked(template : String, context : Value) -> RenderResult {
   render_string_checked(template, context)
 }
 
+///|
 pub fn render_with_partials_checked(
   template : String,
   context : Value,
@@ -26,14 +31,21 @@ pub fn render_with_partials_checked(
   render_string_with_partials_checked(template, context, partials)
 }
 
+///|
 pub fn render_checked_with_options(
   template : String,
   context : Value,
   options : RenderOptions,
 ) -> RenderResult {
-  render_string_with_partials_checked_with_options(template, context, {}, options)
+  render_string_with_partials_checked_with_options(
+    template,
+    context,
+    {},
+    options,
+  )
 }
 
+///|
 pub fn render_with_partials_checked_with_options(
   template : String,
   context : Value,
@@ -41,18 +53,19 @@ pub fn render_with_partials_checked_with_options(
   options : RenderOptions,
 ) -> RenderResult {
   render_string_with_partials_checked_with_options(
-    template,
-    context,
-    partials,
-    options,
+    template, context, partials, options,
   )
 }
 
+///|
 pub fn parse_json_context(input : String) -> Value raise @json.ParseError {
   value_from_json_string(input)
 }
 
-pub fn parse_json_partials_checked(input : String) -> Result[Map[String, String], String] {
+///|
+pub fn parse_json_partials_checked(
+  input : String,
+) -> Result[Map[String, String], String] {
   let parsed = @json.parse(input) catch {
     err => return Err("invalid partials JSON: " + err.to_string())
   }
@@ -62,10 +75,15 @@ pub fn parse_json_partials_checked(input : String) -> Result[Map[String, String]
   Ok(partials)
 }
 
-pub fn render_json(template : String, context_json : String) -> String raise @json.ParseError {
+///|
+pub fn render_json(
+  template : String,
+  context_json : String,
+) -> String raise @json.ParseError {
   render(template, parse_json_context(context_json))
 }
 
+///|
 pub fn render_json_with_partials(
   template : String,
   context_json : String,
@@ -74,6 +92,7 @@ pub fn render_json_with_partials(
   render_with_partials(template, parse_json_context(context_json), partials)
 }
 
+///|
 pub fn render_json_checked(
   template : String,
   context_json : String,
@@ -87,6 +106,7 @@ pub fn render_json_checked(
   )
 }
 
+///|
 pub fn render_json_checked_with_options(
   template : String,
   context_json : String,
@@ -101,9 +121,12 @@ pub fn render_json_checked_with_options(
         missing_variables: [],
       }
   }
-  render_with_partials_checked_with_options(template, context, partials, options)
+  render_with_partials_checked_with_options(
+    template, context, partials, options,
+  )
 }
 
+///|
 pub fn render_json_bundle_checked(
   template : String,
   context_json : String,
@@ -117,6 +140,7 @@ pub fn render_json_bundle_checked(
   )
 }
 
+///|
 pub fn render_json_bundle_checked_with_options(
   template : String,
   context_json : String,
@@ -126,7 +150,8 @@ pub fn render_json_bundle_checked_with_options(
   let partials_result = parse_json_partials_checked(partials_json)
   let partials = match partials_result {
     Ok(partials) => partials
-    Err(message) => return { output: "", errors: [message], missing_variables: [] }
+    Err(message) =>
+      return { output: "", errors: [message], missing_variables: [] }
   }
   render_json_checked_with_options(template, context_json, partials, options)
 }

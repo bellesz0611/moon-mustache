@@ -1,11 +1,14 @@
+///|
 pub let default_partial_depth_limit = 32
 
+///|
 pub struct RenderResult {
   output : String
   errors : Array[String]
   missing_variables : Array[String]
 }
 
+///|
 fn render_value(output : StringBuilder, value : Value, escaped : Bool) -> Unit {
   let text = value_to_string(value)
   if escaped {
@@ -15,7 +18,11 @@ fn render_value(output : StringBuilder, value : Value, escaped : Bool) -> Unit {
   }
 }
 
-fn record_missing_variable(missing_variables : Array[String], name : String) -> Unit {
+///|
+fn record_missing_variable(
+  missing_variables : Array[String],
+  name : String,
+) -> Unit {
   for existing in missing_variables {
     if existing == name {
       return
@@ -24,6 +31,7 @@ fn record_missing_variable(missing_variables : Array[String], name : String) -> 
   missing_variables.push(name)
 }
 
+///|
 fn indent_partial_template(template : String, indentation : String) -> String {
   if indentation == "" || template == "" {
     return template
@@ -43,6 +51,7 @@ fn indent_partial_template(template : String, indentation : String) -> String {
   builder.to_string()
 }
 
+///|
 fn render_partial(
   output : StringBuilder,
   stack : Array[Value],
@@ -60,33 +69,30 @@ fn render_partial(
   }
   match partials.get(name) {
     Some(template) => {
-      let indented_template =
-        match indentation {
-          Some(indent) => indent_partial_template(template, indent)
-          None => template
-        }
+      let indented_template = match indentation {
+        Some(indent) => indent_partial_template(template, indent)
+        None => template
+      }
       let parsed = parse_template(indented_template)
       for error in parsed.errors {
         errors.push("partial " + name + ": " + error)
       }
-      let rendered =
-        render_nodes_with_stack(
-          parsed.nodes,
-          stack,
-          partials,
-          depth + 1,
-          options,
-          errors,
-          missing_variables,
-        )
-      output.write_string(
-        rendered,
+      let rendered = render_nodes_with_stack(
+        parsed.nodes,
+        stack,
+        partials,
+        depth + 1,
+        options,
+        errors,
+        missing_variables,
       )
+      output.write_string(rendered)
     }
     None => errors.push("missing partial: " + name)
   }
 }
 
+///|
 fn render_section(
   output : StringBuilder,
   stack : Array[Value],
@@ -104,13 +110,7 @@ fn render_section(
       if inverted {
         output.write_string(
           render_nodes_with_stack(
-            children,
-            stack,
-            partials,
-            depth,
-            options,
-            errors,
-            missing_variables,
+            children, stack, partials, depth, options, errors, missing_variables,
           ),
         )
       }
@@ -119,48 +119,29 @@ fn render_section(
         if !is_truthy(value) {
           output.write_string(
             render_nodes_with_stack(
-              children,
-              stack,
-              partials,
-              depth,
-              options,
-              errors,
-              missing_variables,
+              children, stack, partials, depth, options, errors, missing_variables,
             ),
           )
         }
       } else {
         match value {
-          ArrayValue(items) => {
+          ArrayValue(items) =>
             if items.length() > 0 {
               for item in items {
                 let next_stack = push_context(stack, item)
                 output.write_string(
                   render_nodes_with_stack(
-                    children,
-                    next_stack,
-                    partials,
-                    depth,
-                    options,
-                    errors,
-                    missing_variables,
+                    children, next_stack, partials, depth, options, errors, missing_variables,
                   ),
                 )
               }
             }
-          }
           _ =>
             if is_truthy(value) {
               let next_stack = push_context(stack, value)
               output.write_string(
                 render_nodes_with_stack(
-                  children,
-                  next_stack,
-                  partials,
-                  depth,
-                  options,
-                  errors,
-                  missing_variables,
+                  children, next_stack, partials, depth, options, errors, missing_variables,
                 ),
               )
             }
@@ -169,6 +150,7 @@ fn render_section(
   }
 }
 
+///|
 fn render_nodes_with_stack(
   nodes : Array[Node],
   stack : Array[Value],
@@ -182,7 +164,7 @@ fn render_nodes_with_stack(
   for node in nodes {
     match node {
       Text(text) => output.write_string(text)
-      Variable(name=name, escaped=escaped) =>
+      Variable(name~, escaped~) =>
         match lookup_name(stack, name) {
           Some(value) => render_value(output, value, escaped)
           None =>
@@ -190,45 +172,32 @@ fn render_nodes_with_stack(
               record_missing_variable(missing_variables, name)
             }
         }
-      Section(name=name, inverted=inverted, children=children) =>
+      Section(name~, inverted~, children~) =>
         render_section(
-          output,
-          stack,
-          name,
-          inverted,
-          children,
-          partials,
-          depth,
-          options,
-          errors,
+          output, stack, name, inverted, children, partials, depth, options, errors,
           missing_variables,
         )
       Comment(_) => ()
-      Partial(name=name, indentation=indentation) =>
+      Partial(name~, indentation~) =>
         render_partial(
-          output,
-          stack,
-          name,
-          indentation,
-          partials,
-          depth,
-          options,
-          errors,
-          missing_variables,
+          output, stack, name, indentation, partials, depth, options, errors, missing_variables,
         )
     }
   }
   output.to_string()
 }
 
+///|
 pub fn render_nodes(nodes : Array[Node], context : Value) -> String {
   render_nodes_with_partials(nodes, context, {})
 }
 
+///|
 pub fn render_string(template : String, context : Value) -> String {
   render_string_with_partials(template, context, {})
 }
 
+///|
 pub fn render_nodes_with_partials(
   nodes : Array[Node],
   context : Value,
@@ -242,6 +211,7 @@ pub fn render_nodes_with_partials(
   ).output
 }
 
+///|
 pub fn render_string_with_partials(
   template : String,
   context : Value,
@@ -255,6 +225,7 @@ pub fn render_string_with_partials(
   ).output
 }
 
+///|
 pub fn render_nodes_checked(
   nodes : Array[Node],
   context : Value,
@@ -268,6 +239,7 @@ pub fn render_nodes_checked(
   )
 }
 
+///|
 pub fn render_nodes_checked_with_options(
   nodes : Array[Node],
   context : Value,
@@ -288,7 +260,11 @@ pub fn render_nodes_checked_with_options(
   { output, errors, missing_variables }
 }
 
-pub fn render_string_checked(template : String, context : Value) -> RenderResult {
+///|
+pub fn render_string_checked(
+  template : String,
+  context : Value,
+) -> RenderResult {
   render_string_with_partials_checked_with_options(
     template,
     context,
@@ -297,6 +273,7 @@ pub fn render_string_checked(template : String, context : Value) -> RenderResult
   )
 }
 
+///|
 pub fn render_string_with_partials_checked(
   template : String,
   context : Value,
@@ -310,6 +287,7 @@ pub fn render_string_with_partials_checked(
   )
 }
 
+///|
 pub fn render_string_with_partials_checked_with_options(
   template : String,
   context : Value,
