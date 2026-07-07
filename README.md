@@ -358,6 +358,7 @@ Quick project demos shipped in the repo:
 - `docs/QUICKSTART.md`: user-oriented onboarding guide
 - `docs/STABILITY.md`: API stability tiers and versioning direction
 - `docs/BENCHMARKS.md`: benchmark interpretation and next steps
+- `docs/FINAL_ACCEPTANCE_REPORT.md`: final acceptance readiness summary
 - `.github/workflows/`: CI configuration
 
 ## License and third-party assets
