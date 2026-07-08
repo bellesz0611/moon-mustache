@@ -15,10 +15,10 @@ The project is intentionally focused on Mustache core semantics and engineering 
 
 ## 2. Why it is not a shell repository
 
-- about `7352` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, and bridge code
-- about `5839` handwritten MoonBit LOC
+- about `7441` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, and bridge code
+- about `5928` handwritten MoonBit LOC
 - `1513` lines of imported generated official fixture asset
-- `35+` public commits
+- `36+` public commits
 - `64 / 64` automated tests passing
 - `136 / 136` imported official `mustache/spec` fixtures passing
 - latest GitHub library CI and playground smoke workflows are green on the default branch
@@ -37,6 +37,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - downstream consumer reuse proof
 - second adoption-oriented rollout demo package
 - content-pipeline consumer demo package
+- starter-repository consumer demo package
 - Vue playground demo backed by the repository's own MoonBit engine
 - independent playground build and API-bridge smoke workflow
 - repository governance and support documents for longer-term maintainability

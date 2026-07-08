@@ -51,6 +51,7 @@ jobs:
           moon run downstream_consumer > _artifacts/downstream_consumer.txt
           moon run adoption_demo > _artifacts/adoption_demo.txt
           moon run content_pipeline_demo > _artifacts/content_pipeline_demo.txt
+          moon run starter_repo_demo > _artifacts/starter_repo_demo.txt
           moon run benchmarks > _artifacts/benchmarks.json
           moon run --target js cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan > _artifacts/cli_scan.txt
 

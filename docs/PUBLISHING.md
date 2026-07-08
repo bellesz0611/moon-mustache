@@ -34,7 +34,7 @@
 
 - `64` automated tests passing
 - `136` imported official `mustache/spec` fixtures passing
-- about `7352` MoonBit lines across reusable library, CLI, demos, reports, benchmarks, consumer demos, and bridge code
+- about `7441` MoonBit lines across reusable library, CLI, demos, reports, benchmarks, consumer demos, and bridge code
 - downstream consumer package smoke-tested
 - bundle validation / plan mode available for CI preflight
 - latest GitHub Actions release gate is green

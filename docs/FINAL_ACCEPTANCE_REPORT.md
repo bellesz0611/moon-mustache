@@ -31,9 +31,9 @@ The final project deliverable includes:
 
 Satisfied.
 
-- handwritten MoonBit code: about `5839` lines
+- handwritten MoonBit code: about `5928` lines
 - generated MoonBit fixture asset code: about `1513` lines
-- total MoonBit code in repo: about `7352` lines
+- total MoonBit code in repo: about `7441` lines
 
 ### 2. Public repositories and clear history
 

@@ -88,6 +88,7 @@ The repository currently exposes the project through:
 - downstream consumer example
 - adoption demo for operations-style rollout generation
 - content pipeline demo for Markdown, text, and HTML artifact generation
+- starter repo demo for generated project scaffolding
 - Vue playground
 - static showcase site
 
