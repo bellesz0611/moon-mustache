@@ -27,6 +27,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - a GitHub Pages workflow now deploys a static site surface under `site/` for low-friction evaluator browsing
 - benchmark notes now include a concrete repository-local snapshot in `docs/BENCHMARK_SNAPSHOT.md`
 - release evolution is now summarized in `docs/RELEASE_HISTORY.md` so the repository shows visible iteration rather than a single static drop
+- FAQ and design-choice documentation now make project boundaries and tradeoffs easier to understand during review
 
 ## Ecosystem contribution
 

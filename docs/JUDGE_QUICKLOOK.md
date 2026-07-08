@@ -42,6 +42,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - static site deployment workflow for a lightweight public-facing showcase
 - benchmark snapshot documentation for regression-oriented review
 - release-history documentation showing the recent project maturation path
+- FAQ and design-choice documentation explaining project boundaries and rationale
 
 ## 4. Fastest verification path
 
