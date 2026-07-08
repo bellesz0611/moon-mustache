@@ -1,0 +1,79 @@
+# Judge Quick Look
+
+This page is a short evaluator-facing entrypoint for Moon Mustache.
+
+## 1. What the project is
+
+Moon Mustache is a reusable Mustache template engine for MoonBit. It targets practical engineering workflows such as:
+
+- scaffolding and multi-file project generation
+- configuration and manifest rendering
+- documentation and message template generation
+- reusable embedding from downstream MoonBit packages
+
+The project is intentionally focused on Mustache core semantics and engineering reuse, rather than growing into a custom logic-heavy template language.
+
+## 2. Why it is not a shell repository
+
+- about `7174` MoonBit LOC across library, CLI, demos, reports, benchmarks, downstream consumer package, and playground bridge
+- about `5661` handwritten MoonBit LOC
+- `1513` lines of imported generated official fixture asset
+- `27` public commits
+- `64 / 64` automated tests passing
+- `136 / 136` imported official `mustache/spec` fixtures passing
+- latest GitHub CI is green: [check #10](https://github.com/bellesz0611/moon-mustache/actions/runs/28910790425)
+
+## 3. Core capabilities
+
+- scanner, parser, AST, and renderer
+- escaped and unescaped interpolation
+- sections and inverted sections
+- comments, partials, and delimiter changes
+- dotted lookup, current-context lookup, and array iteration
+- strict missing-variable diagnostics
+- template reference scanning through library APIs and CLI
+- bundle manifest rendering, validation, and plan generation
+- official spec compatibility reporting
+- downstream consumer reuse proof
+- Vue playground demo backed by the repository's own MoonBit engine
+
+## 4. Fastest verification path
+
+Run the following commands:
+
+```bash
+moon test --deny-warn
+moon run showcase
+moon run official_spec_report
+moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
+```
+
+What these prove:
+
+- `moon test --deny-warn`
+  regression safety and clean diagnostics
+- `moon run showcase`
+  realistic rendering scenarios beyond unit tests
+- `moon run official_spec_report`
+  explicit upstream `mustache/spec` compatibility evidence
+- `moon run cli ... --scan`
+  analysis-oriented functionality beyond simple string rendering
+
+## 5. Why it matters for MoonBit
+
+MoonBit still has room for more reusable text-generation infrastructure. This project contributes a practical middle layer:
+
+- lighter than building custom generators for every tool
+- more reusable than ad hoc string concatenation
+- easier to adopt because Mustache semantics are familiar across ecosystems
+- suitable as a dependency for future MoonBit scaffolding, documentation, config, and codegen tools
+
+## 6. Current remaining gap
+
+The repository is already in a strong acceptance state:
+
+- local `fmt / info / check / test` gates pass
+- latest GitHub CI is green
+- GitHub and GitLink are synchronized
+
+The main remaining external step is final mooncakes.io publishing, which currently requires local account login before `moon publish`.

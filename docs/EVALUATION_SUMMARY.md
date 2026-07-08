@@ -4,18 +4,23 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 ## Why the project is now competitive
 
-- code scale has reached the competition's reference band, with about `6030` MoonBit lines across the core library, CLI, reports, demos, benchmarks, and downstream consumer package
+- code scale has reached the competition's reference band, with about `7174` MoonBit lines across the core library, CLI, reports, demos, benchmarks, downstream consumer package, and playground bridge
+- handwritten implementation scale is already substantial on its own, with about `5661` MoonBit lines excluding the imported generated fixture asset
 - the project is not just a parser demo; it already covers reusable library APIs, a CLI, bundle generation, validation, reporting, and realistic scaffolding workflows
 - compatibility work is evidence-based instead of self-claimed, combining hand-written spec-style suites with imported upstream `mustache/spec` fixtures
-- engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, and public-facing documentation
+- engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, public-facing documentation, and a small interactive Vue playground
 
 ## Hard evidence
 
-- `61` automated tests passing locally
+- `64` automated tests passing locally
 - `136 / 136` imported official `mustache/spec` fixtures passing
+- latest GitHub Actions run is green: `check #10`
+- GitHub and GitLink repositories are synchronized
+- current public history contains `27` commits
 - `moon run scenario_report` covers end-to-end usage flows
 - `moon run downstream_consumer` proves the public API can be consumed from a separate MoonBit package
 - `moon run --target js cli --bundle-check-only ...` supports CI-style validation and generation planning without writing files
+- `moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan` demonstrates template reference scanning as a first-class library and CLI feature
 
 ## Ecosystem contribution
 
@@ -26,6 +31,19 @@ Moon Mustache fills a practical gap in the current MoonBit ecosystem:
 - documentation, notification, and static text tools can adopt a familiar cross-language template format
 - future MoonBit packages can depend on a small public API instead of rebuilding template logic repeatedly
 
+## Evaluator quick verification path
+
+For a fast manual spot-check, an evaluator can run:
+
+```bash
+moon test --deny-warn
+moon run showcase
+moon run official_spec_report
+moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
+```
+
+This path covers regression safety, user-facing rendering, upstream compatibility evidence, and the new analysis-oriented API surface.
+
 ## What still remains after this stage
 
 The project is already beyond a bare first-stage submission, but it can still improve further through:
@@ -33,4 +51,4 @@ The project is already beyond a bare first-stage submission, but it can still im
 - automated upstream fixture synchronization in CI
 - target-agnostic file adapters beyond the current `js` bridge
 - broader benchmarking and compatibility comparison across more implementations
-- final publishing polish for mooncakes.io
+- final publishing polish for mooncakes.io after local `moon login`
