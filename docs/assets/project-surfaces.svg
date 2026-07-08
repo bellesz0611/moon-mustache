@@ -1,0 +1,37 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" rx="36" fill="#F7F0E6"/>
+  <rect x="36" y="36" width="1128" height="648" rx="28" fill="#FFF9F2" stroke="#E8D8C8"/>
+  <text x="76" y="106" fill="#8F3A16" font-family="Arial, sans-serif" font-size="20" font-weight="700" letter-spacing="2">MOON MUSTACHE SURFACES</text>
+  <text x="76" y="164" fill="#1F1710" font-family="Arial, sans-serif" font-size="48" font-weight="700">One library, multiple evaluator-friendly entrypoints.</text>
+  <text x="76" y="208" fill="#66574A" font-family="Arial, sans-serif" font-size="24">The project is no longer just a parser core. It exposes reusable package APIs, CLI flows, reports, demos, and public-facing surfaces.</text>
+
+  <rect x="76" y="276" width="318" height="150" rx="24" fill="#FFF4EA" stroke="#E8D8C8"/>
+  <text x="104" y="324" fill="#BB612D" font-family="Arial, sans-serif" font-size="18" font-weight="700">LIBRARY API</text>
+  <text x="104" y="362" fill="#1F1710" font-family="Arial, sans-serif" font-size="32" font-weight="700">Reusable core</text>
+  <text x="104" y="398" fill="#66574A" font-family="Arial, sans-serif" font-size="22">render / partials / bundles / diagnostics</text>
+
+  <rect x="441" y="276" width="318" height="150" rx="24" fill="#FFF4EA" stroke="#E8D8C8"/>
+  <text x="469" y="324" fill="#BB612D" font-family="Arial, sans-serif" font-size="18" font-weight="700">CLI</text>
+  <text x="469" y="362" fill="#1F1710" font-family="Arial, sans-serif" font-size="32" font-weight="700">Tooling workflows</text>
+  <text x="469" y="398" fill="#66574A" font-family="Arial, sans-serif" font-size="22">file mode / scan mode / bundle validation</text>
+
+  <rect x="806" y="276" width="318" height="150" rx="24" fill="#FFF4EA" stroke="#E8D8C8"/>
+  <text x="834" y="324" fill="#BB612D" font-family="Arial, sans-serif" font-size="18" font-weight="700">REPORTS</text>
+  <text x="834" y="362" fill="#1F1710" font-family="Arial, sans-serif" font-size="32" font-weight="700">Compatibility evidence</text>
+  <text x="834" y="398" fill="#66574A" font-family="Arial, sans-serif" font-size="22">scenario / official spec / downstream proof</text>
+
+  <rect x="76" y="466" width="318" height="150" rx="24" fill="#F3FBF7" stroke="#CFE5D8"/>
+  <text x="104" y="514" fill="#2D7659" font-family="Arial, sans-serif" font-size="18" font-weight="700">PLAYGROUND</text>
+  <text x="104" y="552" fill="#1F1710" font-family="Arial, sans-serif" font-size="32" font-weight="700">Interactive demo</text>
+  <text x="104" y="588" fill="#66574A" font-family="Arial, sans-serif" font-size="22">Vue UI backed by the real MoonBit engine</text>
+
+  <rect x="441" y="466" width="318" height="150" rx="24" fill="#F3FBF7" stroke="#CFE5D8"/>
+  <text x="469" y="514" fill="#2D7659" font-family="Arial, sans-serif" font-size="18" font-weight="700">PUBLIC SITE</text>
+  <text x="469" y="552" fill="#1F1710" font-family="Arial, sans-serif" font-size="32" font-weight="700">Evaluator landing page</text>
+  <text x="469" y="588" fill="#66574A" font-family="Arial, sans-serif" font-size="22">Fast project overview without local setup</text>
+
+  <rect x="806" y="466" width="318" height="150" rx="24" fill="#F3FBF7" stroke="#CFE5D8"/>
+  <text x="834" y="514" fill="#2D7659" font-family="Arial, sans-serif" font-size="18" font-weight="700">ADOPTION DEMOS</text>
+  <text x="834" y="552" fill="#1F1710" font-family="Arial, sans-serif" font-size="32" font-weight="700">Consumer evidence</text>
+  <text x="834" y="588" fill="#66574A" font-family="Arial, sans-serif" font-size="22">release kit + ops rollout demo packages</text>
+</svg>

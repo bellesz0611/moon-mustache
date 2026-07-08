@@ -9,6 +9,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - the project is not just a parser demo; it already covers reusable library APIs, a CLI, bundle generation, validation, reporting, and realistic scaffolding workflows
 - compatibility work is evidence-based instead of self-claimed, combining hand-written spec-style suites with imported upstream `mustache/spec` fixtures
 - engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, governance files, an interactive Vue playground, and a static showcase site for fast public review
+- adoption proof now spans more than one consumer-style scenario, including release communication and operations rollout generation
 
 ## Hard evidence
 
@@ -24,6 +25,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - `npm run smoke` in `playground/` verifies the Vue demo through the real MoonBit render bridge
 - repository collaboration surfaces now include `CODE_OF_CONDUCT.md`, `GOVERNANCE.md`, `SECURITY.md`, `SUPPORT.md`, `PROGRESS.md`, issue templates, and a PR template
 - a GitHub Pages workflow now deploys a static site surface under `site/` for low-friction evaluator browsing
+- benchmark notes now include a concrete repository-local snapshot in `docs/BENCHMARK_SNAPSHOT.md`
 
 ## Ecosystem contribution
 

@@ -86,6 +86,7 @@ The repository currently exposes the project through:
 - CLI
 - scenario and compatibility reports
 - downstream consumer example
+- adoption demo for operations-style rollout generation
 - Vue playground
 - static showcase site
 

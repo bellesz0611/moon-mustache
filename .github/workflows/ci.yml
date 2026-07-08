@@ -62,6 +62,9 @@ jobs:
       - name: Run downstream consumer smoke test
         run: moon run --target ${{ matrix.target }} downstream_consumer
 
+      - name: Run adoption demo smoke test
+        run: moon run --target ${{ matrix.target }} adoption_demo
+
       - name: Run benchmark smoke test
         if: matrix.target == 'wasm-gc'
         run: moon run --target ${{ matrix.target }} benchmarks

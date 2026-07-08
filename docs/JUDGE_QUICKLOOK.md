@@ -35,10 +35,12 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - bundle manifest rendering, validation, and plan generation
 - official spec compatibility reporting
 - downstream consumer reuse proof
+- second adoption-oriented rollout demo package
 - Vue playground demo backed by the repository's own MoonBit engine
 - independent playground build and API-bridge smoke workflow
 - repository governance and support documents for longer-term maintainability
 - static site deployment workflow for a lightweight public-facing showcase
+- benchmark snapshot documentation for regression-oriented review
 
 ## 4. Fastest verification path
 

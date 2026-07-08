@@ -49,6 +49,8 @@ jobs:
           moon run official_spec_report > _artifacts/official_spec_report.txt
           moon run scenario_report > _artifacts/scenario_report.txt
           moon run downstream_consumer > _artifacts/downstream_consumer.txt
+          moon run adoption_demo > _artifacts/adoption_demo.txt
+          moon run benchmarks > _artifacts/benchmarks.json
           moon run --target js cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan > _artifacts/cli_scan.txt
 
       - name: Install playground dependencies

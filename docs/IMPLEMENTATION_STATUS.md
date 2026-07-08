@@ -26,6 +26,7 @@ This document gives a slightly more detailed status view than `PROGRESS.md`.
 - scenario report: complete
 - official spec report: complete
 - downstream consumer example: complete
+- second adoption demo: complete
 - Vue playground: complete
 - static showcase site: complete
 
