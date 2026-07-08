@@ -87,6 +87,7 @@ The repository currently exposes the project through:
 - scenario and compatibility reports
 - downstream consumer example
 - adoption demo for operations-style rollout generation
+- content pipeline demo for Markdown, text, and HTML artifact generation
 - Vue playground
 - static showcase site
 

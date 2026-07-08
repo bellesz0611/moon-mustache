@@ -65,6 +65,9 @@ jobs:
       - name: Run adoption demo smoke test
         run: moon run --target ${{ matrix.target }} adoption_demo
 
+      - name: Run content pipeline demo smoke test
+        run: moon run --target ${{ matrix.target }} content_pipeline_demo
+
       - name: Run benchmark smoke test
         if: matrix.target == 'wasm-gc'
         run: moon run --target ${{ matrix.target }} benchmarks

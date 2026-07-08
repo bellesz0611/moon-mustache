@@ -4,8 +4,8 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 ## Why the project is now competitive
 
-- code scale has reached the competition's reference band, with about `7174` MoonBit lines across the core library, CLI, reports, demos, benchmarks, downstream consumer package, and playground bridge
-- handwritten implementation scale is already substantial on its own, with about `5661` MoonBit lines excluding the imported generated fixture asset
+- code scale has reached the competition's reference band, with about `7352` MoonBit lines across the core library, CLI, reports, demos, benchmarks, consumer demos, and bridge code
+- handwritten implementation scale is already substantial on its own, with about `5839` MoonBit lines excluding the imported generated fixture asset
 - the project is not just a parser demo; it already covers reusable library APIs, a CLI, bundle generation, validation, reporting, and realistic scaffolding workflows
 - compatibility work is evidence-based instead of self-claimed, combining hand-written spec-style suites with imported upstream `mustache/spec` fixtures
 - engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, governance files, an interactive Vue playground, and a static showcase site for fast public review
@@ -17,7 +17,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - `136 / 136` imported official `mustache/spec` fixtures passing
 - latest GitHub library CI and playground smoke workflows are green
 - GitHub and GitLink repositories are synchronized
-- current public history contains `29+` commits
+- current public history contains `35+` commits
 - `moon run scenario_report` covers end-to-end usage flows
 - `moon run downstream_consumer` proves the public API can be consumed from a separate MoonBit package
 - `moon run --target js cli --bundle-check-only ...` supports CI-style validation and generation planning without writing files
