@@ -8,7 +8,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - handwritten implementation scale is already substantial on its own, with about `5661` MoonBit lines excluding the imported generated fixture asset
 - the project is not just a parser demo; it already covers reusable library APIs, a CLI, bundle generation, validation, reporting, and realistic scaffolding workflows
 - compatibility work is evidence-based instead of self-claimed, combining hand-written spec-style suites with imported upstream `mustache/spec` fixtures
-- engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, public-facing documentation, and a small interactive Vue playground
+- engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, public-facing documentation, governance files, and an interactive Vue playground
 
 ## Hard evidence
 
@@ -22,6 +22,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - `moon run --target js cli --bundle-check-only ...` supports CI-style validation and generation planning without writing files
 - `moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan` demonstrates template reference scanning as a first-class library and CLI feature
 - `npm run smoke` in `playground/` verifies the Vue demo through the real MoonBit render bridge
+- repository collaboration surfaces now include `CODE_OF_CONDUCT.md`, `GOVERNANCE.md`, `SECURITY.md`, `SUPPORT.md`, `PROGRESS.md`, issue templates, and a PR template
 
 ## Ecosystem contribution
 

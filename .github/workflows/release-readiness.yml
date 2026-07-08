@@ -1,0 +1,68 @@
+name: release-readiness
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  verify-release-surface:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: playground/package-lock.json
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Update MoonBit
+        run: moon update
+
+      - name: Show MoonBit version
+        run: moon version --all
+
+      - name: Run formatting and analysis gates
+        run: |
+          moon fmt --check
+          moon info --target all
+          moon check --deny-warn --target wasm-gc
+          moon check --deny-warn --target js
+          moon test --deny-warn --target wasm-gc
+          moon test --deny-warn --target js
+
+      - name: Generate evaluator artifacts
+        run: |
+          mkdir -p _artifacts
+          moon run showcase > _artifacts/showcase.txt
+          moon run spec_report > _artifacts/spec_report.txt
+          moon run official_spec_report > _artifacts/official_spec_report.txt
+          moon run scenario_report > _artifacts/scenario_report.txt
+          moon run downstream_consumer > _artifacts/downstream_consumer.txt
+          moon run --target js cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan > _artifacts/cli_scan.txt
+
+      - name: Install playground dependencies
+        working-directory: playground
+        run: npm ci
+
+      - name: Build and smoke test playground
+        working-directory: playground
+        run: |
+          npm run build
+          npm run smoke
+
+      - name: Upload evaluator artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-readiness-artifacts
+          path: _artifacts

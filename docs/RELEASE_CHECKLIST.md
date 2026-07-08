@@ -4,14 +4,18 @@
 
 - `moon check`
 - `moon test`
+- `moon fmt --check`
+- `moon info --target all`
 - `moon run --target js cli --template-file ... --json-file ...`
 - `moon run scenario_report`
 - `moon run official_spec_report`
 - `moon run downstream_consumer`
 - `moon run --target js cli --bundle-manifest-file ... --bundle-check-only ...`
+- `cd playground && npm run build && npm run smoke`
 - refresh compatibility notes if behavior changed
 - update README examples if CLI flags changed
 - update `CHANGELOG.md`
+- confirm `release-readiness` workflow artifacts still make sense
 
 ## Before competition submission update
 

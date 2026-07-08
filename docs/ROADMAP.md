@@ -22,16 +22,20 @@
 - manifest validation and generation-plan reporting
 - showcase / scaffold_demo / benchmark entrypoints
 - unit tests for main rendering branches
+- independent playground smoke workflow
+- repository governance, security, support, and contribution templates
+- mooncakes.io package publication
 
 ## Next milestone
 
-下一阶段重点补齐“工程可用性”和“规范完整度”：
+下一阶段重点补齐“版本演进能力”和“生态 adoption 证据”：
 
 - target-agnostic file-based rendering helpers
 - automated upstream fixture synchronization workflow
 - richer parse/render diagnostics typing
-- stronger release packaging for mooncakes.io
+- stronger release artifact snapshots across versions
 - more complete end-to-end generated artifact examples
+- more external adoption examples and compatibility comparison notes
 
 ## Competition-oriented goals
 

@@ -2,6 +2,7 @@
 
 [![Library CI](https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml/badge.svg)](https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml)
 [![Playground](https://github.com/bellesz0611/moon-mustache/actions/workflows/playground.yml/badge.svg)](https://github.com/bellesz0611/moon-mustache/actions/workflows/playground.yml)
+[![Release Readiness](https://github.com/bellesz0611/moon-mustache/actions/workflows/release-readiness.yml/badge.svg)](https://github.com/bellesz0611/moon-mustache/actions/workflows/release-readiness.yml)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Version](https://img.shields.io/badge/version-0.1.0-blue)
 ![Mooncakes](https://img.shields.io/badge/mooncakes-published-brightgreen)
@@ -38,6 +39,7 @@ moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
 - MoonBit package: `bellesz0611/moon-mustache`
 - current release status: published on mooncakes.io as `bellesz0611/moon-mustache@0.1.0`
 - workflow entrypoints: [library CI](https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml) and [playground smoke workflow](https://github.com/bellesz0611/moon-mustache/actions/workflows/playground.yml)
+- release-readiness workflow: [artifact-oriented verification](https://github.com/bellesz0611/moon-mustache/actions/workflows/release-readiness.yml)
 - evaluator quick-look page: [docs/JUDGE_QUICKLOOK.md](D:/CCF/moonbit/docs/JUDGE_QUICKLOOK.md)
 
 ## Project positioning
@@ -105,10 +107,19 @@ Moon Mustache 选择以 Mustache 规范为核心，优先把最常用、最稳�
 为了让这个仓库更接近长期维护的开源项目，而不只是一次性比赛提交，当前仓库也补齐了基础协作入口：
 
 - `CONTRIBUTING.md`
+- `CODE_OF_CONDUCT.md`
+- `GOVERNANCE.md`
 - `SECURITY.md`
+- `SUPPORT.md`
+- `PROGRESS.md`
 - GitHub issue templates for bugs and feature requests
 - GitHub pull request template
 - Dependabot configuration for GitHub Actions and the Vue playground dependencies
+
+如果你想快速理解项目当前成熟度和功能落点，可以直接看：
+
+- [PROGRESS.md](D:/CCF/moonbit/PROGRESS.md)
+- [docs/IMPLEMENTATION_STATUS.md](D:/CCF/moonbit/docs/IMPLEMENTATION_STATUS.md)
 
 ## Quick start
 
