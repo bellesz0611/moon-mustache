@@ -1,6 +1,7 @@
 /output/
 /tmp/
 /_build/
+**/_build/
 /scripts/__pycache__/
 /.DS_Store
 /*.log

@@ -1,9 +1,0 @@
-{
-  "source_dir": "D:\\CCF\\moonbit\\companion_repo_blueprint",
-  "name": "moonbit-community/moon-release-kit",
-  "packages": [],
-  "deps": [],
-  "backend": "wasm-gc",
-  "opt_level": "debug",
-  "source": null
-}
