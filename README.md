@@ -10,7 +10,7 @@ Moon Mustache 面向 MoonBit 生态提供一套轻量、稳定、可嵌入的模
 
 ## Judge quick look
 
-- latest GitHub CI: [check #10](https://github.com/bellesz0611/moon-mustache/actions/runs/28910790425) is green
+- latest GitHub CI: [check #11](https://github.com/bellesz0611/moon-mustache/actions/runs/28911877204) is green
 - public repositories: GitHub + GitLink are synchronized
 - current code scale: about `7174` MoonBit LOC across library, CLI, demos, reports, benchmarks, and playground bridge
 - handwritten MoonBit LOC: about `5661`
@@ -34,7 +34,7 @@ moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
 - GitHub: <https://github.com/bellesz0611/moon-mustache>
 - GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
 - MoonBit package: `bellesz0611/moon-mustache`
-- current release status: repository and package metadata ready; final mooncakes.io publish requires `moon login`
+- current release status: published on mooncakes.io as `bellesz0611/moon-mustache@0.1.0`
 - evaluator quick-look page: [docs/JUDGE_QUICKLOOK.md](D:/CCF/moonbit/docs/JUDGE_QUICKLOOK.md)
 
 ## Project positioning
@@ -424,7 +424,7 @@ Quick project demos shipped in the repo:
 - core library APIs are the main long-term compatibility target
 - report helpers and CLI UX can still evolve faster than the rendering core
 - versioning and public-surface expectations are documented in [docs/STABILITY.md](D:/CCF/moonbit/docs/STABILITY.md)
-- publishing and release preparation notes live in [docs/PUBLISHING.md](D:/CCF/moonbit/docs/PUBLISHING.md)
+- publishing notes and release verification history live in [docs/PUBLISHING.md](D:/CCF/moonbit/docs/PUBLISHING.md)
 
 ## Engineering direction
 
@@ -434,7 +434,7 @@ Quick project demos shipped in the repo:
 - 引入 target-agnostic 的文件级生成和写出能力
 - 补充更细粒度的 diagnostics 分类与报告导出
 - 丰富 bundle API、manifest profile 和脚手架场景中的使用样例
-- 准备面向 mooncakes.io 的发布、版本化和包说明
+- 继续维护 mooncakes.io 发布版本、版本化说明和包文档
 
 ## Reference projects
 

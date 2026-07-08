@@ -14,7 +14,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 - `64` automated tests passing locally
 - `136 / 136` imported official `mustache/spec` fixtures passing
-- latest GitHub Actions run is green: `check #10`
+- latest GitHub Actions run is green: `check #11`
 - GitHub and GitLink repositories are synchronized
 - current public history contains `27` commits
 - `moon run scenario_report` covers end-to-end usage flows
@@ -51,4 +51,4 @@ The project is already beyond a bare first-stage submission, but it can still im
 - automated upstream fixture synchronization in CI
 - target-agnostic file adapters beyond the current `js` bridge
 - broader benchmarking and compatibility comparison across more implementations
-- final publishing polish for mooncakes.io after local `moon login`
+- follow-up release automation and future mooncakes.io version cadence

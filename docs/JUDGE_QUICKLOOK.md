@@ -21,7 +21,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - `27` public commits
 - `64 / 64` automated tests passing
 - `136 / 136` imported official `mustache/spec` fixtures passing
-- latest GitHub CI is green: [check #10](https://github.com/bellesz0611/moon-mustache/actions/runs/28910790425)
+- latest GitHub CI is green: [check #11](https://github.com/bellesz0611/moon-mustache/actions/runs/28911877204)
 
 ## 3. Core capabilities
 
@@ -68,12 +68,13 @@ MoonBit still has room for more reusable text-generation infrastructure. This pr
 - easier to adopt because Mustache semantics are familiar across ecosystems
 - suitable as a dependency for future MoonBit scaffolding, documentation, config, and codegen tools
 
-## 6. Current remaining gap
+## 6. Current release state
 
-The repository is already in a strong acceptance state:
+The repository is already in a strong acceptance and release state:
 
 - local `fmt / info / check / test` gates pass
 - latest GitHub CI is green
 - GitHub and GitLink are synchronized
+- mooncakes.io publication for `0.1.0` is complete
 
-The main remaining external step is final mooncakes.io publishing, which currently requires local account login before `moon publish`.
+The remaining work is now about future releases and continued ecosystem polish, not first-time publication.
