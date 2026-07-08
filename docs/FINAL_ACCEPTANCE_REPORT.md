@@ -6,7 +6,7 @@
 - repository (GitHub): <https://github.com/bellesz0611/moon-mustache>
 - repository (GitLink): <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
 - primary language: MoonBit
-- current synced commit: `1c78cdb`
+- current synced commit: see the latest synchronized `main` commit on GitHub and GitLink
 
 ## Final delivery summary
 
@@ -23,7 +23,7 @@ The final project deliverable includes:
 - showcase and scaffold demos
 - imported official `mustache/spec` compatibility fixtures and report generation
 - scenario reports and a downstream consumer package
-- CI workflow coverage for check, test, demos, reports, and CLI smoke paths
+- CI workflow coverage for library checks, playground smoke validation, demos, reports, and CLI smoke paths
 
 ## Completion against acceptance expectations
 
@@ -31,9 +31,9 @@ The final project deliverable includes:
 
 Satisfied.
 
-- handwritten MoonBit code: about `4519` lines
-- generated MoonBit fixture asset code: about `1511` lines
-- total MoonBit code in repo: about `6030` lines
+- handwritten MoonBit code: about `5661` lines
+- generated MoonBit fixture asset code: about `1513` lines
+- total MoonBit code in repo: about `7174` lines
 
 ### 2. Public repositories and clear history
 
@@ -78,8 +78,10 @@ Satisfied.
 
 The GitHub Actions workflow covers:
 
-- `moon check`
-- `moon test`
+- `moon fmt --check`
+- `moon info --target all`
+- `moon check --deny-warn`
+- `moon test --deny-warn`
 - showcase smoke tests
 - scaffold demo smoke tests
 - spec report smoke tests
@@ -88,15 +90,15 @@ The GitHub Actions workflow covers:
 - downstream consumer smoke tests
 - benchmark smoke tests
 - CLI file-flow smoke tests
+- CLI scan smoke tests
 - CLI bundle validation smoke tests
+- Vue playground build
+- Vue playground API-bridge smoke tests
 
-Latest confirmed GitHub Actions status for commit `1c78cdb`:
+Latest confirmed GitHub Actions status:
 
-- workflow: `ci`
-- run: `#5`
-- status: `Success`
-- total duration: `31s`
-- trigger time: `July 7, 2026 01:45`
+- library CI workflow: green on the default branch
+- playground workflow: green on the default branch
 
 ## Verification snapshot
 
@@ -113,10 +115,11 @@ Locally verified during the final preparation stage:
 
 Observed results:
 
-- automated tests: `61 / 61` passing
+- automated tests: `64 / 64` passing
 - imported official `mustache/spec` fixtures: `136 / 136` passing
 - scenario report: passing
 - downstream consumer smoke test: passing
+- package publication: complete on mooncakes.io as `bellesz0611/moon-mustache@0.1.0`
 
 ## Third-party and license notes
 
@@ -129,7 +132,6 @@ Observed results:
 
 These do not block final acceptance readiness, but are good next steps:
 
-- publish package metadata to mooncakes.io
 - keep upstream `mustache/spec` synchronization current
 - continue expanding benchmark snapshots and release notes
 

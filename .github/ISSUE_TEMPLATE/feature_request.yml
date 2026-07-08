@@ -1,0 +1,42 @@
+name: Feature request
+description: Propose a reusable capability for the MoonBit Mustache ecosystem.
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please focus on reusable capabilities that fit the project's positioning:
+        practical Mustache rendering, diagnostics, compatibility, tooling, and MoonBit ecosystem integration.
+  - type: input
+    id: area
+    attributes:
+      label: Proposed area
+      placeholder: parser / renderer / cli / bundle / playground / documentation
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should this solve?
+      placeholder: Teams generating multi-file templates currently need...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      placeholder: Add a library API / CLI flag / report mode that...
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      placeholder: Existing workaround, other libraries, or why this should stay out of scope.
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected MoonBit ecosystem impact
+      placeholder: This would help scaffolding tools, config generation, docs pipelines, or...

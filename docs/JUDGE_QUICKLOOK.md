@@ -18,10 +18,10 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - about `7174` MoonBit LOC across library, CLI, demos, reports, benchmarks, downstream consumer package, and playground bridge
 - about `5661` handwritten MoonBit LOC
 - `1513` lines of imported generated official fixture asset
-- `27` public commits
+- `29+` public commits
 - `64 / 64` automated tests passing
 - `136 / 136` imported official `mustache/spec` fixtures passing
-- latest GitHub CI is green: [check #11](https://github.com/bellesz0611/moon-mustache/actions/runs/28911877204)
+- latest GitHub library CI and playground smoke workflows are green on the default branch
 
 ## 3. Core capabilities
 
@@ -36,6 +36,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - official spec compatibility reporting
 - downstream consumer reuse proof
 - Vue playground demo backed by the repository's own MoonBit engine
+- independent playground build and API-bridge smoke workflow
 
 ## 4. Fastest verification path
 

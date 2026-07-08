@@ -30,6 +30,14 @@ The API uses `playground_bridge/` to call the MoonBit renderer and returns struc
 npm run build
 ```
 
+## Run the automated smoke test
+
+```bash
+npm run smoke
+```
+
+This script starts the local API bridge, waits for the health endpoint, submits a real render request, and verifies the returned output. The same path is also exercised by the dedicated GitHub Actions `playground` workflow.
+
 ## Notes
 
 - the playground is intended for local demos and judge-facing presentations

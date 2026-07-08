@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a reproducible defect in the library, CLI, playground, or docs.
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to improve Moon Mustache.
+        Please include enough detail for us to reproduce the issue on the same MoonBit and Node setup.
+  - type: input
+    id: area
+    attributes:
+      label: Affected area
+      description: Which part is affected?
+      placeholder: library / cli / bundle / playground / docs / ci
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected to happen instead.
+      placeholder: The render output differs from the expected Mustache behavior when...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Share a minimal template, context, partials, command, or steps.
+      placeholder: |
+        1. Run `moon run cli ...`
+        2. Use template `...`
+        3. Expected `...`, got `...`
+      render: bash
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Include versions when possible.
+      placeholder: |
+        MoonBit:
+        Node.js:
+        OS:
+        Target:
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Extra context
+      description: Add screenshots, logs, or related links if helpful.

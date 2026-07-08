@@ -14,13 +14,14 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 - `64` automated tests passing locally
 - `136 / 136` imported official `mustache/spec` fixtures passing
-- latest GitHub Actions run is green: `check #11`
+- latest GitHub library CI and playground smoke workflows are green
 - GitHub and GitLink repositories are synchronized
-- current public history contains `27` commits
+- current public history contains `29+` commits
 - `moon run scenario_report` covers end-to-end usage flows
 - `moon run downstream_consumer` proves the public API can be consumed from a separate MoonBit package
 - `moon run --target js cli --bundle-check-only ...` supports CI-style validation and generation planning without writing files
 - `moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan` demonstrates template reference scanning as a first-class library and CLI feature
+- `npm run smoke` in `playground/` verifies the Vue demo through the real MoonBit render bridge
 
 ## Ecosystem contribution
 

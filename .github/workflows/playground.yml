@@ -1,0 +1,46 @@
+name: playground
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  playground-smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: playground/package-lock.json
+
+      - name: Install MoonBit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: Update MoonBit
+        run: moon update
+
+      - name: Show MoonBit version
+        run: moon version --all
+
+      - name: Install playground dependencies
+        working-directory: playground
+        run: npm ci
+
+      - name: Build Vue playground
+        working-directory: playground
+        run: npm run build
+
+      - name: Smoke test playground API bridge
+        working-directory: playground
+        run: npm run smoke
