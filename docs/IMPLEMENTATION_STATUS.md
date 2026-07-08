@@ -29,6 +29,7 @@ This document gives a slightly more detailed status view than `PROGRESS.md`.
 - second adoption demo: complete
 - content pipeline demo: complete
 - starter repo demo: complete
+- companion repo blueprint: complete
 - Vue playground: complete
 - static showcase site: complete
 

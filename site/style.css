@@ -51,7 +51,8 @@ pre {
 .info-card,
 .surface-card,
 .example-card,
-.comparison-card {
+.comparison-card,
+.text-card {
   border: 1px solid var(--line);
   background: var(--panel);
   backdrop-filter: blur(14px);
@@ -62,8 +63,29 @@ pre {
 .info-card,
 .surface-card,
 .example-card,
-.comparison-card {
+.comparison-card,
+.text-card {
   border-radius: 30px;
+}
+
+.top-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.top-nav a {
+  padding: 10px 16px;
+  border-radius: 999px;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(143, 58, 22, 0.12);
+}
+
+.top-nav a.active {
+  background: rgba(187, 97, 45, 0.14);
+  color: var(--accent-deep);
 }
 
 .hero {
@@ -71,6 +93,10 @@ pre {
   grid-template-columns: 1.4fr 1fr;
   gap: 24px;
   padding: 30px;
+}
+
+.hero.compact {
+  grid-template-columns: 1fr;
 }
 
 .eyebrow,
@@ -147,7 +173,8 @@ pre {
 .grid,
 .example-grid,
 .comparison-grid,
-.timeline-list {
+.timeline-list,
+.stack {
   display: grid;
   gap: 20px;
   margin-top: 24px;
@@ -173,11 +200,16 @@ pre {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.stack {
+  grid-template-columns: 1fr;
+}
+
 .info-card,
 .surface-card,
 .example-card,
 .comparison-card,
-.timeline-card {
+.timeline-card,
+.text-card {
   padding: 22px;
 }
 
@@ -185,14 +217,16 @@ pre {
 .surface-card h3,
 .example-card h3,
 .comparison-card h3,
-.timeline-card h3 {
+.timeline-card h3,
+.text-card h2 {
   margin: 0 0 12px;
 }
 
 .info-card ul,
 .comparison-card p,
 .surface-card p,
-.timeline-card p {
+.timeline-card p,
+.text-card p {
   margin: 0;
   color: var(--muted);
   line-height: 1.75;
