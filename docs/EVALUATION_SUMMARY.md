@@ -26,6 +26,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - repository collaboration surfaces now include `CODE_OF_CONDUCT.md`, `GOVERNANCE.md`, `SECURITY.md`, `SUPPORT.md`, `PROGRESS.md`, issue templates, and a PR template
 - a GitHub Pages workflow now deploys a static site surface under `site/` for low-friction evaluator browsing
 - benchmark notes now include a concrete repository-local snapshot in `docs/BENCHMARK_SNAPSHOT.md`
+- release evolution is now summarized in `docs/RELEASE_HISTORY.md` so the repository shows visible iteration rather than a single static drop
 
 ## Ecosystem contribution
 
