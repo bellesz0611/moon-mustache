@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Moon Mustache</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">MoonBit Text Infrastructure</p>
+          <h1>Moon Mustache is a reusable Mustache engine built for real MoonBit workflows.</h1>
+          <p class="lead">
+            It turns structured data into stable text output for scaffolding, config generation,
+            report export, static content rendering, and downstream package reuse.
+          </p>
+          <div class="hero-actions">
+            <a href="https://github.com/bellesz0611/moon-mustache">GitHub</a>
+            <a href="https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt">GitLink</a>
+            <a href="https://mooncakes.io/package/bellesz0611/moon-mustache">mooncakes.io</a>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="metric">
+            <span class="metric-value">136 / 136</span>
+            <span class="metric-label">official mustache/spec fixtures passing</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">64 / 64</span>
+            <span class="metric-label">automated tests passing</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">7174</span>
+            <span class="metric-label">MoonBit LOC across library, CLI, demos, reports, and bridge code</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="strip">
+        <article class="info-card">
+          <span class="kicker">Evaluator path</span>
+          <h2>Three-minute check</h2>
+          <pre><code>moon test --deny-warn
+moon run showcase
+moon run official_spec_report
+moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan</code></pre>
+        </article>
+        <article class="info-card">
+          <span class="kicker">What ships</span>
+          <h2>More than a parser demo</h2>
+          <ul>
+            <li>Core library API for downstream MoonBit packages</li>
+            <li>CLI for inline, file-based, and bundle-driven rendering</li>
+            <li>Official spec reports and scenario-level artifacts</li>
+            <li>Vue playground backed by the repository's own MoonBit render bridge</li>
+          </ul>
+        </article>
+        <article class="info-card">
+          <span class="kicker">Release posture</span>
+          <h2>Ready to adopt</h2>
+          <ul>
+            <li>Published on mooncakes.io as <code>bellesz0611/moon-mustache@0.1.0</code></li>
+            <li>GitHub and GitLink stay synchronized</li>
+            <li>Library CI, playground smoke, and release-readiness workflows are present</li>
+            <li>Governance, support, and contribution docs are included</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="grid">
+        <article class="surface-card">
+          <span class="surface-tag">Library</span>
+          <h3>Reusable rendering API</h3>
+          <p>
+            Use checked rendering, JSON helpers, dotted lookups, strict diagnostics, and bundle APIs
+            from another MoonBit package.
+          </p>
+        </article>
+        <article class="surface-card">
+          <span class="surface-tag">CLI</span>
+          <h3>Tooling-friendly workflows</h3>
+          <p>
+            Render from inline templates or files, validate multi-file bundles, export plans, and scan
+            variable or partial references before integration.
+          </p>
+        </article>
+        <article class="surface-card">
+          <span class="surface-tag">Reports</span>
+          <h3>Evaluator-facing evidence</h3>
+          <p>
+            Generate scenario reports, official spec compatibility reports, and downstream consumer proof
+            with reproducible command lines.
+          </p>
+        </article>
+        <article class="surface-card">
+          <span class="surface-tag">Playground</span>
+          <h3>Browser-facing demo</h3>
+          <p>
+            The local Vue playground lets users edit template, JSON context, and partials while the
+            MoonBit engine handles rendering and diagnostics underneath.
+          </p>
+        </article>
+      </section>
+
+      <section class="examples">
+        <div class="section-head">
+          <span class="kicker">Rendered snapshots</span>
+          <h2>Representative output shapes</h2>
+        </div>
+        <div class="example-grid">
+          <article class="example-card">
+            <h3>Release Email</h3>
+            <pre><code>Subject: Moon Mustache 0.1.0 is live
+
+Hello maintainer,
+
+- Official fixture parity
+- CLI diagnostics
+- Vue playground
+
+Regards,
+MoonBit tooling team</code></pre>
+          </article>
+          <article class="example-card">
+            <h3>Scaffold Summary</h3>
+            <pre><code># moon-mustache
+
+- CLI rendering
+- Official spec coverage
+- Bundle planning
+
+Generated by moon-mustache.</code></pre>
+          </article>
+          <article class="example-card">
+            <h3>Bundle Validation</h3>
+            <pre><code>profile: dev
+templates: 3
+normalized outputs: clean
+duplicate targets: none
+missing partials: none</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="comparison">
+        <div class="section-head">
+          <span class="kicker">Positioning</span>
+          <h2>Why this project matters in MoonBit</h2>
+        </div>
+        <div class="comparison-grid">
+          <article class="comparison-card">
+            <h3>Compared with ad hoc string concatenation</h3>
+            <p>
+              Moon Mustache gives reusable template syntax, better diagnostics, partial reuse, and more
+              stable downstream workflows.
+            </p>
+          </article>
+          <article class="comparison-card">
+            <h3>Compared with a contest-only prototype</h3>
+            <p>
+              This repository includes package publication, reports, CI, governance, downstream proof,
+              and a browser-facing showcase layer.
+            </p>
+          </article>
+          <article class="comparison-card">
+            <h3>Compared with building a custom template language</h3>
+            <p>
+              Mustache semantics are smaller, easier to trust, and already familiar across ecosystems,
+              which lowers adoption friction for MoonBit users.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <a href="https://github.com/bellesz0611/moon-mustache/blob/main/README.md">README</a>
+        <a href="https://github.com/bellesz0611/moon-mustache/blob/main/docs/JUDGE_QUICKLOOK.md">Judge Quick Look</a>
+        <a href="https://github.com/bellesz0611/moon-mustache/blob/main/docs/COMPATIBILITY.md">Compatibility</a>
+        <a href="https://github.com/bellesz0611/moon-mustache/blob/main/docs/IMPLEMENTATION_STATUS.md">Implementation Status</a>
+      </footer>
+    </div>
+  </body>
+  </html>

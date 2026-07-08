@@ -38,6 +38,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - Vue playground demo backed by the repository's own MoonBit engine
 - independent playground build and API-bridge smoke workflow
 - repository governance and support documents for longer-term maintainability
+- static site deployment workflow for a lightweight public-facing showcase
 
 ## 4. Fastest verification path
 
