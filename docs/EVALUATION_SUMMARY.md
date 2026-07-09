@@ -4,8 +4,8 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 ## Why the project is now competitive
 
-- code scale has reached the competition's reference band, with about `8676` MoonBit lines across the core library, CLI, reports, demos, benchmarks, consumer demos, bridge code, and companion blueprint proof
-- handwritten implementation scale is already substantial on its own, with about `7162` MoonBit lines excluding the imported generated fixture asset
+- code scale has reached the competition's reference band, with about `8791` MoonBit lines across the core library, CLI, reports, demos, benchmarks, consumer demos, bridge code, and companion blueprint proof
+- handwritten implementation scale is already substantial on its own, with about `7277` MoonBit lines excluding the imported generated fixture asset
 - the project is not just a parser demo; it already covers reusable library APIs, a CLI, bundle generation, validation, reporting, and realistic scaffolding workflows
 - compatibility work is evidence-based instead of self-claimed, combining hand-written spec-style suites with imported upstream `mustache/spec` fixtures
 - engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, governance files, an interactive Vue playground, and a static showcase site for fast public review
@@ -13,7 +13,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 ## Hard evidence
 
-- `71` automated tests passing locally
+- `73` automated tests passing locally
 - `136 / 136` imported official `mustache/spec` fixtures passing
 - latest GitHub library CI and playground smoke workflows are green
 - GitHub and GitLink repositories are synchronized

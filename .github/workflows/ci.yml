@@ -85,7 +85,10 @@ jobs:
 
       - name: Run benchmark smoke test
         if: matrix.target == 'wasm-gc'
-        run: moon run --target ${{ matrix.target }} benchmarks
+        run: |
+          mkdir -p _ci_artifacts
+          moon run --target ${{ matrix.target }} benchmarks > _ci_artifacts/benchmarks.json
+          python scripts/summarize_benchmarks.py _ci_artifacts/benchmarks.json > _ci_artifacts/benchmarks.md
 
       - name: Run CLI file-flow smoke test
         if: matrix.target == 'js'
@@ -98,3 +101,10 @@ jobs:
       - name: Run CLI bundle validation smoke test
         if: matrix.target == 'js'
         run: moon run --target js cli --bundle-manifest-file examples/bundle/manifest.json --bundle-profile dev --json-file examples/bundle/context.json --bundle-check-only --bundle-validation-file _ci_bundle/validation.md --bundle-plan-file _ci_bundle/plan.md
+
+      - name: Upload benchmark artifacts
+        if: matrix.target == 'wasm-gc'
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-benchmarks-${{ github.sha }}
+          path: _ci_artifacts

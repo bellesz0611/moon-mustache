@@ -25,12 +25,15 @@ pub struct TemplateScanResult {
 }
 
 ///|
-fn push_unique_name(target : Array[String], name : String) -> Unit {
-  for existing in target {
-    if existing == name {
-      return
-    }
+fn push_unique_name(
+  target : Array[String],
+  seen : Map[String, Bool],
+  name : String,
+) -> Unit {
+  if seen.get_or_default(name, false) {
+    return
   }
+  seen[name] = true
   target.push(name)
 }
 
@@ -38,6 +41,8 @@ fn push_unique_name(target : Array[String], name : String) -> Unit {
 fn record_reference(
   data_names : Array[String],
   partial_names : Array[String],
+  seen_data_names : Map[String, Bool],
+  seen_partial_names : Map[String, Bool],
   references : Array[TemplateReference],
   kind : TemplateReferenceKind,
   name : String,
@@ -52,9 +57,10 @@ fn record_reference(
     return
   }
   match kind {
-    PartialReference => push_unique_name(partial_names, name)
+    PartialReference =>
+      push_unique_name(partial_names, seen_partial_names, name)
     _ => {
-      push_unique_name(data_names, name)
+      push_unique_name(data_names, seen_data_names, name)
       if name.contains(".") && dotted_name_markers.length() == 0 {
         dotted_name_markers.push(true)
       }
@@ -67,6 +73,8 @@ fn scan_nodes(
   nodes : Array[Node],
   data_names : Array[String],
   partial_names : Array[String],
+  seen_data_names : Map[String, Bool],
+  seen_partial_names : Map[String, Bool],
   references : Array[TemplateReference],
   current_context_markers : Array[Bool],
   dotted_name_markers : Array[Bool],
@@ -78,6 +86,8 @@ fn scan_nodes(
         record_reference(
           data_names,
           partial_names,
+          seen_data_names,
+          seen_partial_names,
           references,
           if escaped {
             VariableReference
@@ -92,6 +102,8 @@ fn scan_nodes(
         record_reference(
           data_names,
           partial_names,
+          seen_data_names,
+          seen_partial_names,
           references,
           if inverted {
             InvertedSectionReference
@@ -103,14 +115,16 @@ fn scan_nodes(
           dotted_name_markers,
         )
         scan_nodes(
-          children, data_names, partial_names, references, current_context_markers,
-          dotted_name_markers,
+          children, data_names, partial_names, seen_data_names, seen_partial_names,
+          references, current_context_markers, dotted_name_markers,
         )
       }
       Partial(name~, ..) =>
         record_reference(
           data_names,
           partial_names,
+          seen_data_names,
+          seen_partial_names,
           references,
           PartialReference,
           name,
@@ -127,6 +141,8 @@ pub fn scan_template_references(template : String) -> TemplateScanResult {
   let tokens = scan_template(template)
   let data_names : Array[String] = []
   let partial_names : Array[String] = []
+  let seen_data_names : Map[String, Bool] = {}
+  let seen_partial_names : Map[String, Bool] = {}
   let references : Array[TemplateReference] = []
   let current_context_markers : Array[Bool] = []
   let dotted_name_markers : Array[Bool] = []
@@ -136,6 +152,8 @@ pub fn scan_template_references(template : String) -> TemplateScanResult {
     parsed.nodes,
     data_names,
     partial_names,
+    seen_data_names,
+    seen_partial_names,
     references,
     current_context_markers,
     dotted_name_markers,

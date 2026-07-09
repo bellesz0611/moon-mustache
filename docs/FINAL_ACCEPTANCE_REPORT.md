@@ -31,9 +31,9 @@ The final project deliverable includes:
 
 Satisfied.
 
-- handwritten MoonBit code: about `7162` lines
+- handwritten MoonBit code: about `7277` lines
 - generated MoonBit fixture asset code: about `1514` lines
-- total MoonBit code in repo: about `8676` lines
+- total MoonBit code in repo: about `8791` lines
 
 ### 2. Public repositories and clear history
 
@@ -118,7 +118,7 @@ Locally verified during the final preparation stage:
 
 Observed results:
 
-- automated tests: `71 / 71` passing
+- automated tests: `73 / 73` passing
 - imported official `mustache/spec` fixtures: `136 / 136` passing
 - scenario report: passing
 - downstream consumer smoke test: passing

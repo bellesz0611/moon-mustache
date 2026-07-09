@@ -8,22 +8,22 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
-- generated at commit: `6d51d02`
-- public commit count: `44`
+- generated at commit: `267f541`
+- public commit count: `46`
 - MoonBit package: `bellesz0611/moon-mustache`
 - MoonBit toolchain used for the local verification snapshot: `moon 0.1.20260703 (6fbf8c3 2026-07-03) | Feature flags enabled: rr_moon_mod,rr_moon_pkg`
 
 ## Code scale
 
-- total MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof: `8689`
-- handwritten MoonBit LOC in those surfaces: `7175`
+- total MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof: `8791`
+- handwritten MoonBit LOC in those surfaces: `7277`
 - imported generated fixture asset LOC: `1514`
 
 ## Verification snapshot
 
-- automated tests passing: `71 / 71`
+- automated tests passing: `73 / 73`
 - local verification command: `moon test --deny-warn`
-- latest GitHub library workflow conclusion: `success (badge fallback)`
+- latest GitHub library workflow conclusion: `failure (badge fallback)`
 - latest GitHub library workflow URL: <https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml>
 
 ## Publication snapshot

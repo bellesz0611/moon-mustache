@@ -12,6 +12,11 @@ The following results were captured on the maintainer machine on `2026-07-09` us
 
 These values are useful for regression tracking inside the project, not for universal cross-machine comparison.
 
+The repository also publishes machine-readable benchmark artifacts from CI:
+
+- the default `check` workflow uploads `benchmarks.json` and `benchmarks.md` on the `wasm-gc` lane
+- the `release-readiness` workflow includes the same benchmark artifacts in its evaluator bundle
+
 ## Snapshot
 
 | Workload | Mean | Median | Runs | Batch Size |

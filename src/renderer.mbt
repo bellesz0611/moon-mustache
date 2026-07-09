@@ -241,14 +241,23 @@ fn render_section(
         match value {
           ArrayValue(items) =>
             if items.length() > 0 {
-              for item in items {
-                let next_stack = push_context(stack, item)
+              let next_stack = push_context(stack, items[0])
+              output.write_string(
+                render_nodes_with_stack(
+                  children, next_stack, partials, prepared_partials, partial_cache,
+                  depth, options, errors, missing_variables, missing_variable_set,
+                ),
+              )
+              let mut index = 1
+              while index < items.length() {
+                next_stack[next_stack.length() - 1] = items[index]
                 output.write_string(
                   render_nodes_with_stack(
                     children, next_stack, partials, prepared_partials, partial_cache,
                     depth, options, errors, missing_variables, missing_variable_set,
                   ),
                 )
+                index = index + 1
               }
             }
           _ =>
