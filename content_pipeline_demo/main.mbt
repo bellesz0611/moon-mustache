@@ -54,7 +54,9 @@ fn content_context() -> @src.Value {
       }),
       @src.Value::object({
         "title": @src.Value::string("Bundle planning"),
-        "summary": @src.Value::string("multi-file validation and plan reporting"),
+        "summary": @src.Value::string(
+          "multi-file validation and plan reporting",
+        ),
       }),
       @src.Value::object({
         "title": @src.Value::string("Playground"),
@@ -75,15 +77,20 @@ fn print_file(path : String, output : String) -> Unit {
 fn main {
   let manifest = @src.parse_bundle_manifest_json(content_manifest_json()).unwrap()
   let validation = @src.validate_bundle_manifest(manifest)
-  let result = @src.render_bundle_manifest_checked(
+  let prepared = @src.prepare_bundle_manifest_profile(
     manifest,
     content_context(),
-    @src.RenderOptions::strict(),
     profile_name="partners",
   ).unwrap()
+  let result = @src.render_prepared_bundle_manifest_checked(
+    prepared,
+    @src.RenderOptions::strict(),
+  )
   let plan = @src.build_bundle_plan("content-pipeline-kit", result, validation)
 
-  println(@src.format_validation_report_markdown("content-pipeline-kit", validation))
+  println(
+    @src.format_validation_report_markdown("content-pipeline-kit", validation),
+  )
   println("")
   println(@src.format_bundle_plan_markdown(plan))
   println("")

@@ -89,18 +89,21 @@ fn scenario_bundle_render() -> ScenarioResult {
 
 ///|
 fn scenario_manifest_profile() -> ScenarioResult {
-  let result = render_bundle_manifest_json_with_profile_checked(
+  let prepared = prepare_bundle_manifest_json_profile(
     sample_bundle_manifest_json(),
     "{\"project\":{\"name\":\"moon-mustache\"},\"features\":[\"cli\"]}",
-    RenderOptions::default(),
     profile_name="prod",
   )
-  match result {
-    Ok(bundle_result) => {
+  match prepared {
+    Ok(prepared_bundle) => {
+      let bundle_result = render_prepared_bundle_manifest_checked(
+        prepared_bundle,
+        RenderOptions::default(),
+      )
       let output = bundle_result.files[0].output
       {
         name: "manifest_profile",
-        description: "Bundle manifests can switch behavior by profile for real scaffolding workflows.",
+        description: "Bundle manifests can switch behavior by profile and still use a prepared render path for real scaffolding workflows.",
         passed: output.contains("APP_PORT=8080") &&
         output.contains("NETWORK=sample-net"),
         summary: output,
@@ -109,7 +112,7 @@ fn scenario_manifest_profile() -> ScenarioResult {
     Err(message) =>
       {
         name: "manifest_profile",
-        description: "Bundle manifests can switch behavior by profile for real scaffolding workflows.",
+        description: "Bundle manifests can switch behavior by profile and still use a prepared render path for real scaffolding workflows.",
         passed: false,
         summary: message,
       }

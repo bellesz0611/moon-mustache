@@ -27,7 +27,11 @@ pub fn build_bundle_plan(
     let normalized_path = match
       validation_result.normalized_paths.get(file.path) {
       Some(value) => value
-      None => file.path
+      None =>
+        match normalize_bundle_path(file.path) {
+          Ok(value) => value
+          Err(_) => file.path
+        }
     }
     files.push({
       original_path: file.path,

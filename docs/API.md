@@ -38,6 +38,14 @@ For versioning expectations, also read `docs/STABILITY.md`.
   Checked rendering with configurable diagnostics behavior.
 - `render_with_partials_checked_with_options(template, context, partials, options)`
   Same as above, with in-memory partials.
+- `prepare(template, partials)`
+  Parses the root template and precompiles unindented partials for repeated render paths.
+- `render_prepared(prepared, context)`
+  Renders a previously prepared template.
+- `render_prepared_checked(prepared, context)`
+  Checked rendering for a previously prepared template.
+- `render_prepared_checked_with_options(prepared, context, options)`
+  Prepared rendering with explicit diagnostics options.
 
 ## Render options and diagnostics
 
@@ -65,6 +73,10 @@ Use checked APIs when embedding Moon Mustache into generators, CI checks, or sca
   Checked JSON rendering.
 - `render_json_checked_with_options(template, context_json, partials, options)`
   Checked JSON rendering with explicit options.
+- `render_prepared_json_checked(prepared, context_json)`
+  Checked JSON rendering for a previously prepared template.
+- `render_prepared_json_checked_with_options(prepared, context_json, options)`
+  Prepared JSON rendering with explicit options.
 - `render_json_bundle_checked(template, context_json, partials_json)`
   Checked rendering when both context and partials come from JSON strings.
 - `render_json_bundle_checked_with_options(template, context_json, partials_json, options)`
@@ -97,18 +109,29 @@ The library context model is intentionally explicit:
 
 - `TemplateFile::new(path, template)`
 - `TemplateBundle::new(files, partials)`
+- `PreparedTemplateFile::new(path, template)`
+- `PreparedTemplateBundle::new(bundle)`
+- `prepare_template_bundle(bundle)`
 - `render_template_file_checked(file, context, partials, options)`
 - `render_template_bundle_checked(bundle, context, options)`
 - `render_template_bundle_json_checked(bundle, context_json, options)`
+- `render_prepared_template_file_checked(file, context, partials, options)`
+- `render_prepared_template_bundle_checked(bundle, context, options)`
+- `render_prepared_template_bundle_json_checked(bundle, context_json, options)`
 - `bundle_has_issues(result)`
 
 These APIs are intended for scaffolding tools, configuration generators, and any workflow that needs to render multiple text artifacts from one shared context.
+
+Bundle file paths are rendered through the same context before output is produced, and rendered paths are validated so unsafe results such as parent traversal still surface as diagnostics.
 
 ## Manifest-driven bundle rendering
 
 - `parse_bundle_manifest_json(json)`
 - `resolve_bundle_manifest_profile(manifest, runtime_context, profile_name)`
+- `prepare_bundle_manifest_profile(manifest, runtime_context, profile_name)`
+- `render_prepared_bundle_manifest_checked(prepared, options)`
 - `render_bundle_manifest_checked(manifest, runtime_context, options, profile_name=...)`
+- `prepare_bundle_manifest_json_profile(manifest_json, context_json, profile_name=...)`
 - `render_bundle_manifest_json_with_profile_checked(manifest_json, context_json, options, profile_name=...)`
 - `sample_bundle_manifest_json()`
 
@@ -145,3 +168,4 @@ These helpers are useful, but should currently be treated as faster-evolving tha
 - Checked APIs preserve output while also surfacing diagnostics.
 - Strict options can additionally report missing variables without changing rendered output semantics.
 - Partial recursion is protected by a depth limit.
+- Prepared template APIs avoid reparsing the same root template on every render call and reduce repeated partial parse work in high-reuse flows.

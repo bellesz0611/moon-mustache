@@ -9,6 +9,56 @@ pub struct RenderResult {
 }
 
 ///|
+pub struct PreparedPartials {
+  templates : Map[String, String]
+  compiled : Map[String, ParseResult]
+}
+
+///|
+pub struct PreparedTemplate {
+  nodes : Array[Node]
+  errors : Array[String]
+  partials : PreparedPartials
+}
+
+///|
+pub fn PreparedPartials::new(
+  partials : Map[String, String],
+) -> PreparedPartials {
+  let compiled : Map[String, ParseResult] = {}
+  for name, template in partials {
+    compiled[name] = parse_template(template)
+  }
+  { templates: partials, compiled }
+}
+
+///|
+pub fn PreparedTemplate::new(
+  template : String,
+  partials : Map[String, String],
+) -> PreparedTemplate {
+  let parsed = parse_template(template)
+  {
+    nodes: parsed.nodes,
+    errors: parsed.errors,
+    partials: PreparedPartials::new(partials),
+  }
+}
+
+///|
+pub fn prepare_partials(partials : Map[String, String]) -> PreparedPartials {
+  PreparedPartials::new(partials)
+}
+
+///|
+pub fn prepare_template(
+  template : String,
+  partials : Map[String, String],
+) -> PreparedTemplate {
+  PreparedTemplate::new(template, partials)
+}
+
+///|
 fn render_value(output : StringBuilder, value : Value, escaped : Bool) -> Unit {
   let text = value_to_string(value)
   if escaped {
@@ -52,12 +102,69 @@ fn indent_partial_template(template : String, indentation : String) -> String {
 }
 
 ///|
+fn partial_cache_key(name : String, indentation : String?) -> String {
+  match indentation {
+    Some(indent) =>
+      if indent == "" {
+        name
+      } else {
+        name + "\n--indent--\n" + indent
+      }
+    None => name
+  }
+}
+
+///|
+fn resolve_partial_parse(
+  name : String,
+  indentation : String?,
+  partials : Map[String, String],
+  prepared_partials : Map[String, ParseResult],
+  partial_cache : Map[String, ParseResult],
+) -> ParseResult? {
+  let cache_key = partial_cache_key(name, indentation)
+  match partial_cache.get(cache_key) {
+    Some(parsed) => Some(parsed)
+    None =>
+      if cache_key == name {
+        match prepared_partials.get(name) {
+          Some(parsed) => Some(parsed)
+          None =>
+            match partials.get(name) {
+              Some(template) => {
+                let parsed = parse_template(template)
+                partial_cache[cache_key] = parsed
+                Some(parsed)
+              }
+              None => None
+            }
+        }
+      } else {
+        match partials.get(name) {
+          Some(template) => {
+            let indented_template = match indentation {
+              Some(indent) => indent_partial_template(template, indent)
+              None => template
+            }
+            let parsed = parse_template(indented_template)
+            partial_cache[cache_key] = parsed
+            Some(parsed)
+          }
+          None => None
+        }
+      }
+  }
+}
+
+///|
 fn render_partial(
   output : StringBuilder,
   stack : Array[Value],
   name : String,
   indentation : String?,
   partials : Map[String, String],
+  prepared_partials : Map[String, ParseResult],
+  partial_cache : Map[String, ParseResult],
   depth : Int,
   options : RenderOptions,
   errors : Array[String],
@@ -67,13 +174,11 @@ fn render_partial(
     errors.push("partial depth limit exceeded: " + name)
     return
   }
-  match partials.get(name) {
-    Some(template) => {
-      let indented_template = match indentation {
-        Some(indent) => indent_partial_template(template, indent)
-        None => template
-      }
-      let parsed = parse_template(indented_template)
+  match
+    resolve_partial_parse(
+      name, indentation, partials, prepared_partials, partial_cache,
+    ) {
+    Some(parsed) => {
       for error in parsed.errors {
         errors.push("partial " + name + ": " + error)
       }
@@ -81,6 +186,8 @@ fn render_partial(
         parsed.nodes,
         stack,
         partials,
+        prepared_partials,
+        partial_cache,
         depth + 1,
         options,
         errors,
@@ -100,6 +207,8 @@ fn render_section(
   inverted : Bool,
   children : Array[Node],
   partials : Map[String, String],
+  prepared_partials : Map[String, ParseResult],
+  partial_cache : Map[String, ParseResult],
   depth : Int,
   options : RenderOptions,
   errors : Array[String],
@@ -110,7 +219,8 @@ fn render_section(
       if inverted {
         output.write_string(
           render_nodes_with_stack(
-            children, stack, partials, depth, options, errors, missing_variables,
+            children, stack, partials, prepared_partials, partial_cache, depth, options,
+            errors, missing_variables,
           ),
         )
       }
@@ -119,7 +229,8 @@ fn render_section(
         if !is_truthy(value) {
           output.write_string(
             render_nodes_with_stack(
-              children, stack, partials, depth, options, errors, missing_variables,
+              children, stack, partials, prepared_partials, partial_cache, depth,
+              options, errors, missing_variables,
             ),
           )
         }
@@ -131,7 +242,8 @@ fn render_section(
                 let next_stack = push_context(stack, item)
                 output.write_string(
                   render_nodes_with_stack(
-                    children, next_stack, partials, depth, options, errors, missing_variables,
+                    children, next_stack, partials, prepared_partials, partial_cache,
+                    depth, options, errors, missing_variables,
                   ),
                 )
               }
@@ -141,7 +253,8 @@ fn render_section(
               let next_stack = push_context(stack, value)
               output.write_string(
                 render_nodes_with_stack(
-                  children, next_stack, partials, depth, options, errors, missing_variables,
+                  children, next_stack, partials, prepared_partials, partial_cache,
+                  depth, options, errors, missing_variables,
                 ),
               )
             }
@@ -155,6 +268,8 @@ fn render_nodes_with_stack(
   nodes : Array[Node],
   stack : Array[Value],
   partials : Map[String, String],
+  prepared_partials : Map[String, ParseResult],
+  partial_cache : Map[String, ParseResult],
   depth : Int,
   options : RenderOptions,
   errors : Array[String],
@@ -174,13 +289,14 @@ fn render_nodes_with_stack(
         }
       Section(name~, inverted~, children~) =>
         render_section(
-          output, stack, name, inverted, children, partials, depth, options, errors,
-          missing_variables,
+          output, stack, name, inverted, children, partials, prepared_partials, partial_cache,
+          depth, options, errors, missing_variables,
         )
       Comment(_) => ()
       Partial(name~, indentation~) =>
         render_partial(
-          output, stack, name, indentation, partials, depth, options, errors, missing_variables,
+          output, stack, name, indentation, partials, prepared_partials, partial_cache,
+          depth, options, errors, missing_variables,
         )
     }
   }
@@ -246,12 +362,62 @@ pub fn render_nodes_checked_with_options(
   partials : Map[String, String],
   options : RenderOptions,
 ) -> RenderResult {
+  let partial_cache : Map[String, ParseResult] = {}
   let errors : Array[String] = []
   let missing_variables : Array[String] = []
   let output = render_nodes_with_stack(
     nodes,
     [context],
     partials,
+    {},
+    partial_cache,
+    0,
+    options,
+    errors,
+    missing_variables,
+  )
+  { output, errors, missing_variables }
+}
+
+///|
+pub fn render_prepared_template(
+  prepared : PreparedTemplate,
+  context : Value,
+) -> String {
+  render_prepared_template_checked_with_options(
+    prepared,
+    context,
+    RenderOptions::default(),
+  ).output
+}
+
+///|
+pub fn render_prepared_template_checked(
+  prepared : PreparedTemplate,
+  context : Value,
+) -> RenderResult {
+  render_prepared_template_checked_with_options(
+    prepared,
+    context,
+    RenderOptions::default(),
+  )
+}
+
+///|
+pub fn render_prepared_template_checked_with_options(
+  prepared : PreparedTemplate,
+  context : Value,
+  options : RenderOptions,
+) -> RenderResult {
+  let partial_cache : Map[String, ParseResult] = {}
+  let errors = prepared.errors.copy()
+  let missing_variables : Array[String] = []
+  let output = render_nodes_with_stack(
+    prepared.nodes,
+    [context],
+    prepared.partials.templates,
+    prepared.partials.compiled,
+    partial_cache,
     0,
     options,
     errors,
@@ -295,12 +461,15 @@ pub fn render_string_with_partials_checked_with_options(
   options : RenderOptions,
 ) -> RenderResult {
   let parsed = parse_template(template)
+  let partial_cache : Map[String, ParseResult] = {}
   let errors = parsed.errors.copy()
   let missing_variables : Array[String] = []
   let output = render_nodes_with_stack(
     parsed.nodes,
     [context],
     partials,
+    {},
+    partial_cache,
     0,
     options,
     errors,

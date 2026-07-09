@@ -19,6 +19,12 @@ pub struct ResolvedBundleManifest {
 }
 
 ///|
+pub struct PreparedResolvedBundleManifest {
+  bundle : PreparedTemplateBundle
+  context : Value
+}
+
+///|
 fn json_string_field(
   object : Map[String, Json],
   name : String,
@@ -255,6 +261,35 @@ pub fn render_bundle_manifest_checked(
 }
 
 ///|
+pub fn prepare_bundle_manifest_profile(
+  manifest : BundleManifest,
+  runtime_context : Value,
+  profile_name? : String = "",
+) -> Result[PreparedResolvedBundleManifest, String] {
+  let resolved = match
+    resolve_bundle_manifest_profile(manifest, runtime_context, profile_name~) {
+    Ok(value) => value
+    Err(message) => return Err(message)
+  }
+  Ok({
+    bundle: prepare_template_bundle(resolved.bundle),
+    context: resolved.context,
+  })
+}
+
+///|
+pub fn render_prepared_bundle_manifest_checked(
+  prepared : PreparedResolvedBundleManifest,
+  options : RenderOptions,
+) -> BundleRenderResult {
+  render_prepared_template_bundle_checked(
+    prepared.bundle,
+    prepared.context,
+    options,
+  )
+}
+
+///|
 pub fn render_bundle_manifest_json_checked(
   manifest_json : String,
   context_json : String,
@@ -285,6 +320,22 @@ pub fn render_bundle_manifest_json_with_profile_checked(
     options,
     profile_name~,
   )
+}
+
+///|
+pub fn prepare_bundle_manifest_json_profile(
+  manifest_json : String,
+  context_json : String,
+  profile_name? : String = "",
+) -> Result[PreparedResolvedBundleManifest, String] {
+  let manifest = match parse_bundle_manifest_json(manifest_json) {
+    Ok(value) => value
+    Err(message) => return Err(message)
+  }
+  let runtime_context = parse_json_context(context_json) catch {
+    err => return Err("invalid JSON context: " + err.to_string())
+  }
+  prepare_bundle_manifest_profile(manifest, runtime_context, profile_name~)
 }
 
 ///|

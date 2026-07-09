@@ -75,15 +75,20 @@ fn print_file(path : String, output : String) -> Unit {
 fn main {
   let manifest = @src.parse_bundle_manifest_json(starter_manifest_json()).unwrap()
   let validation = @src.validate_bundle_manifest(manifest)
-  let result = @src.render_bundle_manifest_checked(
+  let prepared = @src.prepare_bundle_manifest_profile(
     manifest,
     starter_context(),
-    @src.RenderOptions::strict(),
     profile_name="template",
   ).unwrap()
+  let result = @src.render_prepared_bundle_manifest_checked(
+    prepared,
+    @src.RenderOptions::strict(),
+  )
   let plan = @src.build_bundle_plan("starter-repo-kit", result, validation)
 
-  println(@src.format_validation_report_markdown("starter-repo-kit", validation))
+  println(
+    @src.format_validation_report_markdown("starter-repo-kit", validation),
+  )
   println("")
   println(@src.format_bundle_plan_markdown(plan))
   println("")

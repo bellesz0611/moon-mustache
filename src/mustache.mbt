@@ -4,6 +4,14 @@ pub fn parse(template : String) -> ParseResult {
 }
 
 ///|
+pub fn prepare(
+  template : String,
+  partials : Map[String, String],
+) -> PreparedTemplate {
+  prepare_template(template, partials)
+}
+
+///|
 pub fn render(template : String, context : Value) -> String {
   render_string(template, context)
 }
@@ -55,6 +63,28 @@ pub fn render_with_partials_checked_with_options(
   render_string_with_partials_checked_with_options(
     template, context, partials, options,
   )
+}
+
+///|
+pub fn render_prepared(prepared : PreparedTemplate, context : Value) -> String {
+  render_prepared_template(prepared, context)
+}
+
+///|
+pub fn render_prepared_checked(
+  prepared : PreparedTemplate,
+  context : Value,
+) -> RenderResult {
+  render_prepared_template_checked(prepared, context)
+}
+
+///|
+pub fn render_prepared_checked_with_options(
+  prepared : PreparedTemplate,
+  context : Value,
+  options : RenderOptions,
+) -> RenderResult {
+  render_prepared_template_checked_with_options(prepared, context, options)
 }
 
 ///|
@@ -124,6 +154,35 @@ pub fn render_json_checked_with_options(
   render_with_partials_checked_with_options(
     template, context, partials, options,
   )
+}
+
+///|
+pub fn render_prepared_json_checked(
+  prepared : PreparedTemplate,
+  context_json : String,
+) -> RenderResult {
+  render_prepared_json_checked_with_options(
+    prepared,
+    context_json,
+    RenderOptions::default(),
+  )
+}
+
+///|
+pub fn render_prepared_json_checked_with_options(
+  prepared : PreparedTemplate,
+  context_json : String,
+  options : RenderOptions,
+) -> RenderResult {
+  let context = parse_json_context(context_json) catch {
+    err =>
+      return {
+        output: "",
+        errors: ["invalid JSON context: " + err.to_string()],
+        missing_variables: [],
+      }
+  }
+  render_prepared_checked_with_options(prepared, context, options)
 }
 
 ///|

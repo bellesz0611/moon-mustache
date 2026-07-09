@@ -52,6 +52,17 @@ fn bench_partial_render(bencher : @bench.Bench) -> Unit {
 }
 
 ///|
+fn bench_prepared_partial_render(bencher : @bench.Bench) -> Unit {
+  let context = benchmark_context()
+  let partials : Map[String, String] = { "user": "[{{name}}:{{role}}]" }
+  let prepared = @src.prepare("{{#users}}{{> user}}{{/users}}", partials)
+  bencher.bench(name="prepared_partial_render", count=10, fn() {
+    let output = @src.render_prepared(prepared, context)
+    bencher.keep(output)
+  })
+}
+
+///|
 fn bench_json_bundle_render(bencher : @bench.Bench) -> Unit {
   let template = "{{#users}}{{> user}}{{/users}}"
   let context_json = "{\"users\":[{\"name\":\"Alice\",\"role\":\"admin\"},{\"name\":\"Bob\",\"role\":\"developer\"}]}"
@@ -70,6 +81,7 @@ fn main {
   bench_plain_render(bencher)
   bench_section_render(bencher)
   bench_partial_render(bencher)
+  bench_prepared_partial_render(bencher)
   bench_json_bundle_render(bencher)
   println(bencher.dump_summaries())
 }

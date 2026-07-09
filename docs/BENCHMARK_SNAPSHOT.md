@@ -16,17 +16,21 @@ These values are useful for regression tracking inside the project, not for univ
 
 | Workload | Mean | Median | Runs | Batch Size |
 | --- | ---: | ---: | ---: | ---: |
-| `plain_render` | `0.7229649950` | `0.7062770000` | `10` | `100000` |
-| `section_render` | `2.3239005689` | `2.3280004841` | `10` | `41310` |
-| `partial_render` | `5.2394348367` | `5.2804038107` | `10` | `23303` |
-| `json_bundle_render` | `6.2823793469` | `6.2004981680` | `10` | `15557` |
+| `plain_render` | `0.7882100050` | `0.7635460000` | `10` | `100000` |
+| `section_render` | `2.6859206600` | `2.6278902172` | `10` | `29695` |
+| `partial_render` | `3.3048493345` | `3.2523716508` | `10` | `28925` |
+| `prepared_partial_render` | `1.5300593877` | `1.5283853027` | `10` | `61671` |
+| `json_bundle_render` | `4.8422745870` | `4.7944233074` | `10` | `19187` |
 
 ## Interpretation
 
 - `plain_render` gives the simplest baseline for escaped interpolation
 - `section_render` reflects looping and repeated context lookup
 - `partial_render` captures fragment reuse overhead
+- `prepared_partial_render` measures the compile-once/render-many path and shows the benefit of prepared APIs under repeated partial expansion
 - `json_bundle_render` covers a heavier integration path closer to real workflow use
+
+On the current maintainer machine, `prepared_partial_render` is about `2.16x` faster than the regular `partial_render` path in this benchmark.
 
 ## Why this page exists
 

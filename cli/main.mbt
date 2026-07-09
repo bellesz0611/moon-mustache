@@ -515,8 +515,9 @@ fn handle_bundle_mode(
     resolved.bundle.files,
     merged_partials,
   )
-  let result = @src.render_template_bundle_checked(
-    final_bundle,
+  let prepared_bundle = @src.prepare_template_bundle(final_bundle)
+  let result = @src.render_prepared_template_bundle_checked(
+    prepared_bundle,
     resolved.context,
     render_options,
   )
@@ -529,9 +530,10 @@ fn handle_bundle_mode(
   if all_errors.length() > 0 {
     print_diagnostics(all_errors)
     if flag_enabled(matches, "strict") ||
+      result.errors.length() > 0 ||
       @src.validation_has_errors(validation_result) {
       println(
-        "No bundle files were written because strict mode or validation errors blocked output.",
+        "No bundle files were written because strict mode, render errors, or validation errors blocked output.",
       )
       return
     }
@@ -627,8 +629,9 @@ fn handle_single_template_mode(
     partials
   }
 
-  let result = @src.render_with_partials_checked_with_options(
-    template, context, resolved_partials, render_options,
+  let prepared = @src.prepare(template, resolved_partials)
+  let result = @src.render_prepared_checked_with_options(
+    prepared, context, render_options,
   )
   let all_errors = template_errors.copy()
   for error in context_errors {
