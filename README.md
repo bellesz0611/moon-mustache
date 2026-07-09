@@ -49,7 +49,7 @@ moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
 - workflow entrypoints: [library CI](https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml) and [playground smoke workflow](https://github.com/bellesz0611/moon-mustache/actions/workflows/playground.yml)
 - benchmark artifacts: the default library CI now uploads `benchmarks.json` and `benchmarks.md` from the `wasm-gc` lane
 - release-readiness workflow: [artifact-oriented verification](https://github.com/bellesz0611/moon-mustache/actions/workflows/release-readiness.yml)
-- static showcase site workflow: [GitHub Pages deployment](https://github.com/bellesz0611/moon-mustache/actions/workflows/site.yml)
+- static showcase site workflow: [artifact-packaged site preview](https://github.com/bellesz0611/moon-mustache/actions/workflows/site.yml)
 - evaluator quick-look page: [docs/JUDGE_QUICKLOOK.md](D:/CCF/moonbit/docs/JUDGE_QUICKLOOK.md)
 - canonical generated metrics snapshot: [docs/METRICS_SNAPSHOT.md](D:/CCF/moonbit/docs/METRICS_SNAPSHOT.md)
 - site pages in repo: [site/index.html](D:/CCF/moonbit/site/index.html), [site/adoption.html](D:/CCF/moonbit/site/adoption.html), [site/faq.html](D:/CCF/moonbit/site/faq.html)

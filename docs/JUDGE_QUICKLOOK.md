@@ -46,7 +46,7 @@ For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
 - Vue playground demo backed by the repository's own MoonBit engine
 - independent playground build and API-bridge smoke workflow
 - repository governance and support documents for longer-term maintainability
-- static site deployment workflow for a lightweight public-facing showcase
+- static site packaging workflow for a lightweight public-facing showcase artifact
 - benchmark snapshot documentation for regression-oriented review
 - release-history documentation showing the recent project maturation path
 - FAQ and design-choice documentation explaining project boundaries and rationale

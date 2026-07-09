@@ -8,8 +8,8 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
-- generated at commit: `267f541`
-- public commit count: `46`
+- generated at commit: `9f869ad`
+- public commit count: `47`
 - MoonBit package: `bellesz0611/moon-mustache`
 - MoonBit toolchain used for the local verification snapshot: `moon 0.1.20260703 (6fbf8c3 2026-07-03) | Feature flags enabled: rr_moon_mod,rr_moon_pkg`
 
@@ -23,7 +23,7 @@ python scripts/generate_metrics_snapshot.py
 
 - automated tests passing: `73 / 73`
 - local verification command: `moon test --deny-warn`
-- latest GitHub library workflow conclusion: `failure (badge fallback)`
+- latest GitHub library workflow conclusion: `success (badge fallback)`
 - latest GitHub library workflow URL: <https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml>
 
 ## Publication snapshot

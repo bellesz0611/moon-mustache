@@ -87,16 +87,9 @@ def latest_workflow_status() -> tuple[str, str, str]:
     actions_url = f"https://github.com/{GITHUB_REPO}/actions/workflows/ci.yml"
     try:
         payload = fetch_json(
-            f"https://api.github.com/repos/{GITHUB_REPO}/actions/runs?per_page=10"
+            f"https://api.github.com/repos/{GITHUB_REPO}/actions/workflows/ci.yml/runs?per_page=1"
         )
         runs = payload.get("workflow_runs", [])
-        for run_info in runs:
-            if run_info.get("name") == "check":
-                return (
-                    run_info.get("conclusion", "unknown"),
-                    run_info.get("head_sha", "")[:7],
-                    run_info.get("html_url", actions_url),
-                )
         if runs:
             run_info = runs[0]
             return (

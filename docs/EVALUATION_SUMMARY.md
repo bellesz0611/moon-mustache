@@ -25,7 +25,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - `moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan` demonstrates template reference scanning as a first-class library and CLI feature
 - `npm run smoke` in `playground/` verifies the Vue demo through the real MoonBit render bridge
 - repository collaboration surfaces now include `CODE_OF_CONDUCT.md`, `GOVERNANCE.md`, `SECURITY.md`, `SUPPORT.md`, `PROGRESS.md`, issue templates, and a PR template
-- a GitHub Pages workflow now deploys a static site surface under `site/` for low-friction evaluator browsing
+- a dedicated site workflow now packages the static showcase under `site/` as a downloadable preview artifact for low-friction evaluator browsing
 - benchmark notes now include a concrete repository-local snapshot in `docs/BENCHMARK_SNAPSHOT.md`
 - release evolution is now summarized in `docs/RELEASE_HISTORY.md` so the repository shows visible iteration rather than a single static drop
 - FAQ and design-choice documentation now make project boundaries and tradeoffs easier to understand during review
