@@ -88,22 +88,26 @@ pub fn prepare_template_bundle(
 }
 
 ///|
-fn record_unique_name(items : Array[String], name : String) -> Unit {
-  for existing in items {
-    if existing == name {
-      return
-    }
+fn record_unique_name(
+  items : Array[String],
+  seen : Map[String, Bool],
+  name : String,
+) -> Unit {
+  if seen.get_or_default(name, false) {
+    return
   }
+  seen[name] = true
   items.push(name)
 }
 
 ///|
 fn append_unique_names(
   target : Array[String],
+  seen : Map[String, Bool],
   incoming : Array[String],
 ) -> Unit {
   for name in incoming {
-    record_unique_name(target, name)
+    record_unique_name(target, seen, name)
   }
 }
 
@@ -125,8 +129,17 @@ fn build_generated_file(
     errors.push(error)
   }
   let missing_variables : Array[String] = []
-  append_unique_names(missing_variables, rendered_path.missing_variables)
-  append_unique_names(missing_variables, rendered_output.missing_variables)
+  let missing_variable_set : Map[String, Bool] = {}
+  append_unique_names(
+    missing_variables,
+    missing_variable_set,
+    rendered_path.missing_variables,
+  )
+  append_unique_names(
+    missing_variables,
+    missing_variable_set,
+    rendered_output.missing_variables,
+  )
   let path = if rendered_path.output == "" {
     fallback_path
   } else {
@@ -202,6 +215,7 @@ pub fn render_prepared_template_bundle_checked(
   let rendered_files : Array[GeneratedFile] = []
   let bundle_errors : Array[String] = []
   let bundle_missing_variables : Array[String] = []
+  let bundle_missing_variable_set : Map[String, Bool] = {}
   for file in bundle.files {
     let rendered = render_prepared_template_file_checked(
       file,
@@ -213,7 +227,9 @@ pub fn render_prepared_template_bundle_checked(
       bundle_errors.push(rendered.path + ": " + error)
     }
     for name in rendered.missing_variables {
-      record_unique_name(bundle_missing_variables, name)
+      record_unique_name(
+        bundle_missing_variables, bundle_missing_variable_set, name,
+      )
     }
     rendered_files.push(rendered)
   }

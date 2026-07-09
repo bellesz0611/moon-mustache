@@ -350,6 +350,20 @@ test "render_checked_with_options reports missing variables" {
 }
 
 ///|
+test "render_checked_with_options deduplicates repeated missing variables" {
+  let result = render_checked_with_options(
+    "{{name}}/{{name}}/{{owner}}/{{name}}",
+    Value::empty_object(),
+    RenderOptions::strict(),
+  )
+  inspect(result.output, content="///")
+  inspect(result.errors.length(), content="0")
+  inspect(result.missing_variables.length(), content="2")
+  inspect(result.missing_variables[0], content="name")
+  inspect(result.missing_variables[1], content="owner")
+}
+
+///|
 test "render_json_checked_with_options preserves parse diagnostics" {
   let result = render_json_checked_with_options(
     "{{name}}",
@@ -438,6 +452,25 @@ test "render_template_bundle_checked aggregates missing variables" {
   inspect(result.missing_variables.length(), content="2")
   inspect(result.missing_variables[0], content="name")
   inspect(result.missing_variables[1], content="owner")
+}
+
+///|
+test "render_template_bundle_checked deduplicates path and body misses" {
+  let bundle = TemplateBundle::new(
+    [TemplateFile::new("deploy/{{name}}/README.md", "{{name}}\n{{name}}\n")],
+    {},
+  )
+  let result = render_template_bundle_checked(
+    bundle,
+    Value::empty_object(),
+    RenderOptions::strict(),
+  )
+  inspect(result.errors.length(), content="0")
+  inspect(result.files.length(), content="1")
+  inspect(result.files[0].missing_variables.length(), content="1")
+  inspect(result.files[0].missing_variables[0], content="name")
+  inspect(result.missing_variables.length(), content="1")
+  inspect(result.missing_variables[0], content="name")
 }
 
 ///|

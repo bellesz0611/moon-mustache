@@ -71,13 +71,13 @@ fn render_value(output : StringBuilder, value : Value, escaped : Bool) -> Unit {
 ///|
 fn record_missing_variable(
   missing_variables : Array[String],
+  missing_variable_set : Map[String, Bool],
   name : String,
 ) -> Unit {
-  for existing in missing_variables {
-    if existing == name {
-      return
-    }
+  if missing_variable_set.get_or_default(name, false) {
+    return
   }
+  missing_variable_set[name] = true
   missing_variables.push(name)
 }
 
@@ -169,6 +169,7 @@ fn render_partial(
   options : RenderOptions,
   errors : Array[String],
   missing_variables : Array[String],
+  missing_variable_set : Map[String, Bool],
 ) -> Unit {
   if depth >= options.partial_depth_limit {
     errors.push("partial depth limit exceeded: " + name)
@@ -192,6 +193,7 @@ fn render_partial(
         options,
         errors,
         missing_variables,
+        missing_variable_set,
       )
       output.write_string(rendered)
     }
@@ -213,6 +215,7 @@ fn render_section(
   options : RenderOptions,
   errors : Array[String],
   missing_variables : Array[String],
+  missing_variable_set : Map[String, Bool],
 ) -> Unit {
   match lookup_name(stack, name) {
     None =>
@@ -220,7 +223,7 @@ fn render_section(
         output.write_string(
           render_nodes_with_stack(
             children, stack, partials, prepared_partials, partial_cache, depth, options,
-            errors, missing_variables,
+            errors, missing_variables, missing_variable_set,
           ),
         )
       }
@@ -230,7 +233,7 @@ fn render_section(
           output.write_string(
             render_nodes_with_stack(
               children, stack, partials, prepared_partials, partial_cache, depth,
-              options, errors, missing_variables,
+              options, errors, missing_variables, missing_variable_set,
             ),
           )
         }
@@ -243,7 +246,7 @@ fn render_section(
                 output.write_string(
                   render_nodes_with_stack(
                     children, next_stack, partials, prepared_partials, partial_cache,
-                    depth, options, errors, missing_variables,
+                    depth, options, errors, missing_variables, missing_variable_set,
                   ),
                 )
               }
@@ -254,7 +257,7 @@ fn render_section(
               output.write_string(
                 render_nodes_with_stack(
                   children, next_stack, partials, prepared_partials, partial_cache,
-                  depth, options, errors, missing_variables,
+                  depth, options, errors, missing_variables, missing_variable_set,
                 ),
               )
             }
@@ -274,6 +277,7 @@ fn render_nodes_with_stack(
   options : RenderOptions,
   errors : Array[String],
   missing_variables : Array[String],
+  missing_variable_set : Map[String, Bool],
 ) -> String {
   let output = StringBuilder::new()
   for node in nodes {
@@ -284,19 +288,21 @@ fn render_nodes_with_stack(
           Some(value) => render_value(output, value, escaped)
           None =>
             if options.report_missing_variables {
-              record_missing_variable(missing_variables, name)
+              record_missing_variable(
+                missing_variables, missing_variable_set, name,
+              )
             }
         }
       Section(name~, inverted~, children~) =>
         render_section(
           output, stack, name, inverted, children, partials, prepared_partials, partial_cache,
-          depth, options, errors, missing_variables,
+          depth, options, errors, missing_variables, missing_variable_set,
         )
       Comment(_) => ()
       Partial(name~, indentation~) =>
         render_partial(
           output, stack, name, indentation, partials, prepared_partials, partial_cache,
-          depth, options, errors, missing_variables,
+          depth, options, errors, missing_variables, missing_variable_set,
         )
     }
   }
@@ -365,6 +371,7 @@ pub fn render_nodes_checked_with_options(
   let partial_cache : Map[String, ParseResult] = {}
   let errors : Array[String] = []
   let missing_variables : Array[String] = []
+  let missing_variable_set : Map[String, Bool] = {}
   let output = render_nodes_with_stack(
     nodes,
     [context],
@@ -375,6 +382,7 @@ pub fn render_nodes_checked_with_options(
     options,
     errors,
     missing_variables,
+    missing_variable_set,
   )
   { output, errors, missing_variables }
 }
@@ -412,6 +420,7 @@ pub fn render_prepared_template_checked_with_options(
   let partial_cache : Map[String, ParseResult] = {}
   let errors = prepared.errors.copy()
   let missing_variables : Array[String] = []
+  let missing_variable_set : Map[String, Bool] = {}
   let output = render_nodes_with_stack(
     prepared.nodes,
     [context],
@@ -422,6 +431,7 @@ pub fn render_prepared_template_checked_with_options(
     options,
     errors,
     missing_variables,
+    missing_variable_set,
   )
   { output, errors, missing_variables }
 }
@@ -464,6 +474,7 @@ pub fn render_string_with_partials_checked_with_options(
   let partial_cache : Map[String, ParseResult] = {}
   let errors = parsed.errors.copy()
   let missing_variables : Array[String] = []
+  let missing_variable_set : Map[String, Bool] = {}
   let output = render_nodes_with_stack(
     parsed.nodes,
     [context],
@@ -474,6 +485,7 @@ pub fn render_string_with_partials_checked_with_options(
     options,
     errors,
     missing_variables,
+    missing_variable_set,
   )
   { output, errors, missing_variables }
 }

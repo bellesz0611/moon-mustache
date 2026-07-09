@@ -76,6 +76,19 @@ fn bench_json_bundle_render(bencher : @bench.Bench) -> Unit {
 }
 
 ///|
+fn bench_strict_missing_render(bencher : @bench.Bench) -> Unit {
+  let template = "{{name}}/{{name}}/{{owner}}/{{name}}/{{owner}}/{{team}}/{{team}}/{{name}}"
+  bencher.bench(name="strict_missing_render", count=10, fn() {
+    let result = @src.render_checked_with_options(
+      template,
+      @src.Value::empty_object(),
+      @src.RenderOptions::strict(),
+    )
+    bencher.keep(result.output + result.missing_variables.length().to_string())
+  })
+}
+
+///|
 fn main {
   let bencher = @bench.Bench()
   bench_plain_render(bencher)
@@ -83,5 +96,6 @@ fn main {
   bench_partial_render(bencher)
   bench_prepared_partial_render(bencher)
   bench_json_bundle_render(bencher)
+  bench_strict_missing_render(bencher)
   println(bencher.dump_summaries())
 }
