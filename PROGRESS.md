@@ -34,12 +34,12 @@ This file tracks the current implementation and maturity status of Moon Mustache
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| automated tests | done | `64 / 64` passing |
+| automated tests | done | `71 / 71` passing |
 | imported official fixtures | done | `136 / 136` passing |
 | benchmark entrypoints | done | repository includes benchmark runs |
 | GitHub CI | done | library and playground workflows present |
 | GitLink synchronization | done | competition mirror maintained |
-| release-readiness artifacts | in progress | workflow support is being expanded |
+| release-readiness artifacts | done | workflow uploads evaluator-facing artifact snapshots |
 
 ## Current emphasis
 
@@ -49,3 +49,4 @@ The project is now past first-stage bootstrap and is focused on:
 - staying easy to reuse
 - making compatibility evidence obvious
 - looking like a maintainable MoonBit ecosystem component instead of a one-off contest repo
+- pushing prepared render paths into real bundle and CLI workflows

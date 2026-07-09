@@ -23,6 +23,7 @@ This page summarizes how Moon Mustache moved from a competition bootstrap reposi
 | `2026-07-08` | `b61665d` | strengthened governance and release posture | made the repository look and behave more like a maintainable open-source project |
 | `2026-07-08` | `cf855a2` | added a public showcase site and comparison docs | created a lightweight evaluator landing page |
 | `2026-07-08` | `666f144` | expanded adoption demos and visual showcase assets | made reuse and project surfaces easier to see at a glance |
+| `2026-07-09` | `631756c` | prepared manifest rendering and templated bundle paths | moved compile-once rendering into real manifest workflows and made generated file paths truly runtime-aware |
 
 ## Release themes so far
 

@@ -31,9 +31,9 @@ The final project deliverable includes:
 
 Satisfied.
 
-- handwritten MoonBit code: about `5946` lines
+- handwritten MoonBit code: about `6568` lines
 - generated MoonBit fixture asset code: about `1513` lines
-- total MoonBit code in repo: about `7459` lines
+- total MoonBit code in repo: about `8081` lines
 
 ### 2. Public repositories and clear history
 
@@ -56,6 +56,8 @@ Implemented areas include:
 - JSON helpers
 - bundle manifest parsing and profile resolution
 - bundle validation and generation planning
+- prepared render / prepared manifest profile workflows
+- templated bundle output-path rendering with safety checks
 - CLI rendering flows
 - scenario and compatibility reporting
 
@@ -115,7 +117,7 @@ Locally verified during the final preparation stage:
 
 Observed results:
 
-- automated tests: `64 / 64` passing
+- automated tests: `71 / 71` passing
 - imported official `mustache/spec` fixtures: `136 / 136` passing
 - scenario report: passing
 - downstream consumer smoke test: passing
