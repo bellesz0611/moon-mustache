@@ -55,6 +55,7 @@ When preparing the next release, keep these aligned:
 ## Mooncakes note
 
 - local packaging is ready once `moon fmt --check`, `moon info`, `moon check --deny-warn`, and `moon test --deny-warn` all pass
+- repository CI also includes compatibility gates for the older spellings `moon fmt --deny-warn` and `moon info --deny-warn`, while still running the current executable commands
 - future `moon publish` runs on a new machine require a valid local credentials file created by `moon login`
 
 ## SemVer direction

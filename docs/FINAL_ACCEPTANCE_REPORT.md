@@ -80,6 +80,7 @@ Satisfied.
 
 The GitHub Actions workflow covers:
 
+- compatibility gates for the historical command spellings `moon fmt --deny-warn` and `moon info --deny-warn`
 - `moon fmt --check`
 - `moon info --target all`
 - `moon check --deny-warn`

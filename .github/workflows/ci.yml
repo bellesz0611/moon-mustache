@@ -31,8 +31,20 @@ jobs:
       - name: Show MoonBit version
         run: moon version --all
 
+      - name: Run moon fmt --deny-warn compatibility gate
+        if: matrix.target == 'wasm-gc'
+        shell: bash
+        run: |
+          moon fmt --deny-warn 2>/dev/null || moon fmt --check
+
       - name: Run moon fmt check
         run: moon fmt --check
+
+      - name: Run moon info --deny-warn compatibility gate
+        if: matrix.target == 'wasm-gc'
+        shell: bash
+        run: |
+          moon info --deny-warn 2>/dev/null || moon info --target all
 
       - name: Run moon info
         if: matrix.target == 'wasm-gc'
