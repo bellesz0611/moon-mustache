@@ -8,8 +8,8 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
-- generated at commit: `36f6206`
-- public commit count: `42`
+- generated at commit: `d835037`
+- public commit count: `43`
 - MoonBit package: `bellesz0611/moon-mustache`
 - MoonBit toolchain used for the local verification snapshot: `moon 0.1.20260629 (3e587ed 2026-06-29) | Feature flags enabled: rr_moon_mod,rr_moon_pkg`
 
