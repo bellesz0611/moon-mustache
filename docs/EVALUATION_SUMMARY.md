@@ -17,7 +17,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - `136 / 136` imported official `mustache/spec` fixtures passing
 - latest GitHub library CI and playground smoke workflows are green
 - GitHub and GitLink repositories are synchronized
-- current public history contains `42+` commits
+- current public history is already well beyond the required `10-20` meaningful commits
 - `moon run scenario_report` covers end-to-end usage flows
 - `moon run downstream_consumer` proves the public API can be consumed from a separate MoonBit package
 - `moon run --target js cli --bundle-check-only ...` supports CI-style validation and generation planning without writing files

@@ -18,7 +18,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - about `8676` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
 - about `7162` handwritten MoonBit LOC
 - `1514` lines of imported generated official fixture asset
-- `42+` public commits
+- public history already exceeds the required `10-20` meaningful commits
 - `71 / 71` automated tests passing
 - `136 / 136` imported official `mustache/spec` fixtures passing
 - latest GitHub library CI and playground smoke workflows are green on the default branch

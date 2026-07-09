@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -30,6 +31,10 @@ COUNT_DIRS = [
     "starter_repo_demo",
     "companion_repo_blueprint",
 ]
+
+
+def moon_cmd() -> str:
+    return shutil.which("moon") or str(Path.home() / ".moon" / "bin" / "moon.exe")
 
 
 def run(cmd: list[str]) -> str:
@@ -139,14 +144,11 @@ def main() -> int:
     total_loc, handwritten_loc, imported_loc = collect_loc()
     commit_count = int(run(["git", "rev-list", "--count", "HEAD"]))
     head_sha = run(["git", "rev-parse", "--short", "HEAD"])
+    moon = moon_cmd()
     moon_version = " | ".join(
-        line.strip()
-        for line in run([str(Path.home() / ".moon" / "bin" / "moon.exe"), "version"]).splitlines()
-        if line.strip()
+        line.strip() for line in run([moon, "version"]).splitlines() if line.strip()
     )
-    moon_test_output = run(
-        [str(Path.home() / ".moon" / "bin" / "moon.exe"), "test", "--deny-warn"]
-    )
+    moon_test_output = run([moon, "test", "--deny-warn"])
     test_total, test_passed = parse_test_summary(moon_test_output)
     workflow_conclusion, workflow_sha, workflow_url = latest_workflow_status()
     mooncakes_build_status, mooncakes_version, mooncakes_downloads = mooncakes_status()
@@ -194,6 +196,7 @@ python scripts/generate_metrics_snapshot.py
 
 - This snapshot is intentionally narrower than the whole repository filesystem. It focuses on the MoonBit implementation and proof surfaces used in competition-facing materials.
 - If outward-facing docs mention counts, this file should be treated as the source of truth.
+- The repository's public commit count can advance after documentation-only sync commits; regenerate this file whenever you need a fresher exact number.
 """
     DOC_PATH.write_text(content, encoding="utf-8")
     print(f"Wrote {DOC_PATH}")

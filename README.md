@@ -27,7 +27,7 @@ Moon Mustache 面向 MoonBit 生态提供一套轻量、稳定、可嵌入的模
 - imported official generated fixture asset: `1514` LOC
 - automated tests: `71 / 71` passing
 - imported official `mustache/spec` fixtures: `136 / 136` passing
-- public git history: `42+` commits and still growing
+- public git history: well beyond the required `10-20` meaningful commits and still growing
 - key demos: CLI rendering, template scanning, bundle generation, scenario report, four consumer-style demos, and a Vue playground backed by the repository's own MoonBit engine
 - extra evidence: second adoption-oriented consumer demo, benchmark snapshot, public static site, and SVG showcase assets
 
