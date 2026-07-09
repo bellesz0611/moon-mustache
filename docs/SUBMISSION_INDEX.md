@@ -16,6 +16,7 @@ This page groups the most useful links and files for submission and review.
 
 ## Technical support documents
 
+- [docs/METRICS_SNAPSHOT.md](D:/CCF/moonbit/docs/METRICS_SNAPSHOT.md)
 - [docs/API.md](D:/CCF/moonbit/docs/API.md)
 - [docs/COMPATIBILITY.md](D:/CCF/moonbit/docs/COMPATIBILITY.md)
 - [docs/OFFICIAL_SPEC.md](D:/CCF/moonbit/docs/OFFICIAL_SPEC.md)

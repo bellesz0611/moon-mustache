@@ -54,6 +54,8 @@ jobs:
       - name: Generate evaluator artifacts
         run: |
           mkdir -p _artifacts
+          python scripts/generate_metrics_snapshot.py
+          cp docs/METRICS_SNAPSHOT.md _artifacts/metrics_snapshot.md
           moon run showcase > _artifacts/showcase.txt
           moon run spec_report > _artifacts/spec_report.txt
           moon run official_spec_report > _artifacts/official_spec_report.txt

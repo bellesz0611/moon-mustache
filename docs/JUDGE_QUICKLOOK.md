@@ -15,13 +15,15 @@ The project is intentionally focused on Mustache core semantics and engineering 
 
 ## 2. Why it is not a shell repository
 
-- about `8081` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
-- about `6568` handwritten MoonBit LOC
-- `1513` lines of imported generated official fixture asset
-- `40+` public commits
+- about `8676` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
+- about `7162` handwritten MoonBit LOC
+- `1514` lines of imported generated official fixture asset
+- `42+` public commits
 - `71 / 71` automated tests passing
 - `136 / 136` imported official `mustache/spec` fixtures passing
 - latest GitHub library CI and playground smoke workflows are green on the default branch
+
+For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
 
 ## 3. Core capabilities
 

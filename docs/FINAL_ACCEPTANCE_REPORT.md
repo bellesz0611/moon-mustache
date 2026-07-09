@@ -31,9 +31,9 @@ The final project deliverable includes:
 
 Satisfied.
 
-- handwritten MoonBit code: about `6568` lines
-- generated MoonBit fixture asset code: about `1513` lines
-- total MoonBit code in repo: about `8081` lines
+- handwritten MoonBit code: about `7162` lines
+- generated MoonBit fixture asset code: about `1514` lines
+- total MoonBit code in repo: about `8676` lines
 
 ### 2. Public repositories and clear history
 
@@ -147,3 +147,5 @@ As of the current synchronized state, Moon Mustache satisfies the main technical
 - documentation is sufficient for usage and review
 - repositories are public and synchronized
 - compatibility evidence is explicit and reproducible
+
+For exact current metrics and public-status snapshots, the repository also maintains `docs/METRICS_SNAPSHOT.md`.
