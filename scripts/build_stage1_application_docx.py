@@ -144,6 +144,17 @@ def build_doc():
     add_bullet(doc, "原项目许可证：MIT License")
     add_bullet(doc, "本项目许可证：MIT License")
 
+    add_heading(doc, "与 MoonBit 生态已有同类项目的差异和新增价值")
+    add_body_paragraph(
+        doc,
+        "MoonBit 生态中已经存在同类尝试，例如 ryota0624/mustache（mooncakes: https://mooncakes.io/docs/ryota0624/mustache，"
+        "GitHub: https://github.com/ryota0624/moonbit-mustache）。本项目不是简单重复已有仓库，而是继续把模板渲染能力做成"
+        "可验收、可复用、可工程化集成的基础设施。"
+    )
+    add_bullet(doc, "以 mustache/spec 兼容性为核心，补齐更系统的官方 fixture 对照测试与兼容报告。")
+    add_bullet(doc, "在基础渲染库之外提供 CLI、文件渲染、模板扫描、bundle 校验与多文件生成工作流。")
+    add_bullet(doc, "提供持续集成、发布流程和可复用工程交付，服务其他 MoonBit 工具和脚手架场景。")
+
     add_heading(doc, "与原项目相比，本项目会做以下简化和重新设计")
     add_bullet(doc, "使用 MoonBit 原生包结构、类型系统和测试方式组织代码，而不是复刻 JavaScript 的运行时接口和工程组织。")
     add_bullet(doc, "优先实现适合 MoonBit 工程场景的核心模板能力，弱化浏览器、DOM 或 Node.js 运行环境相关假设。")

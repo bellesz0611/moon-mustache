@@ -62,6 +62,22 @@ MoonBit 已经具备出色的语言设计和统一工具链，但“把结构化
 
 Moon Mustache 选择以 Mustache 规范为核心，优先把最常用、最稳定、最容易复用的能力做好，而不是扩展成一个语法复杂的新模板语言。
 
+## Independent value in MoonBit
+
+MoonBit 生态中已经存在同类尝试，例如 `ryota0624/mustache`：
+
+- mooncakes: <https://mooncakes.io/docs/ryota0624/mustache>
+- GitHub: <https://github.com/ryota0624/moonbit-mustache>
+
+Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是围绕“可验收、可复用、可工程化集成”的目标继续把这一方向做完整。当前仓库的独立新增价值主要体现在：
+
+- 以 `mustache/spec` 为基准的系统兼容性证明，当前导入官方 fixture `136 / 136` 通过
+- 在渲染核心之外补齐 CLI、文件渲染、bundle 校验、扫描分析和多文件生成工作流
+- 提供 six consumer-style demos、Vue playground、静态展示站点和评审 artifact 索引
+- 提供完整 CI、benchmark artifact、mooncakes 发布、治理文档和长期维护入口
+
+因此，本项目更接近“MoonBit 模板基础设施的工程化补强”，而不是仅提供一个最小 Mustache 解释器。
+
 ## Current status
 
 当前版本已经不是启动壳仓库，而是一个具备核心渲染能力、CLI 工具链、规范测试、基准、场景报告和多文件生成演示的可运行项目。

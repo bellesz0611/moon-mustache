@@ -54,7 +54,22 @@ Moon Mustache currently goes further by including:
 - CI workflows for library checks, playground smoke tests, and release-readiness artifacts
 - governance, contribution, support, and security documents
 
-## 4. Compared with logic-heavy template engines
+## 4. Compared with the existing MoonBit Mustache attempt
+
+MoonBit 生态里已经有同类方向的公开项目，例如:
+
+- mooncakes: <https://mooncakes.io/docs/ryota0624/mustache>
+- GitHub: <https://github.com/ryota0624/moonbit-mustache>
+
+Moon Mustache does not try to claim that no similar experiment exists. Its independent contribution is that it pushes the same direction much further toward competition-grade engineering reuse:
+
+- broader compatibility evidence through imported official `mustache/spec` fixtures
+- a reusable CLI and bundle-generation workflow rather than library-only rendering
+- multiple downstream consumer demos instead of a single embedded example
+- stronger review surface through CI, benchmark artifacts, static site packaging, and evaluator-facing indexes
+- clearer publication and maintenance posture through mooncakes release plus governance/support documents
+
+## 5. Compared with logic-heavy template engines
 
 Some template systems provide more control-flow or embedded logic, but that is not the goal here.
 
@@ -72,7 +87,7 @@ For these workflows, smaller syntax often means:
 - easier review of generated output
 - clearer portability across ecosystems
 
-## 5. Why this matters specifically for MoonBit
+## 6. Why this matters specifically for MoonBit
 
 MoonBit already has strong language and tooling foundations, but reusable text-generation infrastructure is still relatively sparse.
 
