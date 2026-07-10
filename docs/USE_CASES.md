@@ -87,3 +87,31 @@ Why Moon Mustache helps:
 - path normalization blocks traversal-like output paths
 - bundle validation can catch duplicate normalized targets
 - `--bundle-check-only` lets teams export validation and plan reports without touching the workspace
+
+## 7. Incident response handoff kits
+
+Typical need:
+
+- draft a runbook during a live incident
+- prepare a status-page update
+- generate an escalation-contact file for responders
+
+Why Moon Mustache helps:
+
+- one shared context can feed multiple incident artifacts
+- profile-aware manifests can separate degraded and critical severity templates
+- bundle validation makes the generated incident pack auditable before writing files
+
+## 8. Developer release packs
+
+Typical need:
+
+- generate a GitHub release body
+- produce install / upgrade snippets
+- summarize migration notes for downstream developers
+
+Why Moon Mustache helps:
+
+- repeated release fragments can stay in partials
+- stable and preview channels can share one manifest while varying install tags
+- the same render core works for Markdown, plain text, and developer-facing snippets

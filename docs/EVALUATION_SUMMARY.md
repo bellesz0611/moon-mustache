@@ -4,12 +4,12 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 ## Why the project is now competitive
 
-- code scale has reached the competition's reference band, with about `8791` MoonBit lines across the core library, CLI, reports, demos, benchmarks, consumer demos, bridge code, and companion blueprint proof
-- handwritten implementation scale is already substantial on its own, with about `7277` MoonBit lines excluding the imported generated fixture asset
+- code scale has reached the competition's reference band, with about `9026` MoonBit lines across the core library, CLI, reports, demos, benchmarks, consumer demos, bridge code, and companion blueprint proof
+- handwritten implementation scale is already substantial on its own, with about `7512` MoonBit lines excluding the imported generated fixture asset
 - the project is not just a parser demo; it already covers reusable library APIs, a CLI, bundle generation, validation, reporting, and realistic scaffolding workflows
 - compatibility work is evidence-based instead of self-claimed, combining hand-written spec-style suites with imported upstream `mustache/spec` fixtures
 - engineering polish is visible through CI coverage, regression tests, scenario reports, benchmark entrypoints, governance files, an interactive Vue playground, and a static showcase site for fast public review
-- adoption proof now spans more than one consumer-style scenario, including release communication and operations rollout generation
+- adoption proof now spans more than one consumer-style scenario, including release communication, operations rollout generation, incident-response packaging, and developer-release publishing
 
 ## Hard evidence
 
@@ -29,7 +29,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - benchmark notes now include a concrete repository-local snapshot in `docs/BENCHMARK_SNAPSHOT.md`
 - release evolution is now summarized in `docs/RELEASE_HISTORY.md` so the repository shows visible iteration rather than a single static drop
 - FAQ and design-choice documentation now make project boundaries and tradeoffs easier to understand during review
-- submission/support materials now also include a community post draft, judge pitch notes, a submission index, and a companion-repo blueprint
+- submission/support materials now also include a community post draft, judge pitch notes, a submission index, an artifact index, and a companion-repo blueprint
 - `docs/METRICS_SNAPSHOT.md` now acts as the canonical generated source for exact counts and public-status snapshots
 
 ## Ecosystem contribution

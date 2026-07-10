@@ -64,6 +64,8 @@ jobs:
           moon run adoption_demo > _artifacts/adoption_demo.txt
           moon run content_pipeline_demo > _artifacts/content_pipeline_demo.txt
           moon run starter_repo_demo > _artifacts/starter_repo_demo.txt
+          moon run incident_response_demo > _artifacts/incident_response_demo.txt
+          moon run developer_release_demo > _artifacts/developer_release_demo.txt
           moon run benchmarks > _artifacts/benchmarks.json
           python scripts/summarize_benchmarks.py _artifacts/benchmarks.json > _artifacts/benchmarks.md
           moon run --target js cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan > _artifacts/cli_scan.txt

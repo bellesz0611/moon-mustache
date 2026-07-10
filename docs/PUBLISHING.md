@@ -11,10 +11,10 @@
 
 ## Current published state
 
-- mooncakes.io publication for `0.1.0` has completed successfully
+- mooncakes.io documentation for `0.1.0` is publicly reachable
 - packaged zip validation passed during `moon publish`
 - server response returned `200 OK`
-- build status reported by mooncakes API: `success`
+- package docs URL: `https://mooncakes.io/docs/bellesz0611/moon-mustache%400.1.0`
 
 ## Recommended release flow
 
@@ -34,7 +34,7 @@
 
 - `73` automated tests passing
 - `136` imported official `mustache/spec` fixtures passing
-- about `8791` MoonBit lines across reusable library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
+- about `9026` MoonBit lines across reusable library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
 - downstream consumer package smoke-tested
 - bundle validation / plan mode available for CI preflight
 - latest GitHub Actions release gate is green

@@ -61,6 +61,32 @@ Why it matters:
 - aligns directly with common MoonBit ecosystem tooling needs
 - makes the project feel closer to a reusable engineering dependency
 
+### 5. `incident_response_demo/`
+
+Focus:
+
+- incident runbook generation
+- status-page draft generation
+- escalation contact packaging
+
+Why it matters:
+
+- shows the engine serving urgent operational coordination flows
+- demonstrates another multi-file bundle domain beyond rollout scaffolding
+
+### 6. `developer_release_demo/`
+
+Focus:
+
+- GitHub release body generation
+- install / upgrade snippet generation
+- migration summary generation
+
+Why it matters:
+
+- shows the same core helping with developer-facing publishing work
+- broadens the adoption story beyond internal ops and content workflows
+
 ## Workflow support
 
 These proof surfaces are not documentation-only.

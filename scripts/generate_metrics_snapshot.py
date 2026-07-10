@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DOC_PATH = ROOT / "docs" / "METRICS_SNAPSHOT.md"
 PACKAGE_NAME = "bellesz0611/moon-mustache"
 GITHUB_REPO = "bellesz0611/moon-mustache"
+MOON_MOD_PATH = ROOT / "moon.mod"
 
 COUNT_DIRS = [
     "src",
@@ -29,12 +30,18 @@ COUNT_DIRS = [
     "adoption_demo",
     "content_pipeline_demo",
     "starter_repo_demo",
+    "incident_response_demo",
+    "developer_release_demo",
     "companion_repo_blueprint",
 ]
 
 
 def moon_cmd() -> str:
-    return shutil.which("moon") or str(Path.home() / ".moon" / "bin" / "moon.exe")
+    for candidate in ("moon.cmd", "moon.exe", "moon"):
+        found = shutil.which(candidate)
+        if found:
+            return found
+    return str(Path.home() / ".moon" / "bin" / "moon.exe")
 
 
 def run(cmd: list[str]) -> str:
@@ -45,6 +52,19 @@ def run(cmd: list[str]) -> str:
         capture_output=True,
         text=True,
     )
+    return completed.stdout.strip()
+
+
+def try_run(cmd: list[str]) -> str | None:
+    completed = subprocess.run(
+        cmd,
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    if completed.returncode != 0:
+        return None
     return completed.stdout.strip()
 
 
@@ -73,14 +93,38 @@ def collect_loc() -> tuple[int, int, int]:
 
 def fetch_json(url: str) -> dict:
     req = Request(url, headers={"User-Agent": "moon-mustache-metrics"})
-    with urlopen(req, timeout=30) as resp:
-        return json.load(resp)
+    try:
+        with urlopen(req, timeout=30) as resp:
+            return json.load(resp)
+    except (HTTPError, URLError, TimeoutError):
+        curl = shutil.which("curl") or shutil.which("curl.exe")
+        if curl:
+            output = try_run([curl, "-fsSL", url])
+            if output:
+                return json.loads(output)
+        raise
 
 
 def fetch_text(url: str) -> str:
     req = Request(url, headers={"User-Agent": "moon-mustache-metrics"})
-    with urlopen(req, timeout=30) as resp:
-        return resp.read().decode("utf-8", errors="replace")
+    try:
+        with urlopen(req, timeout=30) as resp:
+            return resp.read().decode("utf-8", errors="replace")
+    except (HTTPError, URLError, TimeoutError):
+        curl = shutil.which("curl") or shutil.which("curl.exe")
+        if curl:
+            output = try_run([curl, "-fsSL", url])
+            if output is not None:
+                return output
+        raise
+
+
+def package_version() -> str:
+    content = MOON_MOD_PATH.read_text(encoding="utf-8")
+    match = re.search(r'version\s*=\s*"([^"]+)"', content)
+    if not match:
+        raise RuntimeError("Unable to parse package version from moon.mod")
+    return match.group(1)
 
 
 def latest_workflow_status() -> tuple[str, str, str]:
@@ -114,16 +158,23 @@ def latest_workflow_status() -> tuple[str, str, str]:
     return "unknown", "", actions_url
 
 
-def mooncakes_status() -> tuple[str, str, int]:
+def mooncakes_status() -> tuple[str, str, int, str]:
+    version = package_version()
+    docs_url = f"https://mooncakes.io/docs/{PACKAGE_NAME}%40{version}"
     try:
         payload = fetch_json(f"https://mooncakes.io/api/v0/manifest/{PACKAGE_NAME}")
         return (
             payload.get("build_status", "unknown"),
             payload.get("latest_version", "unknown"),
             int(payload.get("downloads", 0)),
+            docs_url,
         )
     except (HTTPError, URLError, TimeoutError):
-        return "unknown", "unknown", 0
+        try:
+            fetch_text(docs_url)
+            return "docs reachable (api unavailable)", version, 0, docs_url
+        except (HTTPError, URLError, TimeoutError):
+            return "unknown", version, 0, docs_url
 
 
 def parse_test_summary(output: str) -> tuple[int, int]:
@@ -144,7 +195,7 @@ def main() -> int:
     moon_test_output = run([moon, "test", "--deny-warn"])
     test_total, test_passed = parse_test_summary(moon_test_output)
     workflow_conclusion, workflow_sha, workflow_url = latest_workflow_status()
-    mooncakes_build_status, mooncakes_version, mooncakes_downloads = mooncakes_status()
+    mooncakes_build_status, mooncakes_version, mooncakes_downloads, mooncakes_docs_url = mooncakes_status()
 
     workflow_summary = f"`{workflow_conclusion}`"
     if workflow_sha:
@@ -183,7 +234,7 @@ python scripts/generate_metrics_snapshot.py
 - mooncakes latest version: `{mooncakes_version}`
 - mooncakes build status: `{mooncakes_build_status}`
 - mooncakes download count reported by API: `{mooncakes_downloads}`
-- mooncakes package page: <https://mooncakes.io/package/{PACKAGE_NAME}>
+- mooncakes docs page: <{mooncakes_docs_url}>
 
 ## Notes
 

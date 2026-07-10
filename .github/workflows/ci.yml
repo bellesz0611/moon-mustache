@@ -83,6 +83,12 @@ jobs:
       - name: Run starter repo demo smoke test
         run: moon run --target ${{ matrix.target }} starter_repo_demo
 
+      - name: Run incident response demo smoke test
+        run: moon run --target ${{ matrix.target }} incident_response_demo
+
+      - name: Run developer release demo smoke test
+        run: moon run --target ${{ matrix.target }} developer_release_demo
+
       - name: Run benchmark smoke test
         if: matrix.target == 'wasm-gc'
         run: |

@@ -6,11 +6,12 @@ This page groups the most useful links and files for submission and review.
 
 - GitHub: <https://github.com/bellesz0611/moon-mustache>
 - GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
-- mooncakes package: <https://mooncakes.io/package/bellesz0611/moon-mustache>
+- mooncakes docs: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.1.0>
 
 ## First files to read
 
 - [README.md](D:/CCF/moonbit/README.md)
+- [docs/ARTIFACT_INDEX.md](D:/CCF/moonbit/docs/ARTIFACT_INDEX.md)
 - [docs/JUDGE_QUICKLOOK.md](D:/CCF/moonbit/docs/JUDGE_QUICKLOOK.md)
 - [docs/EVALUATION_SUMMARY.md](D:/CCF/moonbit/docs/EVALUATION_SUMMARY.md)
 
@@ -39,6 +40,8 @@ This page groups the most useful links and files for submission and review.
 - `moon run adoption_demo`
 - `moon run content_pipeline_demo`
 - `moon run starter_repo_demo`
+- `moon run incident_response_demo`
+- `moon run developer_release_demo`
 
 ## Communication support
 

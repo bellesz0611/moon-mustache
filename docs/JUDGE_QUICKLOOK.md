@@ -15,8 +15,8 @@ The project is intentionally focused on Mustache core semantics and engineering 
 
 ## 2. Why it is not a shell repository
 
-- about `8791` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
-- about `7277` handwritten MoonBit LOC
+- about `9026` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
+- about `7512` handwritten MoonBit LOC
 - `1514` lines of imported generated official fixture asset
 - public history already exceeds the required `10-20` meaningful commits
 - `73 / 73` automated tests passing
@@ -39,9 +39,11 @@ For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
 - rendered bundle output paths with runtime validation
 - official spec compatibility reporting
 - downstream consumer reuse proof
-- second adoption-oriented rollout demo package
+- operations-rollout consumer demo package
 - content-pipeline consumer demo package
 - starter-repository consumer demo package
+- incident-response consumer demo package
+- developer-release consumer demo package
 - companion-repo blueprint for near-standalone consumer shape
 - Vue playground demo backed by the repository's own MoonBit engine
 - independent playground build and API-bridge smoke workflow
@@ -50,7 +52,7 @@ For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
 - benchmark snapshot documentation for regression-oriented review
 - release-history documentation showing the recent project maturation path
 - FAQ and design-choice documentation explaining project boundaries and rationale
-- communication and submission support documents for outreach and judge-facing explanation
+- communication and submission support documents for outreach and judge-facing explanation, including a dedicated artifact index
 
 ## 4. Fastest verification path
 

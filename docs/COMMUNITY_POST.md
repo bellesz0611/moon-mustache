@@ -17,7 +17,7 @@ This is a ready-to-send short introduction for competition groups, community cha
 
 - GitHub: <https://github.com/bellesz0611/moon-mustache>
 - GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
-- mooncakes: <https://mooncakes.io/package/bellesz0611/moon-mustache>
+- mooncakes: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.1.0>
 
 欢迎试用、提 issue、给建议。
 
