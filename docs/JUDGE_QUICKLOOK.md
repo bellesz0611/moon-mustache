@@ -15,12 +15,13 @@ The project is intentionally focused on Mustache core semantics and engineering 
 
 ## 2. Why it is not a shell repository
 
-- about `9026` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof
-- about `7512` handwritten MoonBit LOC
-- `1514` lines of imported generated official fixture asset
+- about `8032` handwritten effective MoonBit LOC, inside the suggested competition band
+- about `2149` imported generated fixture effective lines, disclosed separately
 - public history already exceeds the required `10-20` meaningful commits
-- `73 / 73` automated tests passing
-- `136 / 136` imported official `mustache/spec` fixtures passing
+- `85 / 85` automated tests passing
+- `194 / 194` imported core and optional `mustache/spec` fixtures passing, zero skipped
+- `2048 / 2048` deterministic differential cases passing against `mustache.js`
+- `81.5%` core coverage with an enforced `80%` CI gate
 - latest GitHub library CI and playground smoke workflows are green on the default branch
 
 For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
@@ -31,8 +32,10 @@ For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
 - escaped and unescaped interpolation
 - sections and inverted sections
 - comments, partials, and delimiter changes
+- dynamic partial names, parent/block inheritance, and native MoonBit lambdas
 - dotted lookup, current-context lookup, and array iteration
 - strict missing-variable diagnostics
+- structured source diagnostics, lint, and deterministic render resource limits
 - template reference scanning through library APIs and CLI
 - bundle manifest rendering, validation, and plan generation
 - prepared rendering and prepared manifest profile workflows
@@ -45,10 +48,10 @@ For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
 - incident-response consumer demo package
 - developer-release consumer demo package
 - companion-repo blueprint for near-standalone consumer shape
-- Vue playground demo backed by the repository's own MoonBit engine
-- independent playground build and API-bridge smoke workflow
+- Vue playground directly executing the MoonBit-compiled ES module
+- independent Linux and Windows playground build/API-bridge smoke workflows
 - repository governance and support documents for longer-term maintainability
-- static site packaging workflow for a lightweight public-facing showcase artifact
+- GitHub Pages deployment workflow for a directly runnable public playground
 - benchmark snapshot documentation for regression-oriented review
 - release-history documentation showing the recent project maturation path
 - FAQ and design-choice documentation explaining project boundaries and rationale
@@ -63,6 +66,7 @@ moon test --deny-warn
 moon run showcase
 moon run official_spec_report
 moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
+cd playground && npm ci && npm run differential
 ```
 
 What these prove:
@@ -92,6 +96,7 @@ The repository is already in a strong acceptance and release state:
 - local `fmt / info / check / test` gates pass
 - latest GitHub CI is green
 - GitHub and GitLink are synchronized
-- mooncakes.io publication for `0.1.0` is complete
+- mooncakes.io publication for `0.2.0` is complete
+- the browser playground is deployed through GitHub Pages
 
 The remaining work is now about future releases and continued ecosystem polish, not first-time publication.

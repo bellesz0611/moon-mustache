@@ -6,31 +6,32 @@ This page groups the most useful links and files for submission and review.
 
 - GitHub: <https://github.com/bellesz0611/moon-mustache>
 - GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
-- mooncakes docs: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.1.0>
+- mooncakes docs: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.2.0>
+- online playground: <https://bellesz0611.github.io/moon-mustache/>
 
 ## First files to read
 
-- [README.md](D:/CCF/moonbit/README.md)
-- [docs/ARTIFACT_INDEX.md](D:/CCF/moonbit/docs/ARTIFACT_INDEX.md)
-- [docs/JUDGE_QUICKLOOK.md](D:/CCF/moonbit/docs/JUDGE_QUICKLOOK.md)
-- [docs/EVALUATION_SUMMARY.md](D:/CCF/moonbit/docs/EVALUATION_SUMMARY.md)
+- [README.md](../README.md)
+- [ARTIFACT_INDEX.md](ARTIFACT_INDEX.md)
+- [JUDGE_QUICKLOOK.md](JUDGE_QUICKLOOK.md)
+- [EVALUATION_SUMMARY.md](EVALUATION_SUMMARY.md)
 
 ## Technical support documents
 
-- [docs/METRICS_SNAPSHOT.md](D:/CCF/moonbit/docs/METRICS_SNAPSHOT.md)
-- [docs/API.md](D:/CCF/moonbit/docs/API.md)
-- [docs/COMPATIBILITY.md](D:/CCF/moonbit/docs/COMPATIBILITY.md)
-- [docs/OFFICIAL_SPEC.md](D:/CCF/moonbit/docs/OFFICIAL_SPEC.md)
-- [docs/STABILITY.md](D:/CCF/moonbit/docs/STABILITY.md)
-- [docs/BENCHMARK_SNAPSHOT.md](D:/CCF/moonbit/docs/BENCHMARK_SNAPSHOT.md)
+- [METRICS_SNAPSHOT.md](METRICS_SNAPSHOT.md)
+- [API.md](API.md)
+- [COMPATIBILITY.md](COMPATIBILITY.md)
+- [OFFICIAL_SPEC.md](OFFICIAL_SPEC.md)
+- [STABILITY.md](STABILITY.md)
+- [BENCHMARK_SNAPSHOT.md](BENCHMARK_SNAPSHOT.md)
 
 ## Project maturity documents
 
-- [docs/RELEASE_HISTORY.md](D:/CCF/moonbit/docs/RELEASE_HISTORY.md)
-- [docs/ADOPTION_EVIDENCE.md](D:/CCF/moonbit/docs/ADOPTION_EVIDENCE.md)
-- [docs/ADOPTION_GUIDE.md](D:/CCF/moonbit/docs/ADOPTION_GUIDE.md)
-- [docs/KNOWN_LIMITATIONS.md](D:/CCF/moonbit/docs/KNOWN_LIMITATIONS.md)
-- [docs/DESIGN_CHOICES.md](D:/CCF/moonbit/docs/DESIGN_CHOICES.md)
+- [RELEASE_HISTORY.md](RELEASE_HISTORY.md)
+- [ADOPTION_EVIDENCE.md](ADOPTION_EVIDENCE.md)
+- [ADOPTION_GUIDE.md](ADOPTION_GUIDE.md)
+- [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md)
+- [DESIGN_CHOICES.md](DESIGN_CHOICES.md)
 
 ## Direct demo entrypoints
 
@@ -45,5 +46,5 @@ This page groups the most useful links and files for submission and review.
 
 ## Communication support
 
-- [docs/COMMUNITY_POST.md](D:/CCF/moonbit/docs/COMMUNITY_POST.md)
-- [docs/JUDGE_PITCH.md](D:/CCF/moonbit/docs/JUDGE_PITCH.md)
+- [COMMUNITY_POST.md](COMMUNITY_POST.md)
+- [JUDGE_PITCH.md](JUDGE_PITCH.md)

@@ -31,9 +31,9 @@ The final project deliverable includes:
 
 Satisfied.
 
-- handwritten MoonBit code: about `7512` lines
-- generated MoonBit fixture asset code: about `1514` lines
-- total MoonBit code in repo: about `9026` lines
+- handwritten effective MoonBit code: about `8032` lines
+- generated official-fixture effective code, disclosed separately: about `2149` lines
+- total effective MoonBit proof surface: about `10181` lines
 
 ### 2. Public repositories and clear history
 
@@ -118,11 +118,13 @@ Locally verified during the final preparation stage:
 
 Observed results:
 
-- automated tests: `73 / 73` passing
-- imported official `mustache/spec` fixtures: `136 / 136` passing
+- automated tests: `85 / 85` passing
+- imported official core and optional `mustache/spec` fixtures: `194 / 194` passing, zero skipped
+- deterministic `mustache.js` differential cases: `2048 / 2048` passing
+- core coverage: `81.5%`, above the enforced `80%` gate
 - scenario report: passing
 - downstream consumer smoke test: passing
-- package documentation: queryable on mooncakes.io as `bellesz0611/moon-mustache@0.1.0`
+- package documentation: queryable on mooncakes.io as `bellesz0611/moon-mustache@0.2.0`
 
 ## Third-party and license notes
 

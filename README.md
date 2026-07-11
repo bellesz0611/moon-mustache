@@ -5,7 +5,7 @@
 [![Release Readiness](https://github.com/bellesz0611/moon-mustache/actions/workflows/release-readiness.yml/badge.svg)](https://github.com/bellesz0611/moon-mustache/actions/workflows/release-readiness.yml)
 [![Site](https://github.com/bellesz0611/moon-mustache/actions/workflows/site.yml/badge.svg)](https://github.com/bellesz0611/moon-mustache/actions/workflows/site.yml)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Version](https://img.shields.io/badge/version-0.1.0-blue)
+![Version](https://img.shields.io/badge/version-0.2.0-blue)
 ![Mooncakes](https://img.shields.io/badge/mooncakes-published-brightgreen)
 
 Moon Mustache is a reusable Mustache template engine for MoonBit.
@@ -22,11 +22,12 @@ Moon Mustache 面向 MoonBit 生态提供一套轻量、稳定、可嵌入的模
 
 - latest GitHub workflows: library CI and playground smoke checks are green on the default branch
 - public repositories: GitHub + GitLink are synchronized
-- current code scale: about `9026` MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer scenarios, bridge code, and companion blueprint proof
-- handwritten MoonBit LOC: about `7512`
-- imported official generated fixture asset: `1514` LOC
-- automated tests: `73 / 73` passing
-- imported official `mustache/spec` fixtures: `136 / 136` passing
+- competition-relevant handwritten effective MoonBit LOC: about `8032`, inside the suggested `4k-10k` band
+- imported generated fixture asset: about `2149` effective LOC, reported separately from handwritten implementation
+- automated tests: `85 / 85` passing
+- imported core and optional `mustache/spec` fixtures: `194 / 194` passing, with zero skips
+- deterministic cross-implementation differential cases: `2048 / 2048` passing against `mustache.js`
+- measured core-library coverage: `81.5%`, protected by an `80%` CI gate with Cobertura output
 - public git history: well beyond the required `10-20` meaningful commits and still growing
 - key demos: CLI rendering, template scanning, bundle generation, scenario report, six consumer-style demos, and a Vue playground backed by the repository's own MoonBit engine
 - extra evidence: incident-response and developer-release downstream demos, benchmark snapshot, public static site, and SVG showcase assets
@@ -38,6 +39,7 @@ moon test --deny-warn
 moon run showcase
 moon run official_spec_report
 moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
+cd playground && npm ci && npm run differential
 ```
 
 ## Repository
@@ -45,16 +47,16 @@ moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
 - GitHub: <https://github.com/bellesz0611/moon-mustache>
 - GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
 - MoonBit package: `bellesz0611/moon-mustache`
-- current release status: queryable on mooncakes.io docs as `bellesz0611/moon-mustache@0.1.0`
-- mooncakes docs page: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.1.0>
+- current release: `bellesz0611/moon-mustache@0.2.0`
+- mooncakes docs page: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.2.0>
+- online MoonBit playground: <https://bellesz0611.github.io/moon-mustache/>
 - workflow entrypoints: [library CI](https://github.com/bellesz0611/moon-mustache/actions/workflows/ci.yml) and [playground smoke workflow](https://github.com/bellesz0611/moon-mustache/actions/workflows/playground.yml)
-- benchmark artifacts: the default library CI now uploads `benchmarks.json` and `benchmarks.md` from the `wasm-gc` lane
+- verification artifacts: the default library CI uploads benchmarks, a coverage summary, and Cobertura XML from the `wasm-gc` lane
 - release-readiness workflow: [artifact-oriented verification](https://github.com/bellesz0611/moon-mustache/actions/workflows/release-readiness.yml)
-- static showcase site workflow: [artifact-packaged site preview](https://github.com/bellesz0611/moon-mustache/actions/workflows/site.yml)
-- evaluator artifact map: [docs/ARTIFACT_INDEX.md](D:/CCF/moonbit/docs/ARTIFACT_INDEX.md)
-- evaluator quick-look page: [docs/JUDGE_QUICKLOOK.md](D:/CCF/moonbit/docs/JUDGE_QUICKLOOK.md)
-- canonical generated metrics snapshot: [docs/METRICS_SNAPSHOT.md](D:/CCF/moonbit/docs/METRICS_SNAPSHOT.md)
-- site pages in repo: [site/index.html](D:/CCF/moonbit/site/index.html), [site/adoption.html](D:/CCF/moonbit/site/adoption.html), [site/faq.html](D:/CCF/moonbit/site/faq.html)
+- Pages deployment workflow: [browser playground deployment](https://github.com/bellesz0611/moon-mustache/actions/workflows/site.yml)
+- evaluator artifact map: [docs/ARTIFACT_INDEX.md](docs/ARTIFACT_INDEX.md)
+- evaluator quick-look page: [docs/JUDGE_QUICKLOOK.md](docs/JUDGE_QUICKLOOK.md)
+- canonical generated metrics snapshot: [docs/METRICS_SNAPSHOT.md](docs/METRICS_SNAPSHOT.md)
 
 ## Project positioning
 
@@ -71,7 +73,7 @@ MoonBit 生态中已经存在同类尝试，例如 `ryota0624/mustache`：
 
 Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是围绕“可验收、可复用、可工程化集成”的目标继续把这一方向做完整。当前仓库的独立新增价值主要体现在：
 
-- 以 `mustache/spec` 为基准的系统兼容性证明，当前导入官方 fixture `136 / 136` 通过
+- 以 `mustache/spec` 为基准的系统兼容性证明，核心与可选规范 fixture `194 / 194` 全部通过
 - 在渲染核心之外补齐 CLI、文件渲染、bundle 校验、扫描分析和多文件生成工作流
 - 提供 six consumer-style demos、Vue playground、静态展示站点和评审 artifact 索引
 - 提供完整 CI、benchmark artifact、mooncakes 发布、治理文档和长期维护入口
@@ -84,11 +86,11 @@ Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是
 
 代码规模口径拆分如下：
 
-- 手写 MoonBit 代码约 `7512` 行
-- 导入上游 fixture 后生成的 MoonBit 测试资产约 `1514` 行
-- 合计约 `9026` 行 MoonBit 代码
+- 手写有效 MoonBit 代码约 `8032` 行
+- 导入上游 fixture 后生成的测试资产约 `2149` 有效行，单独披露、不计入手写规模
+- 所有参赛证明面合计约 `10181` 有效 MoonBit 行
 
-也就是说，这个仓库不是靠“纯导入文件”撑规模；仅手写实现与演示部分也已经进入赛事建议体量区间。精确当前数字以 [docs/METRICS_SNAPSHOT.md](D:/CCF/moonbit/docs/METRICS_SNAPSHOT.md) 为准。当前重点能力包括：
+也就是说，这个仓库不是靠“纯导入文件”撑规模；仅手写实现与演示部分已经进入赛事建议体量区间。精确当前数字以 [docs/METRICS_SNAPSHOT.md](docs/METRICS_SNAPSHOT.md) 为准。当前重点能力包括：
 
 - 模板扫描、Token 化与 AST 解析
 - 模板变量/Partial 引用扫描
@@ -97,6 +99,9 @@ Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是
 - Section / Inverted Section
 - Comment
 - Partial
+- dynamic partial names
+- parent templates and block inheritance
+- interpolation and section lambdas
 - Delimiter change
 - standalone line trimming for section-like tags
 - dotted lookup
@@ -104,6 +109,9 @@ Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是
 - `{{.}}` 当前上下文访问
 - JSON 上下文转换
 - `RenderOptions` 严格模式与缺失变量诊断
+- 带稳定错误码、源码范围、行列号和片段的结构化诊断
+- 模板/JSON/bundle lint 与非零 CLI 退出状态
+- 输出长度、Section 迭代次数、渲染步骤和 Partial 深度资源限制
 - dotted assignment 上下文构造与上下文合并
 - 多文件 bundle 渲染接口
 - prepared bundle 预编译与复用接口
@@ -118,9 +126,10 @@ Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是
 - 独立 downstream consumer 包示例
 - benchmark 入口与真实脚手架 demo
 - incident response 与 developer release 两类新增下游 demo
-- 73 个自动化测试
-- 覆盖 `fmt / info / check / test / showcase / scaffold_demo / spec_report / official_spec_report / scenario_report / downstream_consumer / benchmarks / cli-file-flow / cli-scan / bundle-check-only` 的库工作流
-- 独立的 Vue playground build + API bridge smoke workflow
+- 85 个自动化测试、194 个官方 fixture 和 2048 个跨实现差异用例
+- 覆盖 `fmt / info / check / build / test / coverage / differential / demos / CLI` 的 CI 工作流
+- `wasm / wasm-gc / js / native` 四后端矩阵和专门的 Windows Playground 回归任务
+- Vue playground 直接调用 MoonBit 编译的 ESM，不依赖在线后端
 - artifact index 与 CI benchmark artifact 输出
 
 ## Project surfaces
@@ -149,8 +158,8 @@ Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是
   证明该库已经可以被整理成接近“独立外部仓库”形态的消费方项目结构
 - Vue playground
   供用户在浏览器里实时修改模板、JSON 和 partials，直接看到 MoonBit 引擎输出
-- static showcase site
-  供评审快速浏览项目定位、样例输出和关键指标，不依赖本地启动环境
+- deployed browser playground
+  供评审直接在线运行 MoonBit 引擎、浏览项目定位和关键指标，不依赖本地后端
 
 ## Community health
 
@@ -168,23 +177,23 @@ Moon Mustache 不是对现有 MoonBit 同类仓库的简单重复实现，而是
 
 如果你想快速理解项目当前成熟度和功能落点，可以直接看：
 
-- [PROGRESS.md](D:/CCF/moonbit/PROGRESS.md)
-- [docs/METRICS_SNAPSHOT.md](D:/CCF/moonbit/docs/METRICS_SNAPSHOT.md)
-- [docs/IMPLEMENTATION_STATUS.md](D:/CCF/moonbit/docs/IMPLEMENTATION_STATUS.md)
-- [docs/COMPARISON.md](D:/CCF/moonbit/docs/COMPARISON.md)
-- [docs/SHOWCASE_GALLERY.md](D:/CCF/moonbit/docs/SHOWCASE_GALLERY.md)
-- [docs/BENCHMARK_SNAPSHOT.md](D:/CCF/moonbit/docs/BENCHMARK_SNAPSHOT.md)
-- [docs/RELEASE_HISTORY.md](D:/CCF/moonbit/docs/RELEASE_HISTORY.md)
-- [docs/FAQ.md](D:/CCF/moonbit/docs/FAQ.md)
-- [docs/DESIGN_CHOICES.md](D:/CCF/moonbit/docs/DESIGN_CHOICES.md)
-- [docs/ADOPTION_GUIDE.md](D:/CCF/moonbit/docs/ADOPTION_GUIDE.md)
-- [docs/ADOPTION_EVIDENCE.md](D:/CCF/moonbit/docs/ADOPTION_EVIDENCE.md)
-- [docs/KNOWN_LIMITATIONS.md](D:/CCF/moonbit/docs/KNOWN_LIMITATIONS.md)
-- [docs/COMMUNITY_POST.md](D:/CCF/moonbit/docs/COMMUNITY_POST.md)
-- [docs/JUDGE_PITCH.md](D:/CCF/moonbit/docs/JUDGE_PITCH.md)
-- [docs/ARTIFACT_INDEX.md](D:/CCF/moonbit/docs/ARTIFACT_INDEX.md)
-- [docs/SUBMISSION_INDEX.md](D:/CCF/moonbit/docs/SUBMISSION_INDEX.md)
-- [companion_repo_blueprint/README.md](D:/CCF/moonbit/companion_repo_blueprint/README.md)
+- [PROGRESS.md](PROGRESS.md)
+- [docs/METRICS_SNAPSHOT.md](docs/METRICS_SNAPSHOT.md)
+- [docs/IMPLEMENTATION_STATUS.md](docs/IMPLEMENTATION_STATUS.md)
+- [docs/COMPARISON.md](docs/COMPARISON.md)
+- [docs/SHOWCASE_GALLERY.md](docs/SHOWCASE_GALLERY.md)
+- [docs/BENCHMARK_SNAPSHOT.md](docs/BENCHMARK_SNAPSHOT.md)
+- [docs/RELEASE_HISTORY.md](docs/RELEASE_HISTORY.md)
+- [docs/FAQ.md](docs/FAQ.md)
+- [docs/DESIGN_CHOICES.md](docs/DESIGN_CHOICES.md)
+- [docs/ADOPTION_GUIDE.md](docs/ADOPTION_GUIDE.md)
+- [docs/ADOPTION_EVIDENCE.md](docs/ADOPTION_EVIDENCE.md)
+- [docs/KNOWN_LIMITATIONS.md](docs/KNOWN_LIMITATIONS.md)
+- [docs/COMMUNITY_POST.md](docs/COMMUNITY_POST.md)
+- [docs/JUDGE_PITCH.md](docs/JUDGE_PITCH.md)
+- [docs/ARTIFACT_INDEX.md](docs/ARTIFACT_INDEX.md)
+- [docs/SUBMISSION_INDEX.md](docs/SUBMISSION_INDEX.md)
+- [companion_repo_blueprint/README.md](companion_repo_blueprint/README.md)
 
 ## Quick start
 
@@ -231,7 +240,7 @@ Use the file-oriented CLI flow:
 moon run --target js cli --template-file "examples/files/template.mustache" --json-file "examples/files/context.json" --partials-json-file "examples/files/partials.json"
 ```
 
-If you are deciding between library embedding and CLI usage, read [docs/QUICKSTART.md](D:/CCF/moonbit/docs/QUICKSTART.md).
+If you are deciding between library embedding and CLI usage, read [docs/QUICKSTART.md](docs/QUICKSTART.md).
 
 ## Target support
 
@@ -359,7 +368,7 @@ Companion workflow/report helpers:
 当前共有：
 
 - `47` 个仓库内 spec-style case，分布在 `9` 个 suite 中，全部通过
-- `136` 个官方导入 fixture，全部通过
+- `194` 个核心及可选官方 fixture，全部通过且零跳过
 - 最新 GitHub CI 为绿色，能直接复现 `fmt / info / check / test` 与 demo smoke paths
 - 上游 fixture 的原始 JSON 与许可证已归档在 `third_party/mustache-spec/`
 
@@ -528,8 +537,8 @@ Quick project demos shipped in the repo:
 - current package stage: pre-`1.0`
 - core library APIs are the main long-term compatibility target
 - report helpers and CLI UX can still evolve faster than the rendering core
-- versioning and public-surface expectations are documented in [docs/STABILITY.md](D:/CCF/moonbit/docs/STABILITY.md)
-- publishing notes and release verification history live in [docs/PUBLISHING.md](D:/CCF/moonbit/docs/PUBLISHING.md)
+- versioning and public-surface expectations are documented in [docs/STABILITY.md](docs/STABILITY.md)
+- publishing notes and release verification history live in [docs/PUBLISHING.md](docs/PUBLISHING.md)
 
 ## Engineering direction
 

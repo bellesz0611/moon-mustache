@@ -28,14 +28,14 @@ This file tracks the current implementation and maturity status of Moon Mustache
 | downstream consumer proof | done | separate MoonBit package included |
 | Vue playground | done | browser-facing demo backed by MoonBit bridge |
 | playground smoke workflow | done | dedicated workflow validates the demo |
-| mooncakes.io publication | done | `bellesz0611/moon-mustache@0.1.0` |
+| mooncakes.io publication | done | `bellesz0611/moon-mustache@0.2.0` |
 
 ## Evidence and quality
 
 | Area | Status | Notes |
 | --- | --- | --- |
 | automated tests | done | `71 / 71` passing |
-| imported official fixtures | done | `136 / 136` passing |
+| imported official fixtures | done | `194 / 194` passing, zero skipped |
 | benchmark entrypoints | done | repository includes benchmark runs |
 | GitHub CI | done | library and playground workflows present |
 | GitLink synchronization | done | competition mirror maintained |

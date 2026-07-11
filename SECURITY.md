@@ -28,4 +28,6 @@ The most sensitive areas in this repository are:
 - browser demo bridge interactions
 - third-party fixture import and release workflows
 
+For untrusted templates, use `RenderOptions::with_resource_limits(...)` and an explicit partial-depth limit. The renderer can cap output characters, section iterations, render steps, and recursive partial/parent expansion. The CLI lint path also rejects unsafe bundle output paths and returns a non-zero status for errors.
+
 General rendering mismatches that do not create a security impact should be reported through the standard bug-report template instead.

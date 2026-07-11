@@ -6,10 +6,10 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 
 | Goal | Command or file | What it proves |
 | --- | --- | --- |
-| Quick project overview | [README.md](D:/CCF/moonbit/README.md) | Scope, maturity, public links, core capabilities |
-| Judge-facing summary | [docs/JUDGE_QUICKLOOK.md](D:/CCF/moonbit/docs/JUDGE_QUICKLOOK.md) | Why the project is not a shell repository |
-| Exact current metrics | [docs/METRICS_SNAPSHOT.md](D:/CCF/moonbit/docs/METRICS_SNAPSHOT.md) | Commit count, LOC, test count, workflow state |
-| Final acceptance posture | [docs/FINAL_ACCEPTANCE_REPORT.md](D:/CCF/moonbit/docs/FINAL_ACCEPTANCE_REPORT.md) | Completion against final-stage expectations |
+| Quick project overview | [README.md](../README.md) | Scope, maturity, public links, core capabilities |
+| Judge-facing summary | [JUDGE_QUICKLOOK.md](JUDGE_QUICKLOOK.md) | Why the project is not a shell repository |
+| Exact current metrics | [METRICS_SNAPSHOT.md](METRICS_SNAPSHOT.md) | Commit count, LOC, test count, workflow state |
+| Final acceptance posture | [FINAL_ACCEPTANCE_REPORT.md](FINAL_ACCEPTANCE_REPORT.md) | Completion against final-stage expectations |
 
 ## 2. Fast manual verification
 
@@ -20,6 +20,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | `moon run official_spec_report` | Imported upstream `mustache/spec` compatibility evidence |
 | `moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan` | Reference scanning through the CLI |
 | `moon run benchmarks` | Measured performance surfaces |
+| `cd playground && npm ci && npm run differential` | 2,048 deterministic comparisons against `mustache.js` |
 
 ## 3. Reuse demos
 
@@ -38,21 +39,24 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | --- | --- | --- |
 | `benchmarks.json` | `check` workflow on the `wasm-gc` lane | Machine-readable benchmark output |
 | `benchmarks.md` | `check` workflow on the `wasm-gc` lane | Human-readable benchmark summary |
+| `coverage-summary.txt` and `coverage.xml` | `check` workflow on the `wasm-gc` lane | 80% core threshold plus Cobertura evidence |
 | `release-readiness-artifacts` | `release-readiness` workflow | Metrics snapshot, reports, demos, and benchmark outputs |
-| `static-site-preview-<sha>` | `site` workflow | Packaged static showcase preview |
+| GitHub Pages artifact | `deploy-playground` workflow | Runnable Vue UI containing the MoonBit-compiled ESM |
 
 ## 5. Supporting documents
 
 | File | Purpose |
 | --- | --- |
-| [docs/COMPATIBILITY.md](D:/CCF/moonbit/docs/COMPATIBILITY.md) | Supported feature matrix |
-| [docs/OFFICIAL_SPEC.md](D:/CCF/moonbit/docs/OFFICIAL_SPEC.md) | Imported upstream fixture coverage |
-| [docs/BENCHMARK_SNAPSHOT.md](D:/CCF/moonbit/docs/BENCHMARK_SNAPSHOT.md) | Repository-local benchmark snapshot |
-| [docs/ADOPTION_EVIDENCE.md](D:/CCF/moonbit/docs/ADOPTION_EVIDENCE.md) | Why the project is reusable beyond one example |
-| [docs/USE_CASES.md](D:/CCF/moonbit/docs/USE_CASES.md) | Concrete workflow categories |
+| [COMPATIBILITY.md](COMPATIBILITY.md) | Supported feature matrix |
+| [OFFICIAL_SPEC.md](OFFICIAL_SPEC.md) | Imported upstream fixture coverage |
+| [DIFFERENTIAL_TESTING.md](DIFFERENTIAL_TESTING.md) | Cross-implementation randomized parity methodology |
+| [BENCHMARK_SNAPSHOT.md](BENCHMARK_SNAPSHOT.md) | Repository-local benchmark snapshot |
+| [ADOPTION_EVIDENCE.md](ADOPTION_EVIDENCE.md) | Why the project is reusable beyond one example |
+| [USE_CASES.md](USE_CASES.md) | Concrete workflow categories |
 
 ## 6. Public links
 
 - GitHub: <https://github.com/bellesz0611/moon-mustache>
 - GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
-- mooncakes docs: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.1.0>
+- mooncakes docs: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.2.0>
+- online playground: <https://bellesz0611.github.io/moon-mustache/>

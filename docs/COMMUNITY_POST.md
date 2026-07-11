@@ -17,7 +17,7 @@ This is a ready-to-send short introduction for competition groups, community cha
 
 - GitHub: <https://github.com/bellesz0611/moon-mustache>
 - GitLink: <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
-- mooncakes: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.1.0>
+- mooncakes: <https://mooncakes.io/docs/bellesz0611/moon-mustache%400.2.0>
 
 欢迎试用、提 issue、给建议。
 
@@ -25,8 +25,10 @@ This is a ready-to-send short introduction for competition groups, community cha
 
 `moon-mustache` 是一个面向 MoonBit 生态的 Mustache 模板引擎，主要服务脚手架生成、配置渲染、内容产出、多文件模板工程这类场景。现在项目已经不是壳仓库，包含：
 
-- 73 / 73 自动化测试
-- 136 / 136 官方 `mustache/spec` fixture 通过
+- 85 / 85 自动化测试
+- 194 / 194 官方核心及可选 `mustache/spec` fixture 通过
+- 2048 / 2048 固定随机种子差异用例与 `mustache.js` 输出一致
+- 核心库覆盖率 81.5%，CI 门槛 80%
 - 多条 GitHub Actions workflow
 - GitHub 和 GitLink 双仓库同步
 - mooncakes.io 已发布

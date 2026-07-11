@@ -9,6 +9,9 @@ This document gives a slightly more detailed status view than `PROGRESS.md`.
 - strict diagnostics: available through checked render options
 - JSON helpers: available for direct JSON-driven integration
 - bundle helpers: available for multi-file planning and rendering
+- optional Mustache features: dynamic names, inheritance, and lambdas complete against imported upstream fixtures
+- structured diagnostics and lint: complete for syntax, data, partial, JSON, cycle, and output-path checks
+- resource limits: complete for output length, section iterations, render steps, and partial depth
 
 ## CLI status
 
@@ -18,6 +21,7 @@ This document gives a slightly more detailed status view than `PROGRESS.md`.
 - bundle-manifest validation and rendering: complete
 - template scan mode: complete
 - report export helpers: complete for current competition-facing flows
+- lint mode and non-zero CI status: complete
 
 ## Demo and ecosystem status
 
@@ -30,20 +34,24 @@ This document gives a slightly more detailed status view than `PROGRESS.md`.
 - content pipeline demo: complete
 - starter repo demo: complete
 - companion repo blueprint: complete
-- Vue playground: complete
-- static showcase site: complete
+- Vue playground with browser-compiled MoonBit ESM: complete
+- GitHub Pages deployment workflow: complete
+- deterministic `mustache.js` differential suite: complete
 
 ## Quality gates
 
 - `moon fmt --check`: required in CI
 - `moon info --target all`: required in CI
 - `moon check --deny-warn`: required in CI
+- `moon build --deny-warn`: required in CI
 - `moon test --deny-warn`: required in CI
-- playground build + smoke verification: required in dedicated workflow
+- 80% core coverage gate with Cobertura artifact: required in CI
+- 2048-case differential parity: required in playground and Pages workflows
+- playground build + Linux/Windows smoke verification: required in dedicated workflow
 
 ## Remaining growth directions
 
 - automated upstream fixture sync
 - richer benchmark snapshots across versions
-- broader external comparison notes for adopters
-- follow-up releases after `0.1.0`
+- independent adopters beyond the maintained proof repository
+- follow-up releases after `0.2.0`

@@ -40,7 +40,7 @@ partials:
 Representative output:
 
 ```text
-Subject: Moon Mustache 0.1.0 is live
+Subject: Moon Mustache 0.2.0 is live
 
 Hello maintainer,
 

@@ -20,7 +20,7 @@ The repository now includes benchmark entrypoints and a benchmark snapshot, but 
 
 ## 4. External adoption evidence is still emerging
 
-The repository includes multiple consumer-style demos, but these are still maintained inside the main project tree.
+The repository includes multiple consumer-style demos and a separately installable consumer proof, but broad third-party adoption naturally takes longer than the competition development window.
 
 This is good reuse evidence, but it is not the same thing as multiple independently maintained external repositories.
 
@@ -36,8 +36,12 @@ That narrower boundary is intentional, but it also means some users will still n
 
 ## 6. Upstream fixture sync is not fully automated yet
 
-Official `mustache/spec` fixtures are imported and validated, but upstream synchronization is not yet a fully automated recurring workflow.
+All current core and optional `mustache/spec` fixtures are imported and validated, but pulling future upstream changes remains a maintainer-triggered regeneration step.
 
-## 7. Community signals are smaller than long-running flagship projects
+## 7. JSON cannot represent executable lambdas
+
+Interpolation and section lambdas are supported for native MoonBit `Value` contexts. They are intentionally unavailable through JSON-only inputs because JSON has no executable function type.
+
+## 8. Community signals are smaller than long-running flagship projects
 
 The repository has grown quickly and now has strong engineering surfaces, but community size, stars, forks, and long-duration maintenance history are naturally still smaller than the biggest reference projects.

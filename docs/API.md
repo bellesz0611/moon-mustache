@@ -23,6 +23,8 @@ For versioning expectations, also read `docs/STABILITY.md`.
   Parsed AST nodes.
 - `ParseResult.errors`
   Structural parse diagnostics, such as unterminated sections.
+- `ParseResult.diagnostics`
+  Structured diagnostics with stable codes, severity, source name, source span, line/column, and excerpt.
 
 ## Core rendering
 
@@ -53,11 +55,38 @@ For versioning expectations, also read `docs/STABILITY.md`.
   Default permissive behavior.
 - `RenderOptions::strict()`
   Enables missing-variable collection while preserving Mustache rendering semantics.
+- `RenderOptions::with_partial_depth_limit(limit)`
+  Overrides the maximum recursive partial/parent depth.
+- `RenderOptions::with_resource_limits(max_output_chars, max_section_iterations, max_render_steps)`
+  Applies deterministic resource ceilings for untrusted or generated templates.
 - `RenderResult.output`
 - `RenderResult.errors`
 - `RenderResult.missing_variables`
 
 Use checked APIs when embedding Moon Mustache into generators, CI checks, or scaffolding tools that should fail fast on malformed templates or missing data.
+
+Resource-limit failures use stable `MST-LIMIT-*` codes in `RenderResult.errors`. Parsing and lint diagnostics use `MST-PARSE-*` and `MST-LINT-*` codes.
+
+## Structured diagnostics and lint
+
+- `Diagnostic`
+  Carries `code`, `severity`, `message`, `source_name`, `span`, and `excerpt`.
+- `SourceSpan`
+  Carries byte/character offsets plus one-based line and column positions.
+- `format_diagnostic(diagnostic)`
+  Produces a CLI-friendly diagnostic including source location and excerpt.
+- `LintOptions::default()`
+  Enables missing-variable and partial-cycle analysis.
+- `lint_template(template, context, partials)`
+  Checks syntax, data references, partial availability, and cycles.
+- `lint_template_json(template, context_json, partials, source_name=...)`
+  Adds checked JSON parsing to the lint path.
+- `lint_template_bundle(bundle, context)`
+  Adds bundle output-path safety checks.
+- `format_lint_report(report)`, `lint_error_count(report)`, `lint_warning_count(report)`, `lint_has_errors(report)`
+  Support CI and CLI presentation.
+
+The CLI exposes this path through `--lint` and returns a non-zero process status when errors are present.
 
 ## JSON-oriented helpers
 
@@ -93,6 +122,10 @@ The library context model is intentionally explicit:
 - `Value::object(...)`
 - `Value::array(...)`
 - `Value::empty_object()`
+- `Value::interpolation_lambda(() -> String)`
+- `Value::section_lambda((String) -> String)`
+
+The lambda constructors implement the optional Mustache lambda specification for native MoonBit contexts. JSON cannot encode executable functions, so JSON-only integrations intentionally cannot create lambdas.
 
 ## Context construction helpers
 
@@ -168,4 +201,6 @@ These helpers are useful, but should currently be treated as faster-evolving tha
 - Checked APIs preserve output while also surfacing diagnostics.
 - Strict options can additionally report missing variables without changing rendered output semantics.
 - Partial recursion is protected by a depth limit.
+- Dynamic partial names (`{{>*name}}`), parent templates (`{{<parent}}`), and block inheritance (`{{$block}}`) follow the optional upstream specifications.
+- Output length, section iteration count, and total render steps are bounded by configurable options.
 - Prepared template APIs avoid reparsing the same root template on every render call and reduce repeated partial parse work in high-reuse flows.

@@ -5,6 +5,7 @@ import re
 import shutil
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -27,6 +28,7 @@ COUNT_DIRS = [
     "official_spec_report",
     "downstream_consumer",
     "playground_bridge",
+    "browser_bridge",
     "adoption_demo",
     "content_pipeline_demo",
     "starter_repo_demo",
@@ -68,27 +70,32 @@ def try_run(cmd: list[str]) -> str | None:
     return completed.stdout.strip()
 
 
-def count_lines(path: Path) -> int:
-    return sum(1 for _ in path.open("r", encoding="utf-8"))
+def source_lines(path: Path) -> list[str]:
+    return path.read_text(encoding="utf-8").splitlines()
 
 
-def collect_loc() -> tuple[int, int, int]:
-    total = 0
-    handwritten = 0
-    imported = 0
+def effective_line_count(lines: list[str]) -> int:
+    return sum(1 for line in lines if line.strip() and not line.lstrip().startswith("//"))
+
+
+def collect_loc() -> tuple[int, int, int, int]:
+    physical = 0
+    effective = 0
+    handwritten_effective = 0
+    imported_effective = 0
     for dirname in COUNT_DIRS:
         for path in (ROOT / dirname).rglob("*"):
-            if not path.is_file():
+            if not path.is_file() or path.suffix != ".mbt":
                 continue
-            if path.suffix not in {".mbt", ".mbti"}:
-                continue
-            lines = count_lines(path)
-            total += lines
+            lines = source_lines(path)
+            line_count = effective_line_count(lines)
+            physical += len(lines)
+            effective += line_count
             if path.name == "official_spec_fixtures.mbt":
-                imported += lines
+                imported_effective += line_count
             else:
-                handwritten += lines
-    return total, handwritten, imported
+                handwritten_effective += line_count
+    return physical, effective, handwritten_effective, imported_effective
 
 
 def fetch_json(url: str) -> dict:
@@ -184,16 +191,44 @@ def parse_test_summary(output: str) -> tuple[int, int]:
     return int(match.group(1)), int(match.group(2))
 
 
+def parse_official_spec_summary(output: str) -> tuple[int, int, int]:
+    total = re.search(r"- total cases:\s*(\d+)", output)
+    failures = re.search(r"- total failures:\s*(\d+)", output)
+    skips = re.search(r"- total skips:\s*(\d+)", output)
+    if not total or not failures or not skips:
+        raise RuntimeError("Unable to parse official spec report")
+    return int(total.group(1)), int(failures.group(1)), int(skips.group(1))
+
+
+def parse_core_coverage(output: str) -> tuple[int, int, float]:
+    covered = 0
+    total = 0
+    for line in output.splitlines():
+        match = re.match(r"^src[\\/].*:\s*(\d+)/(\d+)\s*$", line.strip())
+        if match:
+            covered += int(match.group(1))
+            total += int(match.group(2))
+    if total == 0:
+        raise RuntimeError("Unable to parse core coverage summary")
+    return covered, total, covered * 100.0 / total
+
+
 def main() -> int:
-    total_loc, handwritten_loc, imported_loc = collect_loc()
+    physical_loc, effective_loc, handwritten_effective_loc, imported_effective_loc = collect_loc()
     commit_count = int(run(["git", "rev-list", "--count", "HEAD"]))
     head_sha = run(["git", "rev-parse", "--short", "HEAD"])
     moon = moon_cmd()
     moon_version = " | ".join(
-        line.strip() for line in run([moon, "version"]).splitlines() if line.strip()
+        line.strip() for line in run([moon, "version", "--all"]).splitlines() if line.strip()
     )
-    moon_test_output = run([moon, "test", "--deny-warn"])
+    moon_test_output = run([moon, "test", "--deny-warn", "--target", "wasm-gc"])
     test_total, test_passed = parse_test_summary(moon_test_output)
+    official_output = run([moon, "run", "--target", "wasm-gc", "official_spec_report"])
+    official_total, official_failures, official_skips = parse_official_spec_summary(official_output)
+    run([moon, "coverage", "clean"])
+    run([moon, "test", "--enable-coverage", "--target", "wasm-gc"])
+    coverage_output = run([moon, "coverage", "report", "-f", "summary"])
+    coverage_covered, coverage_total, coverage_percent = parse_core_coverage(coverage_output)
     workflow_conclusion, workflow_sha, workflow_url = latest_workflow_status()
     mooncakes_build_status, mooncakes_version, mooncakes_downloads, mooncakes_docs_url = mooncakes_status()
 
@@ -211,6 +246,7 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
+- generated at: `{datetime.now(timezone.utc).isoformat(timespec="seconds")}`
 - generated at commit: `{head_sha}`
 - public commit count: `{commit_count}`
 - MoonBit package: `{PACKAGE_NAME}`
@@ -218,14 +254,19 @@ python scripts/generate_metrics_snapshot.py
 
 ## Code scale
 
-- total MoonBit LOC across library, CLI, demos, reports, benchmarks, consumer demos, bridge code, and companion blueprint proof: `{total_loc}`
-- handwritten MoonBit LOC in those surfaces: `{handwritten_loc}`
-- imported generated fixture asset LOC: `{imported_loc}`
+- physical MoonBit source lines across library, CLI, demos, reports, benchmarks, consumer proofs, and bridges: `{physical_loc}`
+- effective MoonBit source lines after excluding blank and comment-only lines: `{effective_loc}`
+- handwritten effective MoonBit lines: `{handwritten_effective_loc}`
+- imported generated official-fixture effective lines, disclosed separately: `{imported_effective_loc}`
 
 ## Verification snapshot
 
 - automated tests passing: `{test_passed} / {test_total}`
-- local verification command: `moon test --deny-warn`
+- imported official fixture cases: `{official_total - official_failures} / {official_total}` passing, `{official_skips}` skipped
+- core library coverage: `{coverage_covered} / {coverage_total}` (`{coverage_percent:.1f}%`)
+- coverage policy: at least `80.0%`, enforced in CI with summary and Cobertura artifacts
+- local verification command: `moon test --deny-warn --target wasm-gc`
+- deterministic differential policy: `2048` generated cases with fixed seed `20260710` against `mustache.js`
 - latest GitHub library workflow conclusion: {workflow_summary}
 - latest GitHub library workflow URL: <{workflow_url}>
 
@@ -238,7 +279,8 @@ python scripts/generate_metrics_snapshot.py
 
 ## Notes
 
-- This snapshot is intentionally narrower than the whole repository filesystem. It focuses on the MoonBit implementation and proof surfaces used in competition-facing materials.
+- Effective LOC excludes blank and comment-only lines. Imported generated fixture code is never presented as handwritten implementation.
+- This snapshot is intentionally narrower than the whole repository filesystem. It focuses on MoonBit implementation and proof surfaces used in competition-facing materials.
 - If outward-facing docs mention counts, this file should be treated as the source of truth.
 - The repository's public commit count can advance after documentation-only sync commits; regenerate this file whenever you need a fresher exact number.
 """
