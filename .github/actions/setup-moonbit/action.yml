@@ -28,29 +28,30 @@ runs:
       shell: pwsh
       run: |
         $ErrorActionPreference = "Stop"
-        Set-ExecutionPolicy RemoteSigned -Scope Process -Force
         $toolchainFile = Join-Path $env:GITHUB_WORKSPACE "${{ inputs.toolchain-file }}"
         $version = Get-Content -LiteralPath $toolchainFile |
           Where-Object { $_.Trim() -and -not $_.Trim().StartsWith("#") } |
           Select-Object -First 1
         if ($null -eq $version) { throw "Empty MoonBit toolchain file: $toolchainFile" }
         $version = $version.Trim()
-        for ($attempt = 1; $attempt -le 3; $attempt++) {
-          try {
-            $env:MOONBIT_INSTALL_VERSION = $version
-            Invoke-RestMethod https://cli.moonbitlang.com/install/powershell.ps1 | Invoke-Expression
-            break
-          } catch {
-            if ($attempt -eq 3) { throw }
-            Write-Warning "MoonBit install attempt $attempt failed; retrying in $($attempt * 10)s"
-            Start-Sleep -Seconds ($attempt * 10)
-          }
-        }
-        $moon = @(
-          (Join-Path $env:USERPROFILE ".moon\bin\moon.exe"),
-          (Join-Path $env:USERPROFILE "moon-toolchain\bin\moon.exe")
-        ) | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
-        if ($null -eq $moon) { throw "MoonBit executable was not installed" }
+        $encodedVersion = $version -replace '\+', '%2B'
+        $moonHome = Join-Path $env:USERPROFILE ".moon"
+        $downloadDir = Join-Path $env:RUNNER_TEMP "moonbit-download"
+        New-Item -ItemType Directory -Force -Path $moonHome, $downloadDir | Out-Null
+        $binaryZip = Join-Path $downloadDir "moonbit.zip"
+        $coreZip = Join-Path $downloadDir "core.zip"
+        curl.exe -fsSL --retry 3 --retry-all-errors `
+          "https://cli.moonbitlang.com/binaries/$encodedVersion/moonbit-windows-x86_64.zip" `
+          -o $binaryZip
+        if ($LASTEXITCODE -ne 0) { throw "Failed to download MoonBit binaries" }
+        curl.exe -fsSL --retry 3 --retry-all-errors `
+          "https://cli.moonbitlang.com/cores/core-$encodedVersion.zip" `
+          -o $coreZip
+        if ($LASTEXITCODE -ne 0) { throw "Failed to download MoonBit core" }
+        Expand-Archive -LiteralPath $binaryZip -DestinationPath $moonHome -Force
+        Expand-Archive -LiteralPath $coreZip -DestinationPath (Join-Path $moonHome "lib") -Force
+        $moon = Join-Path $moonHome "bin\moon.exe"
+        if (!(Test-Path -LiteralPath $moon)) { throw "MoonBit executable was not installed" }
         $versionOutput = & $moon version --all | Out-String
         Write-Host $versionOutput
         if (!$versionOutput.Contains($version)) {
