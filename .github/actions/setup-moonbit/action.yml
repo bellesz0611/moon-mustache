@@ -28,18 +28,32 @@ runs:
       shell: pwsh
       run: |
         $ErrorActionPreference = "Stop"
+        Set-ExecutionPolicy RemoteSigned -Scope Process -Force
         $toolchainFile = Join-Path $env:GITHUB_WORKSPACE "${{ inputs.toolchain-file }}"
         $version = Get-Content -LiteralPath $toolchainFile |
           Where-Object { $_.Trim() -and -not $_.Trim().StartsWith("#") } |
           Select-Object -First 1
         if ($null -eq $version) { throw "Empty MoonBit toolchain file: $toolchainFile" }
         $version = $version.Trim()
-        $env:MOONBIT_INSTALL_VERSION = $version
-        Invoke-RestMethod https://cli.moonbitlang.com/install/powershell.ps1 | Invoke-Expression
-        $moon = Join-Path $env:USERPROFILE ".moon\bin\moon.exe"
+        for ($attempt = 1; $attempt -le 3; $attempt++) {
+          try {
+            $env:MOONBIT_INSTALL_VERSION = $version
+            Invoke-RestMethod https://cli.moonbitlang.com/install/powershell.ps1 | Invoke-Expression
+            break
+          } catch {
+            if ($attempt -eq 3) { throw }
+            Write-Warning "MoonBit install attempt $attempt failed; retrying in $($attempt * 10)s"
+            Start-Sleep -Seconds ($attempt * 10)
+          }
+        }
+        $moon = @(
+          (Join-Path $env:USERPROFILE ".moon\bin\moon.exe"),
+          (Join-Path $env:USERPROFILE "moon-toolchain\bin\moon.exe")
+        ) | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+        if ($null -eq $moon) { throw "MoonBit executable was not installed" }
         $versionOutput = & $moon version --all | Out-String
         Write-Host $versionOutput
         if (!$versionOutput.Contains($version)) {
           throw "Installed MoonBit toolchain does not match $version"
         }
-        "$env:USERPROFILE\.moon\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+        (Split-Path -Parent $moon) | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
