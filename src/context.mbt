@@ -6,6 +6,8 @@ pub enum Value {
   StringValue(String)
   ObjectValue(Map[String, Value])
   ArrayValue(Array[Value])
+  InterpolationLambda(() -> String)
+  SectionLambda((String) -> String)
 }
 
 ///|
@@ -41,6 +43,16 @@ pub fn Value::empty_object() -> Value {
 ///|
 pub fn Value::array(items : Array[Value]) -> Value {
   ArrayValue(items)
+}
+
+///|
+pub fn Value::interpolation_lambda(callback : () -> String) -> Value {
+  InterpolationLambda(callback)
+}
+
+///|
+pub fn Value::section_lambda(callback : (String) -> String) -> Value {
+  SectionLambda(callback)
 }
 
 ///|
@@ -115,6 +127,7 @@ pub fn is_truthy(value : Value) -> Bool {
     NullValue => false
     BoolValue(v) => v
     ArrayValue(items) => items.length() > 0
+    InterpolationLambda(_) | SectionLambda(_) => true
     _ => true
   }
 }
@@ -128,5 +141,6 @@ pub fn value_to_string(value : Value) -> String {
     StringValue(v) => v
     ObjectValue(_) => "[object]"
     ArrayValue(_) => "[array]"
+    InterpolationLambda(_) | SectionLambda(_) => ""
   }
 }

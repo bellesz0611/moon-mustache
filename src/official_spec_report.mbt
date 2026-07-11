@@ -34,6 +34,55 @@ fn parse_official_partials(input : String) -> Map[String, String] {
 }
 
 ///|
+fn official_lambda_value(case_name : String) -> Value {
+  match case_name {
+    "Interpolation" => Value::interpolation_lambda(fn() { "world" })
+    "Interpolation - Expansion" =>
+      Value::interpolation_lambda(fn() { "{{planet}}" })
+    "Interpolation - Alternate Delimiters" =>
+      Value::interpolation_lambda(fn() { "|planet| => {{planet}}" })
+    "Interpolation - Multiple Calls" => {
+      let calls = [0]
+      Value::interpolation_lambda(fn() {
+        calls[0] = calls[0] + 1
+        calls[0].to_string()
+      })
+    }
+    "Escaping" => Value::interpolation_lambda(fn() { ">" })
+    "Section" =>
+      Value::section_lambda(fn(text) {
+        if text == "{{x}}" {
+          "yes"
+        } else {
+          "no"
+        }
+      })
+    "Section - Expansion" =>
+      Value::section_lambda(fn(text) { text + "{{planet}}" + text })
+    "Section - Alternate Delimiters" =>
+      Value::section_lambda(fn(text) { text + "{{planet}} => |planet|" + text })
+    "Section - Multiple Calls" =>
+      Value::section_lambda(fn(text) { "__" + text + "__" })
+    "Inverted Section" => Value::section_lambda(fn(_text) { "false" })
+    _ => Value::interpolation_lambda(fn() { "" })
+  }
+}
+
+///|
+fn adapt_official_context(case_ : OfficialSpecCase, context : Value) -> Value {
+  if case_.suite_name != "~lambdas" {
+    return context
+  }
+  match context {
+    ObjectValue(entries) => {
+      entries["lambda"] = official_lambda_value(case_.case_name)
+      Value::object(entries)
+    }
+    _ => context
+  }
+}
+
+///|
 fn official_case_result_for_skip(
   case_ : OfficialSpecCase,
   reason : String,
@@ -64,6 +113,7 @@ fn run_official_spec_case(case_ : OfficialSpecCase) -> OfficialSpecCaseResult {
             skip_reason: None,
           }
       }
+      let context = adapt_official_context(case_, context)
       let actual = render_with_partials(
         case_.template,
         context,

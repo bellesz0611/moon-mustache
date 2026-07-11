@@ -15,6 +15,9 @@ SUITES = [
     "inverted",
     "partials",
     "sections",
+    "~dynamic-names",
+    "~inheritance",
+    "~lambdas",
 ]
 
 SKIP_REASONS = {}

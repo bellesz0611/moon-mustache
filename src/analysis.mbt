@@ -5,6 +5,9 @@ pub enum TemplateReferenceKind {
   SectionReference
   InvertedSectionReference
   PartialReference
+  DynamicPartialReference
+  ParentReference
+  BlockReference
 }
 
 ///|
@@ -57,8 +60,9 @@ fn record_reference(
     return
   }
   match kind {
-    PartialReference =>
+    PartialReference | ParentReference =>
       push_unique_name(partial_names, seen_partial_names, name)
+    BlockReference => ()
     _ => {
       push_unique_name(data_names, seen_data_names, name)
       if name.contains(".") && dotted_name_markers.length() == 0 {
@@ -98,7 +102,7 @@ fn scan_nodes(
           current_context_markers,
           dotted_name_markers,
         )
-      Section(name~, inverted~, children~) => {
+      Section(name~, inverted~, children~, ..) => {
         record_reference(
           data_names,
           partial_names,
@@ -131,6 +135,52 @@ fn scan_nodes(
           current_context_markers,
           dotted_name_markers,
         )
+      DynamicPartial(name~, ..) =>
+        record_reference(
+          data_names,
+          partial_names,
+          seen_data_names,
+          seen_partial_names,
+          references,
+          DynamicPartialReference,
+          name,
+          current_context_markers,
+          dotted_name_markers,
+        )
+      Parent(name~, children~, ..) => {
+        record_reference(
+          data_names,
+          partial_names,
+          seen_data_names,
+          seen_partial_names,
+          references,
+          ParentReference,
+          name,
+          current_context_markers,
+          dotted_name_markers,
+        )
+        scan_nodes(
+          children, data_names, partial_names, seen_data_names, seen_partial_names,
+          references, current_context_markers, dotted_name_markers,
+        )
+      }
+      Block(name~, children~, ..) => {
+        record_reference(
+          data_names,
+          partial_names,
+          seen_data_names,
+          seen_partial_names,
+          references,
+          BlockReference,
+          name,
+          current_context_markers,
+          dotted_name_markers,
+        )
+        scan_nodes(
+          children, data_names, partial_names, seen_data_names, seen_partial_names,
+          references, current_context_markers, dotted_name_markers,
+        )
+      }
     }
   }
 }

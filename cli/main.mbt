@@ -378,6 +378,83 @@ fn print_scan_result(result : @src.TemplateScanResult) -> Unit {
 }
 
 ///|
+fn lint_source_name(matches : @argparse.Matches) -> String {
+  match first_value(matches, "template-file") {
+    Some(path) => path
+    None => "<inline-template>"
+  }
+}
+
+///|
+fn finish_lint(report : @src.LintReport, input_errors : Array[String]) -> Unit {
+  for error in input_errors {
+    println("<input>:1:1: error [MST-CLI-001] " + error)
+  }
+  println(@src.format_lint_report(report))
+  if input_errors.length() > 0 || @src.lint_has_errors(report) {
+    set_process_exit_code(1)
+  }
+}
+
+///|
+fn handle_lint_mode(
+  matches : @argparse.Matches,
+  context : @src.Value,
+  context_errors : Array[String],
+  partials : Map[String, String],
+  partial_errors : Array[String],
+) -> Unit {
+  let input_errors = context_errors.copy()
+  push_all(input_errors, partial_errors)
+  if bundle_manifest_enabled(matches) {
+    let (manifest_opt, manifest_errors) = build_bundle_manifest(matches)
+    push_all(input_errors, manifest_errors)
+    match manifest_opt {
+      Some(manifest) => {
+        let profile_name = match first_value(matches, "bundle-profile") {
+          Some(value) => value
+          None => ""
+        }
+        match
+          @src.resolve_bundle_manifest_profile(manifest, context, profile_name~) {
+          Ok(resolved) => {
+            let final_bundle = @src.TemplateBundle::new(
+              resolved.bundle.files,
+              merge_partial_maps(resolved.bundle.partials, partials),
+            )
+            finish_lint(
+              @src.lint_template_bundle(final_bundle, resolved.context),
+              input_errors,
+            )
+          }
+          Err(message) => {
+            input_errors.push(message)
+            finish_lint(@src.lint_template("", context, {}), input_errors)
+          }
+        }
+      }
+      None => finish_lint(@src.lint_template("", context, {}), input_errors)
+    }
+  } else {
+    let (template, template_errors) = build_template(matches)
+    push_all(input_errors, template_errors)
+    let resolved_partials = if partials.length() == 0 {
+      { "footer": "Rendered by moon-mustache." }
+    } else {
+      partials
+    }
+    let report = @src.lint_template_with_options(
+      template,
+      context,
+      resolved_partials,
+      @src.LintOptions::default(),
+      source_name=lint_source_name(matches),
+    )
+    finish_lint(report, input_errors)
+  }
+}
+
+///|
 fn bundle_manifest_enabled(matches : @argparse.Matches) -> Bool {
   first_value(matches, "bundle-manifest-file") is Some(_)
 }
@@ -787,6 +864,11 @@ fn main {
         about="Scan a template and print referenced data names, partials, and delimiter usage.",
       ),
       FlagArg(
+        "lint",
+        long="lint",
+        about="Validate template syntax, context references, partial graphs, and bundle paths.",
+      ),
+      FlagArg(
         "print-default-template",
         long="print-default-template",
         about="Print the built-in demo template and exit.",
@@ -832,6 +914,10 @@ fn main {
   let (context, context_errors) = build_context(matches)
   let (partials, partial_errors) = build_partials(matches)
   let render_options = build_render_options(matches)
+  if flag_enabled(matches, "lint") {
+    handle_lint_mode(matches, context, context_errors, partials, partial_errors)
+    return
+  }
   if bundle_manifest_enabled(matches) {
     handle_bundle_mode(
       matches, context, context_errors, partials, partial_errors, render_options,

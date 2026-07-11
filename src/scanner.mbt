@@ -40,6 +40,9 @@ fn is_standalone_candidate(kind : TokenKind) -> Bool {
     | SectionEnd
     | InvertedSectionStart
     | Partial
+    | DynamicPartial
+    | ParentStart
+    | BlockStart
     | Comment
     | SetDelimiter => true
     _ => false
@@ -93,6 +96,22 @@ fn standalone_line_end(input : String, start : Int) -> Int? {
     return None
   }
   Some(cursor)
+}
+
+///|
+fn paired_parent_is_standalone(
+  input : String,
+  tag_end : Int,
+  name : String,
+  state : ScanState,
+) -> Bool {
+  let end_tag = state.open_delim + "/" + name + state.close_delim
+  let remaining = input[:].view(start_offset=tag_end).to_owned()
+  match remaining.strip_prefix(end_tag) {
+    Some(after_end_tag) =>
+      standalone_line_end(after_end_tag.to_owned(), 0) is Some(_)
+    None => false
+  }
 }
 
 ///|
@@ -165,9 +184,42 @@ fn classify_tag(
         state,
       )
     '>' =>
+      match trimmed.view(start_offset=1).trim().to_owned().strip_prefix("*") {
+        Some(dynamic_name) =>
+          (
+            Token::new(
+              DynamicPartial,
+              dynamic_name.to_owned().trim().to_owned(),
+              start,
+              end_,
+            ),
+            state,
+          )
+        None =>
+          (
+            Token::new(
+              Partial,
+              trimmed.view(start_offset=1).trim().to_owned(),
+              start,
+              end_,
+            ),
+            state,
+          )
+      }
+    '<' =>
       (
         Token::new(
-          Partial,
+          ParentStart,
+          trimmed.view(start_offset=1).trim().to_owned(),
+          start,
+          end_,
+        ),
+        state,
+      )
+    '$' =>
+      (
+        Token::new(
+          BlockStart,
           trimmed.view(start_offset=1).trim().to_owned(),
           start,
           end_,
@@ -258,12 +310,13 @@ pub fn scan_with_state(input : String, state : ScanState) -> Array[Token] {
             let raw_content = input[:]
               .view(start_offset=tag_start, end_offset=close_index)
               .to_owned()
-            let (token, next_state) = classify_tag(
+            let (raw_token, next_state) = classify_tag(
               raw_content,
               open_index,
               close_index + close_delim.length(),
               current_state,
             )
+            let token = raw_token.with_delimiters(open_delim, close_delim)
             let tag_end = close_index + close_delim.length()
             let line_start = line_start_index(input, open_index)
             let can_be_standalone = is_standalone_candidate(token.kind) &&
@@ -273,13 +326,28 @@ pub fn scan_with_state(input : String, state : ScanState) -> Array[Token] {
             } else {
               None
             }
-            let text_end = match standalone_end {
-              Some(_) => line_start
-              None => open_index
+            let paired_parent_standalone = match token.kind {
+              ParentStart =>
+                can_be_standalone &&
+                paired_parent_is_standalone(
+                  input,
+                  tag_end,
+                  token.lexeme,
+                  current_state,
+                )
+              _ => false
+            }
+            let text_end = if paired_parent_standalone {
+              line_start
+            } else {
+              match standalone_end {
+                Some(_) => line_start
+                None => open_index
+              }
             }
             push_text_token(tokens, input, cursor, text_end)
             let final_token = match (token.kind, standalone_end) {
-              (Partial, Some(_)) =>
+              (Partial | DynamicPartial | ParentStart | BlockStart, Some(_)) =>
                 Token::with_indentation(
                   token.kind,
                   token.lexeme,
@@ -287,6 +355,41 @@ pub fn scan_with_state(input : String, state : ScanState) -> Array[Token] {
                   token.end_,
                   Some(slice_owned(input, line_start, open_index)),
                 )
+              (BlockStart, None) =>
+                if can_be_standalone {
+                  Token::with_indentation(
+                    token.kind,
+                    token.lexeme,
+                    token.start,
+                    token.end_,
+                    Some(slice_owned(input, line_start, open_index)),
+                    standalone=false,
+                  )
+                } else {
+                  token
+                }
+              (SectionEnd, Some(_)) =>
+                Token::with_indentation(
+                  token.kind,
+                  token.lexeme,
+                  token.start,
+                  token.end_,
+                  None,
+                )
+              (ParentStart, None) =>
+                if can_be_standalone {
+                  Token::with_indentation(
+                    token.kind,
+                    token.lexeme,
+                    token.start,
+                    token.end_,
+                    Some(slice_owned(input, line_start, open_index)),
+                    standalone=paired_parent_standalone,
+                    paired=paired_parent_standalone,
+                  )
+                } else {
+                  token
+                }
               _ => token
             }
             tokens.push(final_token)

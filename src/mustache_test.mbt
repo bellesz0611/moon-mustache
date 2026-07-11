@@ -21,8 +21,11 @@ fn run_spec_case(
 
 ///|
 test "escape_html handles reserved characters" {
-  let actual = escape_html("<tag>&\"'")
-  inspect(actual, content="&lt;tag&gt;&amp;&quot;&#39;")
+  let actual = escape_html("<tag>&\"'/`=<tag>&")
+  inspect(
+    actual,
+    content="&lt;tag&gt;&amp;&quot;&#39;&#x2F;&#x60;&#x3D;&lt;tag&gt;&amp;",
+  )
 }
 
 ///|
@@ -810,6 +813,144 @@ test "parse_template builds section tree without errors" {
 test "parse_template reports unterminated sections" {
   let parsed = parse("{{#user}}Hi")
   inspect(parsed.errors.length(), content="1")
+}
+
+///|
+test "parse_template reports structured source diagnostics" {
+  let parsed = parse("Hello\n{{/user}}")
+  inspect(parsed.diagnostics.length(), content="1")
+  inspect(parsed.diagnostics[0].code, content="MST-PARSE-001")
+  inspect(parsed.diagnostics[0].span.line, content="2")
+  inspect(parsed.diagnostics[0].span.column, content="1")
+}
+
+///|
+test "lint reports missing variables with source positions" {
+  let report = lint_template("Hello {{user.name}}", Value::empty_object(), {})
+  inspect(lint_error_count(report), content="1")
+  inspect(report.diagnostics[0].code, content="MST-LINT-001")
+  inspect(report.diagnostics[0].span.column, content="7")
+}
+
+///|
+test "lint reports missing partials and partial cycles" {
+  let missing = lint_template("{{> card}}", Value::empty_object(), {})
+  inspect(lint_error_count(missing), content="1")
+  inspect(missing.diagnostics[0].code, content="MST-LINT-002")
+  let cyclic = lint_template("{{> first}}", Value::empty_object(), {
+    "first": "{{> second}}",
+    "second": "{{> first}}",
+  })
+  inspect(lint_has_errors(cyclic), content="true")
+  inspect(format_lint_report(cyclic).contains("MST-LINT-003"), content="true")
+}
+
+///|
+test "lint bundle includes unsafe output path diagnostics" {
+  let bundle = TemplateBundle::new(
+    [TemplateFile::new("../secret.txt", "safe")],
+    {},
+  )
+  let report = lint_template_bundle(bundle, Value::empty_object())
+  inspect(lint_has_errors(report), content="true")
+  inspect(
+    format_lint_report(report).contains("MST-BUNDLE-invalid-output-path"),
+    content="true",
+  )
+}
+
+///|
+test "lint json reports malformed context" {
+  let report = lint_template_json("Hello {{name}}", "{", {})
+  inspect(lint_error_count(report), content="1")
+  inspect(report.diagnostics[0].code, content="MST-LINT-004")
+}
+
+///|
+test "render resource budget limits output length" {
+  let options = RenderOptions::default().with_resource_limits(5, 100, 100)
+  let result = render_checked_with_options(
+    "abcdefghij",
+    Value::empty_object(),
+    options,
+  )
+  inspect(result.output, content="abcde")
+  inspect(result.errors[0].contains("MST-LIMIT-001"), content="true")
+}
+
+///|
+test "render resource budget limits section iterations" {
+  let context = make_object([
+    (
+      "items",
+      Value::array([Value::string("1"), Value::string("2"), Value::string("3")]),
+    ),
+  ])
+  let options = RenderOptions::default().with_resource_limits(100, 2, 100)
+  let result = render_checked_with_options(
+    "{{#items}}{{.}}{{/items}}", context, options,
+  )
+  inspect(result.output, content="12")
+  inspect(result.errors[0].contains("MST-LIMIT-002"), content="true")
+}
+
+///|
+test "render resource budget limits total render steps" {
+  let context = make_object([("name", Value::string("MoonBit"))])
+  let options = RenderOptions::default().with_resource_limits(100, 100, 2)
+  let result = render_checked_with_options("A{{name}}B", context, options)
+  inspect(result.output, content="AMoonBit")
+  inspect(result.errors[0].contains("MST-LIMIT-003"), content="true")
+}
+
+///|
+test "interpolation lambda expands returned templates and escapes output" {
+  let context = Value::object({
+    "planet": Value::string("<Earth>"),
+    "lambda": Value::interpolation_lambda(fn() { "{{{planet}}}" }),
+  })
+  inspect(
+    render("Hello {{lambda}} / {{{lambda}}}", context),
+    content="Hello &lt;Earth&gt; / <Earth>",
+  )
+}
+
+///|
+test "section lambda receives raw source and expands returned templates" {
+  let context = Value::object({
+    "planet": Value::string("Earth"),
+    "lambda": Value::section_lambda(fn(text) { text + "{{planet}}" + text }),
+  })
+  inspect(render("<{{#lambda}}-{{/lambda}}>", context), content="<-Earth->")
+}
+
+///|
+test "section lambda honors active delimiters" {
+  let context = Value::object({
+    "planet": Value::string("Earth"),
+    "lambda": Value::section_lambda(fn(text) {
+      text + "{{planet}} => |planet|" + text
+    }),
+  })
+  inspect(
+    render("{{= | | =}}<|#lambda|-|/lambda|>", context),
+    content="<-{{planet}} => Earth->",
+  )
+}
+
+///|
+test "interpolation lambdas are invoked for every reference" {
+  let calls = [0]
+  let context = Value::object({
+    "lambda": Value::interpolation_lambda(fn() {
+      calls[0] = calls[0] + 1
+      calls[0].to_string()
+    }),
+  })
+  inspect(
+    render("{{lambda}} == {{{lambda}}} == {{lambda}}", context),
+    content="1 == 2 == 3",
+  )
 }
 
 ///|

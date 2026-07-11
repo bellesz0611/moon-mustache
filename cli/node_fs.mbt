@@ -88,3 +88,20 @@ fn read_text_file(_path : String) -> Result[String, String] {
 fn write_text_file(_path : String, _content : String) -> Result[Unit, String] {
   Err("file IO is only supported when running the CLI with --target js")
 }
+
+///|
+#cfg(target="js")
+extern "js" fn set_process_exit_code(code : Int) -> Unit =
+  #|(code) => {
+  #|  if (typeof process !== 'undefined') {
+  #|    process.exitCode = code
+  #|  }
+  #|}
+
+///|
+#cfg(not(target="js"))
+fn set_process_exit_code(code : Int) -> Unit {
+  if code != 0 {
+    panic()
+  }
+}
