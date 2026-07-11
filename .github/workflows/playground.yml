@@ -22,10 +22,8 @@ jobs:
           cache: npm
           cache-dependency-path: playground/package-lock.json
 
-      - name: Install MoonBit
-        run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Set up pinned MoonBit
+        uses: ./.github/actions/setup-moonbit
 
       - name: Update MoonBit
         run: moon update
@@ -41,6 +39,45 @@ jobs:
         working-directory: playground
         run: npm run build
 
+      - name: Run deterministic differential suite
+        working-directory: playground
+        run: npm run differential
+
       - name: Smoke test playground API bridge
+        working-directory: playground
+        run: npm run smoke
+
+  windows-playground-smoke:
+    name: Windows browser and API bridge
+    runs-on: windows-2022
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up pinned MoonBit
+        uses: ./.github/actions/setup-moonbit
+
+      - name: Update MoonBit package index
+        run: moon update
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: playground/package-lock.json
+
+      - name: Install playground dependencies
+        working-directory: playground
+        run: npm ci
+
+      - name: Verify JS target and build browser bundle
+        run: |
+          moon check --deny-warn --target js
+          moon test --deny-warn --target js
+          npm --prefix playground run build
+
+      - name: Verify Windows API bridge discovery
         working-directory: playground
         run: npm run smoke

@@ -1,16 +1,21 @@
 {
   "name": "moon-mustache-playground",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -k \"node server.mjs\" \"vite --host\"",
+    "moon-engine": "node scripts/build-moon-engine.mjs",
+    "predev": "npm run moon-engine",
+    "dev": "vite --host",
+    "prebuild": "npm run moon-engine",
     "build": "vite build",
     "preview": "vite preview --host",
     "api": "node server.mjs",
-    "smoke": "node smoke.mjs"
+    "smoke": "node smoke.mjs",
+    "differential": "npm run moon-engine && node scripts/differential-test.mjs --cases 2048 --seed 20260710"
   },
   "dependencies": {
+    "mustache": "^4.2.0",
     "vue": "^3.5.18"
   },
   "devDependencies": {

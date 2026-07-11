@@ -13,29 +13,23 @@ jobs:
     strategy:
       matrix:
         target:
+          - wasm
           - wasm-gc
           - js
+          - native
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Install MoonBit
-        run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Set up pinned MoonBit
+        uses: ./.github/actions/setup-moonbit
 
       - name: Update MoonBit
         run: moon update
 
       - name: Show MoonBit version
         run: moon version --all
-
-      - name: Run moon fmt --deny-warn compatibility gate
-        if: matrix.target == 'wasm-gc'
-        shell: bash
-        run: |
-          moon fmt --deny-warn 2>/dev/null || moon fmt --check
 
       - name: Run moon fmt check
         run: moon fmt --check
@@ -52,6 +46,9 @@ jobs:
 
       - name: Run moon check with deny-warn
         run: moon check --deny-warn --target ${{ matrix.target }}
+
+      - name: Run moon build with deny-warn
+        run: moon build --deny-warn --target ${{ matrix.target }}
 
       - name: Run moon test with deny-warn
         run: moon test --deny-warn --target ${{ matrix.target }}
@@ -96,6 +93,15 @@ jobs:
           moon run --target ${{ matrix.target }} benchmarks > _ci_artifacts/benchmarks.json
           python scripts/summarize_benchmarks.py _ci_artifacts/benchmarks.json > _ci_artifacts/benchmarks.md
 
+      - name: Enforce core coverage gate
+        if: matrix.target == 'wasm-gc'
+        run: |
+          moon coverage clean
+          moon test --enable-coverage --target wasm-gc
+          moon coverage report -f summary | tee _ci_artifacts/coverage-summary.txt
+          python scripts/check_coverage.py _ci_artifacts/coverage-summary.txt 80
+          moon coverage report -f cobertura -o _ci_artifacts/coverage.xml
+
       - name: Run CLI file-flow smoke test
         if: matrix.target == 'js'
         run: moon run --target js cli --template-file examples/files/template.mustache --json-file examples/files/context.json --partials-json-file examples/files/partials.json
@@ -108,9 +114,13 @@ jobs:
         if: matrix.target == 'js'
         run: moon run --target js cli --bundle-manifest-file examples/bundle/manifest.json --bundle-profile dev --json-file examples/bundle/context.json --bundle-check-only --bundle-validation-file _ci_bundle/validation.md --bundle-plan-file _ci_bundle/plan.md
 
-      - name: Upload benchmark artifacts
+      - name: Run CLI lint smoke test
+        if: matrix.target == 'js'
+        run: moon run --target js cli --template "Hello {{name}}" --var name=MoonBit --lint
+
+      - name: Upload verification artifacts
         if: matrix.target == 'wasm-gc'
         uses: actions/upload-artifact@v4
         with:
-          name: library-benchmarks-${{ github.sha }}
+          name: verification-evidence-${{ github.sha }}
           path: _ci_artifacts

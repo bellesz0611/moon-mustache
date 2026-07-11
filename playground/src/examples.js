@@ -27,7 +27,7 @@ export const examples = [
       'Subject: {{release.name}} is live\n\nHello {{user.name}},\n\n{{#highlights}}- {{.}}\n{{/highlights}}\n{{^highlights}}- No highlights provided\n{{/highlights}}\n\n{{> signature}}',
     contextJson: JSON.stringify(
       {
-        release: { name: 'Moon Mustache 0.1.0' },
+        release: { name: 'Moon Mustache 0.2.0' },
         user: { name: 'maintainer' },
         highlights: ['Official fixture parity', 'CLI diagnostics', 'Vue playground'],
       },

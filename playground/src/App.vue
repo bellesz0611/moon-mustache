@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
 import { examples } from './examples'
+import { renderMoonMustache } from './generated/moon_mustache.js'
 
 const selectedId = ref(examples[0].id)
 const template = ref(examples[0].template)
@@ -18,17 +19,17 @@ const copied = ref('')
 const proofItems = [
   {
     label: 'Official fixtures',
-    value: '136 / 136',
-    note: 'Imported mustache/spec cases passing end to end.',
+    value: '194 / 194',
+    note: 'Core and optional mustache/spec cases passing end to end.',
   },
   {
     label: 'Automated tests',
-    value: '64',
+    value: '85',
     note: 'Library, CLI, bundle, report, and bridge paths covered.',
   },
   {
     label: 'MoonBit package',
-    value: '0.1.0',
+    value: '0.2.0',
     note: 'Published to mooncakes.io and reusable downstream.',
   },
 ]
@@ -72,19 +73,14 @@ async function renderNow() {
   isRendering.value = true
   lastError.value = ''
   try {
-    const response = await fetch('/api/render', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        template: template.value,
-        contextJson: contextJson.value,
-        partialsJson: partialsJson.value,
-        strictMissing: strictMissing.value,
-      }),
-    })
-    const payload = await response.json()
+    const payload = JSON.parse(
+      renderMoonMustache(
+        template.value,
+        contextJson.value,
+        partialsJson.value,
+        strictMissing.value,
+      ),
+    )
     output.value = payload.output || ''
     diagnostics.value = payload.errors || []
     missingVariables.value = payload.missing_variables || []
@@ -136,7 +132,7 @@ onMounted(() => {
         <p class="eyebrow">MoonBit Template Infrastructure</p>
         <h1>Moon Mustache turns template rendering into a reusable MoonBit building block.</h1>
         <p class="lead">
-          This playground is wired to the repository's own MoonBit engine through a local render bridge.
+          This playground runs the repository's MoonBit engine directly in the browser as a compiled ES module.
           Edit the template, JSON context, and partials, then inspect output, diagnostics, and integration
           signals side by side.
         </p>

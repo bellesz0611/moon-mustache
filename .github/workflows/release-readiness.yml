@@ -21,21 +21,14 @@ jobs:
           cache: npm
           cache-dependency-path: playground/package-lock.json
 
-      - name: Install MoonBit
-        run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Set up pinned MoonBit
+        uses: ./.github/actions/setup-moonbit
 
       - name: Update MoonBit
         run: moon update
 
       - name: Show MoonBit version
         run: moon version --all
-
-      - name: Run moon fmt --deny-warn compatibility gate
-        shell: bash
-        run: |
-          moon fmt --deny-warn 2>/dev/null || moon fmt --check
 
       - name: Run moon info --deny-warn compatibility gate
         shell: bash
@@ -78,6 +71,7 @@ jobs:
         working-directory: playground
         run: |
           npm run build
+          npm run differential
           npm run smoke
 
       - name: Upload evaluator artifacts

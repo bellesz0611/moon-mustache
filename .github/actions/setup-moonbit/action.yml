@@ -1,0 +1,45 @@
+name: Set up MoonBit
+description: Install and verify the repository-pinned MoonBit toolchain.
+
+inputs:
+  toolchain-file:
+    description: Toolchain version file relative to the repository root.
+    required: false
+    default: .moonbit-toolchain
+
+runs:
+  using: composite
+  steps:
+    - name: Install pinned MoonBit on Unix
+      if: runner.os != 'Windows'
+      shell: bash
+      run: |
+        set -euo pipefail
+        toolchain_file="$GITHUB_WORKSPACE/${{ inputs.toolchain-file }}"
+        version="$(awk 'NF && $1 !~ /^#/ { print $1; exit }' "$toolchain_file")"
+        test -n "$version"
+        curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash -s "$version"
+        "$HOME/.moon/bin/moon" version --all | tee "$RUNNER_TEMP/moon-version.txt"
+        grep -Fq "$version" "$RUNNER_TEMP/moon-version.txt"
+        echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+    - name: Install pinned MoonBit on Windows
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $ErrorActionPreference = "Stop"
+        $toolchainFile = Join-Path $env:GITHUB_WORKSPACE "${{ inputs.toolchain-file }}"
+        $version = Get-Content -LiteralPath $toolchainFile |
+          Where-Object { $_.Trim() -and -not $_.Trim().StartsWith("#") } |
+          Select-Object -First 1
+        if ($null -eq $version) { throw "Empty MoonBit toolchain file: $toolchainFile" }
+        $version = $version.Trim()
+        $env:MOONBIT_INSTALL_VERSION = $version
+        Invoke-RestMethod https://cli.moonbitlang.com/install/powershell.ps1 | Invoke-Expression
+        $moon = Join-Path $env:USERPROFILE ".moon\bin\moon.exe"
+        $versionOutput = & $moon version --all | Out-String
+        Write-Host $versionOutput
+        if (!$versionOutput.Contains($version)) {
+          throw "Installed MoonBit toolchain does not match $version"
+        }
+        "$env:USERPROFILE\.moon\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append

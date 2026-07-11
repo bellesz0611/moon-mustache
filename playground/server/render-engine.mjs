@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process'
+import { existsSync } from 'node:fs'
 import { promisify } from 'node:util'
 import path from 'node:path'
 import os from 'node:os'
@@ -20,10 +21,21 @@ function resolveMoonBinary() {
   if (process.env.MOON_BIN) {
     return process.env.MOON_BIN
   }
-  if (process.platform === 'win32') {
-    return path.join(os.homedir(), '.moon', 'bin', 'moon.exe')
+
+  const executable = process.platform === 'win32' ? 'moon.exe' : 'moon'
+  const candidates = [
+    path.join(os.homedir(), 'moon-toolchain', 'bin', executable),
+    path.join(os.homedir(), '.moon', 'bin', executable),
+  ]
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate
+    }
   }
-  return path.join(os.homedir(), '.moon', 'bin', 'moon')
+
+  // Let the operating system resolve the executable from PATH. This covers
+  // package-manager and custom toolchain installations on every platform.
+  return executable
 }
 
 async function ensureBridgeBuilt() {

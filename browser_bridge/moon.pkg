@@ -1,0 +1,12 @@
+import {
+  "bellesz0611/moon-mustache/src",
+}
+
+options(
+  link: {
+    "js": {
+      "exports": [ "render_json_bridge:renderMoonMustache" ],
+      "format": "esm",
+    },
+  },
+)

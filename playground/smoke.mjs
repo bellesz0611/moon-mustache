@@ -41,7 +41,10 @@ async function verifyRender() {
     }),
   })
   if (!response.ok) {
-    throw new Error(`render request failed with status ${response.status}`)
+    const detail = await response.text()
+    throw new Error(
+      `render request failed with status ${response.status}: ${detail}`,
+    )
   }
   const payload = await response.json()
   if (payload.errors?.length) {

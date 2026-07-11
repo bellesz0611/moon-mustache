@@ -21,10 +21,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Install MoonBit
-        run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+      - name: Set up pinned MoonBit
+        uses: ./.github/actions/setup-moonbit
 
       - name: Update MoonBit
         run: moon update
