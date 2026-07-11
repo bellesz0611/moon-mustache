@@ -72,11 +72,16 @@ jobs:
         working-directory: playground
         run: npm ci
 
-      - name: Verify JS target and build browser bundle
+      - name: Check MoonBit JS target
+        run: moon check --deny-warn --target js
+
+      - name: Test MoonBit JS target
+        run: moon test --deny-warn --target js
+
+      - name: Build browser bundle on Windows
+        working-directory: playground
         run: |
-          moon check --deny-warn --target js
-          moon test --deny-warn --target js
-          npm --prefix playground run build
+          npm run build
 
       - name: Verify Windows API bridge discovery
         working-directory: playground
