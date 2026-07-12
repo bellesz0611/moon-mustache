@@ -73,7 +73,18 @@ jobs:
         run: npm ci
 
       - name: Check MoonBit JS target
-        run: moon check --deny-warn --target js
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path _windows_diagnostics | Out-Null
+          $output = & moon check --deny-warn --target js 2>&1
+          $status = $LASTEXITCODE
+          $output | Tee-Object -FilePath _windows_diagnostics/moon-check.txt
+          if ($status -ne 0) {
+            $escaped = $output | ForEach-Object { $_ -replace '%', '%25' -replace "`r", '%0D' -replace "`n", '%0A' }
+            $annotation = $escaped -join '%0A'
+            Write-Output "::error title=Windows moon check failed::$annotation"
+            exit $status
+          }
 
       - name: Test MoonBit JS target
         run: moon test --deny-warn --target js
@@ -86,3 +97,11 @@ jobs:
       - name: Verify Windows API bridge discovery
         working-directory: playground
         run: npm run smoke
+
+      - name: Upload Windows diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-playground-diagnostics-${{ github.sha }}
+          path: _windows_diagnostics
+          if-no-files-found: warn
