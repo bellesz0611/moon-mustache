@@ -52,6 +52,16 @@ runs:
         Expand-Archive -LiteralPath $coreZip -DestinationPath (Join-Path $moonHome "lib") -Force
         $moon = Join-Path $moonHome "bin\moon.exe"
         if (!(Test-Path -LiteralPath $moon)) { throw "MoonBit executable was not installed" }
+        $coreDir = Join-Path $moonHome "lib\core"
+        Push-Location $coreDir
+        try {
+          & $moon bundle --warn-list -a --all
+          if ($LASTEXITCODE -ne 0) { throw "Failed to bundle MoonBit core targets" }
+          & $moon bundle --warn-list -a --target wasm-gc --quiet
+          if ($LASTEXITCODE -ne 0) { throw "Failed to bundle MoonBit wasm-gc core" }
+        } finally {
+          Pop-Location
+        }
         $versionOutput = & $moon version --all | Out-String
         Write-Host $versionOutput
         if (!$versionOutput.Contains($version)) {
