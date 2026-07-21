@@ -12,6 +12,8 @@
 - add five controlled fault injections and expand CLI black-box contracts from five to eleven cases
 - compare one reviewed output and diagnostics corpus directly across all four MoonBit backends
 - expand deterministic differential parity to 6,144 cases and publish per-case JUnit XML
+- expand executable documentation across sections, arrays, partials, strict diagnostics, and multi-file generation
+- turn the browser playground into a bilingual compatibility lab with live reference comparison, pinned conformance details, and real five-file starter generation
 
 ## 0.2.0 - 2026-07-10
 

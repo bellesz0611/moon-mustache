@@ -170,7 +170,7 @@ npm ci
 npm run dev
 ```
 
-Playground 构建时编译仓库中的 MoonBit browser bridge，不依赖在线后端，也不以 `mustache.js` 代替产品实现。`mustache.js` 只在差分测试中作为参考实现。
+Playground 构建时编译仓库中的 MoonBit browser bridge，不依赖在线后端，也不以 `mustache.js` 代替产品实现。界面提供 Render、Diagnose、Compare、Conformance、Generate 五个视图：Compare 明确把 `mustache.js` 标为参考实现；Generate 则通过真实 `TemplateBundle` API 预览 `moon.mod`、README、源码、包配置和 CI 五个文件。入口默认中文并可切换英文。
 
 ## 架构
 

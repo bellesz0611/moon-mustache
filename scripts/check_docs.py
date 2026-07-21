@@ -10,6 +10,14 @@ ROOT = Path(__file__).resolve().parents[1]
 SKIP_PARTS = {".git", "_build", "node_modules", "tmp"}
 LINK_RE = re.compile(r"!?\[[^\]]*\]\((<[^>]+>|[^)\s]+)(?:\s+['\"][^'\"]*['\"])?\)")
 SCHEMES = ("http://", "https://", "mailto:", "data:")
+EXECUTABLE_GUIDE = ROOT / "src" / "README.mbt.md"
+REQUIRED_EXECUTABLE_EXAMPLES = (
+    'test "documentation: escaped render"',
+    'test "documentation: sections and arrays"',
+    'test "documentation: partial render"',
+    'test "documentation: strict missing-variable diagnostics"',
+    'test "documentation: multi-file generation"',
+)
 
 
 def markdown_files() -> list[Path]:
@@ -52,15 +60,38 @@ def check_file(path: Path) -> list[str]:
     return errors
 
 
+def check_executable_guide() -> list[str]:
+    relative = EXECUTABLE_GUIDE.relative_to(ROOT)
+    if not EXECUTABLE_GUIDE.exists():
+        return [f"{relative}: missing executable guide"]
+    content = EXECUTABLE_GUIDE.read_text(encoding="utf-8")
+    errors = [
+        f"{relative}: missing required executable example: {example}"
+        for example in REQUIRED_EXECUTABLE_EXAMPLES
+        if example not in content
+    ]
+    fence_count = content.count("```mbt check")
+    if fence_count < len(REQUIRED_EXECUTABLE_EXAMPLES):
+        errors.append(
+            f"{relative}: expected at least {len(REQUIRED_EXECUTABLE_EXAMPLES)} "
+            f"executable mbt check fences, found {fence_count}"
+        )
+    return errors
+
+
 def main() -> int:
     files = markdown_files()
     errors = [error for path in files for error in check_file(path)]
+    errors.extend(check_executable_guide())
     if errors:
         print("Documentation validation failed:", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         return 1
-    print(f"Documentation validation passed: {len(files)} Markdown files, no broken local links")
+    print(
+        f"Documentation validation passed: {len(files)} Markdown files, "
+        f"no broken local links, {len(REQUIRED_EXECUTABLE_EXAMPLES)} required executable paths"
+    )
     return 0
 
 

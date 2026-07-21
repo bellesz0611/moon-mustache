@@ -5,7 +5,10 @@ import {
 options(
   link: {
     "js": {
-      "exports": [ "render_json_bridge:renderMoonMustache" ],
+      "exports": [
+        "render_json_bridge:renderMoonMustache",
+        "generate_starter_bridge:generateMoonStarter",
+      ],
       "format": "esm",
     },
   },

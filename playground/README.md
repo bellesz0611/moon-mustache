@@ -4,11 +4,14 @@ This directory contains a Vue + Vite playground for Moon Mustache.
 
 ## What it does
 
-- edits Mustache templates in the browser
-- edits JSON context and partials side by side
-- renders through the repository's own MoonBit engine
-- surfaces diagnostics and missing variables without switching back to the CLI
+- provides explicit Render, Diagnose, Compare, Conformance, and Generate views
+- renders through the repository's own compiled MoonBit engine
+- surfaces checked-render diagnostics and missing variables without switching back to the CLI
+- compares the current input live with the pinned `mustache.js` reference implementation
+- loads the official fixture suite counts, pinned commit, and hashes from `third_party/mustache-spec/MANIFEST.json`
+- generates a five-file MoonBit starter through the real `TemplateBundle` API
 - bundles current test and coverage values from `docs/METRICS_SNAPSHOT.json`
+- offers a Chinese-first entry with an English switch
 
 ## Run locally
 
@@ -36,6 +39,7 @@ This script independently starts the local `playground_bridge/` API, waits for i
 
 ## Notes
 
-- the playground is a product-facing compatibility lab for render, diagnostics, and verification evidence
+- the playground is a product-facing compatibility lab, not a separate JavaScript renderer
 - file-backed rendering is still handled by the main CLI
-- the bridge uses the MoonBit build output instead of a third-party Mustache implementation
+- Render, Diagnose, and Generate use the MoonBit build output; `mustache.js` is isolated to the labeled Compare reference
+- generated starter artifacts remain in memory for safe review; the browser does not write to the user's filesystem

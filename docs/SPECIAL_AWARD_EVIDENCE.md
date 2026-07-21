@@ -95,9 +95,12 @@ CI 会在 `wasm`、`wasm-gc`、`js`、`native` 四个目标执行 check/build/te
 
 - 首页只保留一个主任务、快速运行、测试证据、常用接口和导航，不再堆叠比赛口号。
 - [`src/README.mbt.md`](../src/README.mbt.md) 中的入门示例使用 `mbt check`，随包一起编译检查。
-- `python scripts/check_docs.py` 检查 Markdown 本地链接，拒绝开发者机器上的绝对路径。
+- 可执行教程覆盖基础转义、Section/数组、Partial、严格诊断和多文件生成；`scripts/check_docs.py` 还会拒绝这些关键教程入口被意外删除。
+- `python scripts/check_docs.py` 检查 Markdown 本地链接，拒绝开发者机器上的绝对路径；`moon test` 执行教程，`moon info --deny-warn` 检查导出接口。
 - 指标集中在生成文件，其他文档引用它而不复制易过期数字。
 - API、兼容性、架构、稳定性和已知限制各有明确入口。
+
+在线 Compatibility Lab 不是静态截图：Render、Diagnose 和 Generate 直接调用编译后的 MoonBit bridge；Compare 使用 `mustache.js` 对当前输入即时对比；Conformance 从锁定的 `mustache/spec` manifest 加载 suite 数、case 数和哈希。Generate 会通过真实 `TemplateBundle` 生成 `moon.mod`、README、源码、包配置与 CI 五个内存 artifact，便于评审验证实际任务而不会写入本机文件。界面默认中文并提供英文切换。
 
 ## 5. AI 协作证据边界
 
@@ -105,8 +108,8 @@ CI 会在 `wasm`、`wasm-gc`、`js`、`native` 四个目标执行 check/build/te
 
 ## 6. 评审建议顺序
 
-1. 在在线 Playground 完成一次模板渲染；
+1. 在在线 Playground 完成一次模板渲染，并在 Compare 查看参考输出；
 2. 运行 CLI 黑盒集成套件，观察严格失败退出码；
 3. 查看官方 fixture 报告与差分测试输出；
 4. 打开 CI artifact 核对 coverage 与 JSON 结果；
-5. 修改 `src/README.mbt.md` 示例后运行 `moon test`，验证可执行文档会真实失败。
+5. 在 Generate 生成五文件 starter，再修改 `src/README.mbt.md` 示例运行 `moon test`，验证产品任务和可执行文档都由真实 MoonBit 路径支撑。
