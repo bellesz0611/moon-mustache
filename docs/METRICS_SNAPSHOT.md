@@ -8,27 +8,28 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
-- generated at: `2026-07-21T13:44:57+00:00`
-- generated at commit: `01ac59f`
+- generated at: `2026-07-21T14:14:34+00:00`
+- generated at commit: `5877dbd`
 - working tree: `clean`
-- public commit count: `70`
+- public commit count: `72`
 - MoonBit package: `bellesz0611/moon-mustache`
 - MoonBit toolchain used for the local verification snapshot: `moon 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moon.exe | moonc v0.10.3+16975d007 (2026-07-03) ~\moon-toolchain\bin\moonc.exe | moonrun 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moonrun.exe | Feature flags enabled: rr_moon_mod,rr_moon_pkg`
 
 ## Code scale
 
-- physical MoonBit source lines across library, CLI, demos, reports, benchmarks, consumer proofs, and bridges: `11624`
-- effective MoonBit source lines after excluding blank and comment-only lines: `10609`
-- handwritten effective MoonBit lines: `8460`
+- physical MoonBit source lines across library, CLI, demos, reports, benchmarks, consumer proofs, and bridges: `11790`
+- effective MoonBit source lines after excluding blank and comment-only lines: `10756`
+- handwritten effective MoonBit lines: `8607`
 - imported generated official-fixture effective lines, disclosed separately: `2149`
 
 ## Verification snapshot
 
-- automated tests passing: `107 / 107`
+- automated tests passing: `114 / 114`
 - imported official fixture cases: `194 / 194` passing, `0` skipped
 - core library coverage: `1891 / 2131` (`88.7%`)
 - coverage policy: at least `88.0%`, enforced in CI with summary and Cobertura artifacts
-- repository-wide instrumented lines: `1951 / 3211` (`60.8%`, informational; CLI, bridges, and demos are verified by integration/smoke jobs rather than this unit-coverage gate)
+- CLI testable-core coverage: `78 / 78` (`100.0%`), with a `70.0%` CI gate; filesystem and process behavior remains covered by black-box integration
+- repository-wide instrumented lines: `2029 / 3216` (`63.1%`, informational; CLI, bridges, and demos are verified by integration/smoke jobs rather than this unit-coverage gate)
 - CLI black-box integration: `11 / 11` passing
 - controlled fault injection: `5 / 5` mutants killed, `0` survived, `0` invalid
 - local backend golden conformance: `3 / 3` available targets match, with four targets required in Linux CI
