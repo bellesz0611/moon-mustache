@@ -15,7 +15,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 - automated tests passing locally; the exact current count is generated in `METRICS_SNAPSHOT.md`
 - `194 / 194` imported core and optional `mustache/spec` fixtures passing with zero skips
-- `2048 / 2048` deterministic differential cases passing against `mustache.js`
+- deterministic four-seed differential cases passing against `mustache.js`; exact current size is generated in `METRICS_SNAPSHOT.md`
 - measured core coverage above the enforced CI gate; exact numerator, denominator, and threshold are generated in `METRICS_SNAPSHOT.md`
 - latest GitHub library CI and playground smoke workflows are green
 - GitHub is canonical; the GitLink mirror commit must be verified before submission

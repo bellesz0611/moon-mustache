@@ -19,7 +19,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - public history already exceeds the required `10-20` meaningful commits
 - automated tests passing; exact current count is generated in `METRICS_SNAPSHOT.md`
 - `194 / 194` imported core and optional `mustache/spec` fixtures passing, zero skipped
-- `2048 / 2048` deterministic differential cases passing against `mustache.js`
+- deterministic four-seed differential cases passing against `mustache.js`, with exact current size in `METRICS_SNAPSHOT.md`
 - measured core coverage above the enforced CI gate, with exact values in `METRICS_SNAPSHOT.md`
 - latest GitHub library CI and playground smoke workflows are green on the default branch
 

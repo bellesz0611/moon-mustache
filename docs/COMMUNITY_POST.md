@@ -27,7 +27,7 @@ This is a ready-to-send short introduction for competition groups, community cha
 
 - 自动化测试全量通过，精确数量见生成的 `docs/METRICS_SNAPSHOT.md`
 - 194 / 194 官方核心及可选 `mustache/spec` fixture 通过
-- 2048 / 2048 四个固定随机种子差异用例与 `mustache.js` 输出一致
+- 四个固定随机种子的差分用例与 `mustache.js` 输出一致，精确数量见生成指标快照
 - 核心覆盖率与 CI 门槛以自动生成的 `docs/METRICS_SNAPSHOT.md` 为准
 - 多条 GitHub Actions workflow
 - GitHub 为主仓库；GitLink 镜像在正式提交前按同一 commit 校验

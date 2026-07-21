@@ -1,0 +1,7 @@
+escape=&lt;tag&gt;&amp;&quot;&#39;
+section=core/scanner;core/renderer;
+partial=<Moon>
+delimiter=MoonBit|on
+strict.output=[Hello ]
+strict.missing=missing
+parse.error=unterminated section: open

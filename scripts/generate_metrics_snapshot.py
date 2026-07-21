@@ -37,6 +37,7 @@ COUNT_DIRS = [
     "incident_response_demo",
     "developer_release_demo",
     "companion_repo_blueprint",
+    "backend_conformance",
 ]
 
 
@@ -251,6 +252,16 @@ def main() -> int:
         fault_json_path = Path(directory) / "fault-injection.json"
         run([sys.executable, "scripts/run_fault_injection.py", "--json-output", str(fault_json_path)])
         fault_payload = json.loads(fault_json_path.read_text(encoding="utf-8"))
+        backend_json_path = Path(directory) / "backend-conformance.json"
+        run(
+            [
+                sys.executable,
+                "scripts/test_backend_conformance.py",
+                "--json-output",
+                str(backend_json_path),
+            ]
+        )
+        backend_payload = json.loads(backend_json_path.read_text(encoding="utf-8"))
     workflow_conclusion, workflow_sha, workflow_url = latest_workflow_status()
     mooncakes_build_status, mooncakes_version, mooncakes_downloads, mooncakes_docs_url = mooncakes_status()
 
@@ -292,8 +303,9 @@ python scripts/generate_metrics_snapshot.py
 - repository-wide instrumented lines: `{repository_covered} / {repository_total}` (`{repository_percent:.1f}%`, informational; CLI, bridges, and demos are verified by integration/smoke jobs rather than this unit-coverage gate)
 - CLI black-box integration: `{cli_payload['passed']} / {cli_payload['total']}` passing
 - controlled fault injection: `{fault_payload['killed']} / {fault_payload['total']}` mutants killed, `{fault_payload['survived']}` survived, `{fault_payload['invalid']}` invalid
+- local backend golden conformance: `{sum(item['status'] == 'passed' for item in backend_payload['results'])} / {len(backend_payload['results'])}` available targets match, with four targets required in Linux CI
 - local verification command: `moon test --deny-warn --target wasm-gc`
-- deterministic differential policy: `2048` generated cases across four fixed seeds (`20260710` through `20260713`) against `mustache.js`
+- deterministic differential policy: `6144` generated cases across four fixed seeds (`20260710` through `20260713`) against `mustache.js`
 - latest GitHub library workflow conclusion: {workflow_summary}
 - latest GitHub library workflow URL: <{workflow_url}>
 
@@ -353,9 +365,10 @@ python scripts/generate_metrics_snapshot.py
             },
             "cli_integration": cli_payload,
             "fault_injection": fault_payload,
+            "backend_conformance": backend_payload,
             "differential_policy": {
-                "cases": 2048,
-                "cases_per_seed": 512,
+                "cases": 6144,
+                "cases_per_seed": 1536,
                 "seeds": [20260710, 20260711, 20260712, 20260713],
                 "reference": "mustache.js",
             },

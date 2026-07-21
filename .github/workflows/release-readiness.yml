@@ -52,6 +52,7 @@ jobs:
           python scripts/verify_official_spec_fixtures.py --json-output _artifacts/official-fixture-integrity.json
           python scripts/test_cli_integration.py --json-output _artifacts/cli-integration.json
           python scripts/run_fault_injection.py --json-output _artifacts/fault-injection.json
+          python scripts/test_backend_conformance.py --targets wasm,wasm-gc,js,native --require-native --json-output _artifacts/backend-conformance.json
           python scripts/generate_metrics_snapshot.py
           cp docs/METRICS_SNAPSHOT.md _artifacts/metrics_snapshot.md
           cp docs/METRICS_SNAPSHOT.json _artifacts/metrics_snapshot.json
@@ -77,7 +78,7 @@ jobs:
         working-directory: playground
         run: |
           npm run build
-          npm run differential -- --json-output ../_artifacts/differential.json --failure-output ../_artifacts/differential-failures.json
+          npm run differential -- --json-output ../_artifacts/differential.json --failure-output ../_artifacts/differential-failures.json --junit-output ../_artifacts/differential.junit.xml
           npm run smoke
 
       - name: Upload evaluator artifacts

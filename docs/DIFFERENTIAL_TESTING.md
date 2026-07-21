@@ -10,7 +10,7 @@ npm ci
 npm run differential
 ```
 
-The command compiles `browser_bridge` from MoonBit to an ES module, generates 512 cases for each of four fixed seeds (`20260710` through `20260713`), renders all 2,048 cases with both implementations in one Node.js process, and exits non-zero when a mismatch is found.
+The command compiles `browser_bridge` from MoonBit to an ES module, generates 1,536 cases for each of four fixed seeds (`20260710` through `20260713`), renders all 6,144 cases with both implementations in one Node.js process, and exits non-zero when a mismatch is found.
 
 ## Generated coverage
 
@@ -21,8 +21,11 @@ Generate local evidence explicitly:
 ```bash
 npm run differential -- \
   --json-output ../_artifacts/differential.json \
-  --failure-output ../_artifacts/differential-failures.json
+  --failure-output ../_artifacts/differential-failures.json \
+  --junit-output ../_artifacts/differential.junit.xml
 ```
+
+The JSON report keeps seeds, inputs, outputs, diagnostics, and exact replay commands. The JUnit XML exposes every generated case to CI test-report viewers without changing the deterministic corpus.
 
 Replay one generated case:
 

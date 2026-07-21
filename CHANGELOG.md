@@ -10,6 +10,8 @@
 - add executable `mbt check` documentation and automated Markdown link validation
 - pin imported `mustache/spec` provenance and enforce fixture, license, case-count, and generated-source integrity offline in CI
 - add five controlled fault injections and expand CLI black-box contracts from five to eleven cases
+- compare one reviewed output and diagnostics corpus directly across all four MoonBit backends
+- expand deterministic differential parity to 6,144 cases and publish per-case JUnit XML
 
 ## 0.2.0 - 2026-07-10
 

@@ -143,8 +143,23 @@ def main() -> int:
                 ]
             )
         npm = executable("npm", "npm.cmd")
+        backend_targets = ["wasm", "wasm-gc", "js"]
+        if any(shutil.which(compiler) for compiler in ("cl", "cc", "gcc", "clang")):
+            backend_targets.append("native")
         steps.extend(
             [
+                (
+                    "backend conformance",
+                    [
+                        python,
+                        "scripts/test_backend_conformance.py",
+                        "--targets",
+                        ",".join(backend_targets),
+                        "--json-output",
+                        str(output_dir / "backend-conformance.json"),
+                    ],
+                    ROOT,
+                ),
                 (
                     "coverage",
                     [
@@ -178,6 +193,8 @@ def main() -> int:
                         str(output_dir / "differential.json"),
                         "--failure-output",
                         str(output_dir / "differential-failures.json"),
+                        "--junit-output",
+                        str(output_dir / "differential.junit.xml"),
                     ],
                     ROOT / "playground",
                 ),

@@ -113,6 +113,10 @@ jobs:
         if: matrix.target == 'wasm-gc'
         run: python scripts/run_fault_injection.py --json-output _ci_artifacts/fault-injection.json
 
+      - name: Compare the golden corpus across all backends
+        if: matrix.target == 'wasm-gc'
+        run: python scripts/test_backend_conformance.py --targets wasm,wasm-gc,js,native --require-native --json-output _ci_artifacts/backend-conformance.json
+
       - name: Run CLI black-box integration suite
         if: matrix.target == 'js'
         run: |

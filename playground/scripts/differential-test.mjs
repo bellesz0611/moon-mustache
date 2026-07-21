@@ -34,6 +34,34 @@ function writeJson(filePath, payload) {
   fs.writeFileSync(resolved, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
 }
 
+function xmlEscape(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+}
+
+function writeJUnit(filePath, executions, report) {
+  if (!filePath) return
+  const cases = executions.map(({ seed, index, failure }) => {
+    const header = `  <testcase classname="seed-${seed}" name="case-${index}">`
+    if (!failure) return `${header}</testcase>`
+    const details = xmlEscape(JSON.stringify(failure, null, 2))
+    return `${header}<failure message="differential output mismatch">${details}</failure></testcase>`
+  })
+  const xml = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    `<testsuite name="moon-mustache differential parity" tests="${report.total}" failures="${report.failures.length}" time="${(report.duration_ms / 1000).toFixed(3)}">`,
+    ...cases,
+    '</testsuite>',
+    '',
+  ].join('\n')
+  const resolved = path.resolve(filePath)
+  fs.mkdirSync(path.dirname(resolved), { recursive: true })
+  fs.writeFileSync(resolved, xml, 'utf8')
+}
+
 function mulberry32(seed) {
   return () => {
     seed |= 0
@@ -50,6 +78,7 @@ const caseIndex = option('--case-index') === undefined ? undefined : numberOptio
 const maxFailures = numberOption('--max-failures', 10)
 const jsonOutput = option('--json-output')
 const failureOutput = option('--failure-output')
+const junitOutput = option('--junit-output')
 const words = ['MoonBit', 'Mustache', 'template', 'release', 'alpha', 'beta', '<tag>', 'A&B']
 
 function fixture(index, random) {
@@ -138,6 +167,7 @@ function evaluate(seed, index, test) {
 
 const started = performance.now()
 const failures = []
+const executions = []
 let executed = 0
 for (const seed of seeds) {
   const random = mulberry32(seed)
@@ -148,6 +178,7 @@ for (const seed of seeds) {
     executed += 1
     const failure = evaluate(seed, index, test)
     if (failure) failures.push(failure)
+    executions.push({ seed, index, failure })
     if (failures.length >= maxFailures) break
   }
   if (failures.length >= maxFailures) break
@@ -167,6 +198,7 @@ const report = {
 }
 
 writeJson(jsonOutput, report)
+writeJUnit(junitOutput, executions, report)
 if (failures.length > 0) {
   writeJson(failureOutput, report)
   console.error(`Differential parity failed: ${failures.length}/${executed} cases`)

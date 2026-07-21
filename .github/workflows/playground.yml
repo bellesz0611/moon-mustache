@@ -41,7 +41,7 @@ jobs:
 
       - name: Run deterministic differential suite
         working-directory: playground
-        run: npm run differential -- --json-output ../_playground_artifacts/differential.json --failure-output ../_playground_artifacts/differential-failures.json
+        run: npm run differential -- --json-output ../_playground_artifacts/differential.json --failure-output ../_playground_artifacts/differential-failures.json --junit-output ../_playground_artifacts/differential.junit.xml
 
       - name: Smoke test playground API bridge
         working-directory: playground

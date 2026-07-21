@@ -47,21 +47,31 @@ def main() -> int:
     if payload["repository"]["working_tree_dirty"]:
         errors.append("committed metrics snapshot was generated from a dirty working tree")
 
-    verification = payload["verification"]
-    expected_lines = [
-        (
-            "MoonBit test count",
-            f"automated tests passing: `{verification['moon_tests']['passed']} / {verification['moon_tests']['total']}`",
-        ),
-        (
-            "CLI integration count",
-            f"CLI black-box integration: `{verification['cli_integration']['passed']} / {verification['cli_integration']['total']}` passing",
-        ),
-        (
-            "fault-injection count",
-            f"controlled fault injection: `{verification['fault_injection']['killed']} / {verification['fault_injection']['total']}` mutants killed",
-        ),
-    ]
+    try:
+        verification = payload["verification"]
+        expected_lines = [
+            (
+                "MoonBit test count",
+                f"automated tests passing: `{verification['moon_tests']['passed']} / {verification['moon_tests']['total']}`",
+            ),
+            (
+                "CLI integration count",
+                f"CLI black-box integration: `{verification['cli_integration']['passed']} / {verification['cli_integration']['total']}` passing",
+            ),
+            (
+                "fault-injection count",
+                f"controlled fault injection: `{verification['fault_injection']['killed']} / {verification['fault_injection']['total']}` mutants killed",
+            ),
+            (
+                "backend conformance count",
+                "local backend golden conformance: "
+                f"`{sum(item['status'] == 'passed' for item in verification['backend_conformance']['results'])} / "
+                f"{len(verification['backend_conformance']['results'])}` available targets match",
+            ),
+        ]
+    except KeyError as error:
+        errors.append(f"metrics snapshot is missing required field: {error}")
+        expected_lines = []
     for label, expected in expected_lines:
         if expected not in markdown:
             errors.append(f"Markdown and JSON disagree on {label}")

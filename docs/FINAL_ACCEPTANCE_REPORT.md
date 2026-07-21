@@ -119,7 +119,7 @@ Observed results:
 
 - automated tests: passing; exact current count is generated in `METRICS_SNAPSHOT.md`
 - imported official core and optional `mustache/spec` fixtures: `194 / 194` passing, zero skipped
-- deterministic `mustache.js` differential cases: `2048 / 2048` passing
+- deterministic `mustache.js` differential cases passing; exact current size is generated in `METRICS_SNAPSHOT.md`
 - core coverage: above the enforced gate; exact current values are generated in `METRICS_SNAPSHOT.md`
 - scenario report: passing
 - downstream consumer smoke test: passing
