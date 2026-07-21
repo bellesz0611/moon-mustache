@@ -1,9 +1,37 @@
+import fs from 'node:fs'
+import path from 'node:path'
 import Mustache from 'mustache'
 import { renderMoonMustache } from '../src/generated/moon_mustache.js'
 
-function option(name, fallback) {
-  const index = process.argv.indexOf(name)
-  return index >= 0 && process.argv[index + 1] ? Number(process.argv[index + 1]) : fallback
+function option(name) {
+  const index = process.argv.lastIndexOf(name)
+  return index >= 0 && process.argv[index + 1] ? process.argv[index + 1] : undefined
+}
+
+function numberOption(name, fallback) {
+  const raw = option(name)
+  if (raw === undefined) return fallback
+  const value = Number(raw)
+  if (!Number.isInteger(value) || value < 0) {
+    throw new Error(`${name} must be a non-negative integer`)
+  }
+  return value
+}
+
+function seedList() {
+  const raw = option('--seeds') ?? option('--seed') ?? '20260710,20260711,20260712,20260713'
+  const seeds = raw.split(',').map((item) => Number(item.trim()))
+  if (seeds.length === 0 || seeds.some((seed) => !Number.isInteger(seed))) {
+    throw new Error('--seeds must be a comma-separated list of integers')
+  }
+  return seeds
+}
+
+function writeJson(filePath, payload) {
+  if (!filePath) return
+  const resolved = path.resolve(filePath)
+  fs.mkdirSync(path.dirname(resolved), { recursive: true })
+  fs.writeFileSync(resolved, `${JSON.stringify(payload, null, 2)}\n`, 'utf8')
 }
 
 function mulberry32(seed) {
@@ -16,20 +44,17 @@ function mulberry32(seed) {
   }
 }
 
-const cases = option('--cases', 2048)
-const seed = option('--seed', 20260710)
-const random = mulberry32(seed)
+const casesPerSeed = numberOption('--cases-per-seed', numberOption('--cases', 512))
+const seeds = seedList()
+const caseIndex = option('--case-index') === undefined ? undefined : numberOption('--case-index', 0)
+const maxFailures = numberOption('--max-failures', 10)
+const jsonOutput = option('--json-output')
+const failureOutput = option('--failure-output')
 const words = ['MoonBit', 'Mustache', 'template', 'release', 'alpha', 'beta', '<tag>', 'A&B']
 
-function pick(items) {
-  return items[Math.floor(random() * items.length)]
-}
-
-function integer(maximum) {
-  return Math.floor(random() * maximum)
-}
-
-function fixture(index) {
+function fixture(index, random) {
+  const pick = (items) => items[Math.floor(random() * items.length)]
+  const integer = (maximum) => Math.floor(random() * maximum)
   const name = `${pick(words)}-${integer(1000)}`
   const html = `<strong>${pick(words)} & ${integer(100)}</strong>`
   const enabled = random() >= 0.5
@@ -89,9 +114,7 @@ function fixture(index) {
   }
 }
 
-const failures = []
-for (let index = 0; index < cases; index += 1) {
-  const test = fixture(index)
+function evaluate(seed, index, test) {
   const expected = Mustache.render(test.template, test.context, test.partials)
   const response = JSON.parse(
     renderMoonMustache(
@@ -101,15 +124,61 @@ for (let index = 0; index < cases; index += 1) {
       false,
     ),
   )
-  if (response.errors.length > 0 || response.output !== expected) {
-    failures.push({ index, test, expected, actual: response.output, errors: response.errors })
-    if (failures.length >= 10) break
+  if (response.errors.length === 0 && response.output === expected) return undefined
+  return {
+    seed,
+    index,
+    fixture: test,
+    expected,
+    actual: response.output,
+    errors: response.errors,
+    reproduce: `node scripts/differential-test.mjs --seed ${seed} --cases ${index + 1} --case-index ${index}`,
   }
 }
 
+const started = performance.now()
+const failures = []
+let executed = 0
+for (const seed of seeds) {
+  const random = mulberry32(seed)
+  const limit = caseIndex === undefined ? casesPerSeed : Math.max(casesPerSeed, caseIndex + 1)
+  for (let index = 0; index < limit; index += 1) {
+    const test = fixture(index, random)
+    if (caseIndex !== undefined && index !== caseIndex) continue
+    executed += 1
+    const failure = evaluate(seed, index, test)
+    if (failure) failures.push(failure)
+    if (failures.length >= maxFailures) break
+  }
+  if (failures.length >= maxFailures) break
+}
+
+const report = {
+  schema_version: 1,
+  suite: 'moon-mustache differential parity',
+  reference: `mustache.js ${Mustache.version ?? 'unknown'}`,
+  seeds,
+  cases_per_seed: casesPerSeed,
+  requested_case_index: caseIndex ?? null,
+  passed: executed - failures.length,
+  total: executed,
+  duration_ms: Math.round(performance.now() - started),
+  failures,
+}
+
+writeJson(jsonOutput, report)
 if (failures.length > 0) {
-  console.error(JSON.stringify({ seed, cases, failures }, null, 2))
+  writeJson(failureOutput, report)
+  console.error(`Differential parity failed: ${failures.length}/${executed} cases`)
+  for (const failure of failures) {
+    console.error(`- seed ${failure.seed}, case ${failure.index}`)
+    console.error(`  reproduce: ${failure.reproduce}`)
+  }
   process.exitCode = 1
 } else {
-  console.log(`Differential parity: ${cases}/${cases} cases passed (seed ${seed})`)
+  console.log(
+    `Differential parity: ${executed}/${executed} cases passed ` +
+      `(seeds ${seeds.join(', ')}, reference ${report.reference})`,
+  )
+  if (jsonOutput) console.log(`Report: ${path.resolve(jsonOutput)}`)
 }

@@ -1,4 +1,5 @@
 /output/
+/_artifacts/
 /tmp/
 /_build/
 **/_build/

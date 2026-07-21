@@ -8,6 +8,7 @@ This directory contains a Vue + Vite playground for Moon Mustache.
 - edits JSON context and partials side by side
 - renders through the repository's own MoonBit engine
 - surfaces diagnostics and missing variables without switching back to the CLI
+- bundles current test and coverage values from `docs/METRICS_SNAPSHOT.json`
 
 ## Run locally
 
@@ -17,12 +18,7 @@ npm install
 npm run dev
 ```
 
-This starts:
-
-- a Vite front-end on port `5173`
-- a local Node API on port `4177`
-
-The API uses `playground_bridge/` to call the MoonBit renderer and returns structured JSON to the Vue app.
+This starts a Vite front-end on port `5173`. The build step compiles `browser_bridge/` into an ES module, and the browser calls that MoonBit module directly without an online backend.
 
 ## Build the front-end
 
@@ -36,10 +32,10 @@ npm run build
 npm run smoke
 ```
 
-This script starts the local API bridge, waits for the health endpoint, submits a real render request, and verifies the returned output. The same path is also exercised by the dedicated GitHub Actions `playground` workflow.
+This script independently starts the local `playground_bridge/` API, waits for its health endpoint, submits a real render request, and verifies the returned output. It covers the API integration path in addition to the browser's direct ES-module path. Both are exercised by the dedicated GitHub Actions `playground` workflow.
 
 ## Notes
 
-- the playground is intended for local demos and judge-facing presentations
+- the playground is a product-facing compatibility lab for render, diagnostics, and verification evidence
 - file-backed rendering is still handled by the main CLI
 - the bridge uses the MoonBit build output instead of a third-party Mustache implementation

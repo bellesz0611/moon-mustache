@@ -568,6 +568,7 @@ fn handle_bundle_mode(
     Some(value) => value
     None => {
       print_diagnostics(all_errors)
+      set_process_exit_code(1)
       return
     }
   }
@@ -584,6 +585,7 @@ fn handle_bundle_mode(
     Ok(value) => value
     Err(message) => {
       print_diagnostics([message])
+      set_process_exit_code(1)
       return
     }
   }
@@ -612,6 +614,7 @@ fn handle_bundle_mode(
       println(
         "No bundle files were written because strict mode, render errors, or validation errors blocked output.",
       )
+      set_process_exit_code(1)
       return
     }
   }
@@ -622,10 +625,12 @@ fn handle_bundle_mode(
           let path = join_output_path(root, file.path)
           match write_text_file(path, file.output) {
             Ok(_) => ()
-            Err(message) =>
+            Err(message) => {
               print_diagnostics([
                 "failed to write bundle file `" + path + "`: " + message,
               ])
+              set_process_exit_code(1)
+            }
           }
         }
       None =>
@@ -644,10 +649,15 @@ fn handle_bundle_mode(
         Some((_, content)) =>
           match write_text_file(path, content) {
             Ok(_) => println("Wrote bundle report to " + path)
-            Err(message) =>
+            Err(message) => {
               print_diagnostics(["failed to write bundle report: " + message])
+              set_process_exit_code(1)
+            }
           }
-        None => print_diagnostics(["unsupported bundle report format"])
+        None => {
+          print_diagnostics(["unsupported bundle report format"])
+          set_process_exit_code(1)
+        }
       }
     }
     None => ()
@@ -663,10 +673,12 @@ fn handle_bundle_mode(
           ),
         ) {
         Ok(_) => println("Wrote bundle validation report to " + path)
-        Err(message) =>
+        Err(message) => {
           print_diagnostics([
             "failed to write bundle validation report: " + message,
           ])
+          set_process_exit_code(1)
+        }
       }
     None => ()
   }
@@ -678,10 +690,12 @@ fn handle_bundle_mode(
           build_bundle_plan_output(manifest.name, result, validation_result),
         ) {
         Ok(_) => println("Wrote bundle generation plan to " + path)
-        Err(message) =>
+        Err(message) => {
           print_diagnostics([
             "failed to write bundle generation plan: " + message,
           ])
+          set_process_exit_code(1)
+        }
       }
     None => ()
   }
@@ -728,6 +742,7 @@ fn handle_single_template_mode(
     print_diagnostics(all_errors)
     if flag_enabled(matches, "strict") {
       println("No rendered output was produced because strict mode is enabled.")
+      set_process_exit_code(1)
       return
     }
   }
@@ -736,8 +751,10 @@ fn handle_single_template_mode(
     Some(path) =>
       match write_text_file(path, result.output) {
         Ok(_) => println("Wrote rendered output to " + path)
-        Err(message) =>
+        Err(message) => {
           print_diagnostics(["failed to write output file: " + message])
+          set_process_exit_code(1)
+        }
       }
     None => println(result.output)
   }
@@ -884,6 +901,7 @@ fn main {
   let matches = command.parse(argv=effective_argv()) catch {
     err => {
       println(err.to_string())
+      set_process_exit_code(1)
       return
     }
   }
@@ -906,6 +924,7 @@ fn main {
     let (template, template_errors) = build_template(matches)
     if template_errors.length() > 0 {
       print_diagnostics(template_errors)
+      set_process_exit_code(1)
       return
     }
     print_scan_result(@src.scan_template_references(template))

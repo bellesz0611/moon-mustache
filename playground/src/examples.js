@@ -55,4 +55,11 @@ export const examples = [
     ),
     partialsJson: '{}',
   },
+  {
+    id: 'invalid-json',
+    name: 'Invalid JSON Diagnostic',
+    template: 'Release {{release.name}} is ready.',
+    contextJson: '{\n  "release": { "name": "0.2.0" }',
+    partialsJson: '{}',
+  },
 ]

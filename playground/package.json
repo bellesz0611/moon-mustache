@@ -12,7 +12,7 @@
     "preview": "vite preview --host",
     "api": "node server.mjs",
     "smoke": "node smoke.mjs",
-    "differential": "npm run moon-engine && node scripts/differential-test.mjs --cases 2048 --seed 20260710"
+    "differential": "npm run moon-engine && node scripts/differential-test.mjs --cases-per-seed 512 --seeds 20260710,20260711,20260712,20260713"
   },
   "dependencies": {
     "mustache": "^4.2.0",

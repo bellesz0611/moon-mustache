@@ -26,10 +26,10 @@ This repository is no longer in a bootstrap-only phase. Contributions should now
 Before opening a pull request, run the most relevant checks for your change:
 
 ```bash
-moon fmt --check
-moon check --deny-warn
-moon test --deny-warn
+python scripts/verify.py
 ```
+
+This runs documentation validation, formatting, `wasm-gc` check/test, official fixture reporting, and CLI black-box integration with per-step logs.
 
 If you touched the CLI, bundle rendering, spec coverage, or the browser demo, also verify the related flows:
 
@@ -41,6 +41,8 @@ cd playground
 npm run build
 npm run smoke
 ```
+
+For release-oriented or cross-backend changes, run `python scripts/verify.py --profile full`. AI-assisted contributions follow the disclosure and human-review policy in [docs/AI_COLLABORATION.md](docs/AI_COLLABORATION.md).
 
 ## Review priorities
 

@@ -37,7 +37,7 @@
 - `194` imported core and optional `mustache/spec` fixtures passing
 - `2048` deterministic differential cases passing against `mustache.js`
 - `8032` handwritten effective MoonBit lines, with generated fixtures disclosed separately
-- `81.5%` core coverage with an enforced `80%` CI gate
+- core coverage above the enforced CI gate, with exact values generated in `METRICS_SNAPSHOT.md`
 - downstream consumer package smoke-tested
 - bundle validation / plan mode available for CI preflight
 - latest GitHub Actions release gate is green

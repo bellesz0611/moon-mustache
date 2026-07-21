@@ -3,6 +3,11 @@
 ## Unreleased
 
 - continue external adoption work and release-over-release performance tracking
+- add black-box CLI integration tests and enforce non-zero exit codes for strict failures
+- add failure-contract tests for malformed manifests, invalid JSON, unsafe paths, report escaping, and missing variables
+- raise the core coverage gate from 80% to 88% and fix accounting for fully covered files omitted by MoonBit's summary rows
+- split the 2,048 differential cases across four fixed seeds and emit replayable JSON evidence
+- add executable `mbt check` documentation and automated Markdown link validation
 
 ## 0.2.0 - 2026-07-10
 

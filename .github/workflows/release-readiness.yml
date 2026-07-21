@@ -47,8 +47,11 @@ jobs:
       - name: Generate evaluator artifacts
         run: |
           mkdir -p _artifacts
+          python scripts/check_docs.py
+          python scripts/test_cli_integration.py --json-output _artifacts/cli-integration.json
           python scripts/generate_metrics_snapshot.py
           cp docs/METRICS_SNAPSHOT.md _artifacts/metrics_snapshot.md
+          cp docs/METRICS_SNAPSHOT.json _artifacts/metrics_snapshot.json
           moon run showcase > _artifacts/showcase.txt
           moon run spec_report > _artifacts/spec_report.txt
           moon run official_spec_report > _artifacts/official_spec_report.txt
@@ -71,7 +74,7 @@ jobs:
         working-directory: playground
         run: |
           npm run build
-          npm run differential
+          npm run differential -- --json-output ../_artifacts/differential.json --failure-output ../_artifacts/differential-failures.json
           npm run smoke
 
       - name: Upload evaluator artifacts

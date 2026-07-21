@@ -6,7 +6,7 @@
 - repository (GitHub): <https://github.com/bellesz0611/moon-mustache>
 - repository (GitLink): <https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt>
 - primary language: MoonBit
-- current synced commit: see the latest synchronized `main` commit on GitHub and GitLink
+- canonical commit: use GitHub `main`; verify the GitLink mirror points to the same commit before submission
 
 ## Final delivery summary
 
@@ -118,10 +118,10 @@ Locally verified during the final preparation stage:
 
 Observed results:
 
-- automated tests: `85 / 85` passing
+- automated tests: passing; exact current count is generated in `METRICS_SNAPSHOT.md`
 - imported official core and optional `mustache/spec` fixtures: `194 / 194` passing, zero skipped
 - deterministic `mustache.js` differential cases: `2048 / 2048` passing
-- core coverage: `81.5%`, above the enforced `80%` gate
+- core coverage: above the enforced gate; exact current values are generated in `METRICS_SNAPSHOT.md`
 - scenario report: passing
 - downstream consumer smoke test: passing
 - package documentation: queryable on mooncakes.io as `bellesz0611/moon-mustache@0.2.0`
@@ -142,12 +142,12 @@ These do not block final acceptance readiness, but are good next steps:
 
 ## Conclusion
 
-As of the current synchronized state, Moon Mustache satisfies the main technical and engineering expectations for final project acceptance:
+As of the current repository state, Moon Mustache satisfies the main technical and engineering expectations for final project acceptance:
 
 - source code is complete and reusable
 - tests and CI are present
 - documentation is sufficient for usage and review
-- repositories are public and synchronized
+- repositories are public; mirror synchronization remains a submission-time check
 - compatibility evidence is explicit and reproducible
 
 For exact current metrics and public-status snapshots, the repository also maintains `docs/METRICS_SNAPSHOT.md`.

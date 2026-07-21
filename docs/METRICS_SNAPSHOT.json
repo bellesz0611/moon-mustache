@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-21T09:33:45+00:00",
+  "repository": {
+    "commit": "6a82c6a",
+    "working_tree_dirty": true,
+    "commit_count": 60
+  },
+  "package": {
+    "name": "bellesz0611/moon-mustache",
+    "version": "0.2.0",
+    "moonbit_toolchain": "moon 0.1.20260703 (6fbf8c3 2026-07-03) ~\\moon-toolchain\\bin\\moon.exe | moonc v0.10.3+16975d007 (2026-07-03) ~\\moon-toolchain\\bin\\moonc.exe | moonrun 0.1.20260703 (6fbf8c3 2026-07-03) ~\\moon-toolchain\\bin\\moonrun.exe | Feature flags enabled: rr_moon_mod,rr_moon_pkg"
+  },
+  "code_scale": {
+    "physical_moonbit_lines": 11458,
+    "effective_moonbit_lines": 10461,
+    "handwritten_effective_moonbit_lines": 8312,
+    "imported_fixture_effective_lines": 2149
+  },
+  "verification": {
+    "moon_tests": {
+      "passed": 100,
+      "total": 100
+    },
+    "official_fixtures": {
+      "passed": 194,
+      "total": 194,
+      "skipped": 0
+    },
+    "core_coverage": {
+      "covered": 1889,
+      "total": 2131,
+      "percent": 88.6,
+      "gate_percent": 88.0
+    },
+    "repository_coverage": {
+      "covered": 1889,
+      "total": 3134,
+      "percent": 60.3,
+      "policy": "informational"
+    },
+    "cli_integration": {
+      "suite": "moon-mustache CLI integration",
+      "passed": 5,
+      "total": 5,
+      "cases": [
+        {
+          "name": "inline render",
+          "status": "passed",
+          "duration_ms": 1545
+        },
+        {
+          "name": "file-backed render",
+          "status": "passed",
+          "duration_ms": 746
+        },
+        {
+          "name": "strict failure exit code",
+          "status": "passed",
+          "duration_ms": 658
+        },
+        {
+          "name": "lint failure exit code",
+          "status": "passed",
+          "duration_ms": 605
+        },
+        {
+          "name": "bundle generation",
+          "status": "passed",
+          "duration_ms": 836
+        }
+      ]
+    },
+    "differential_policy": {
+      "cases": 2048,
+      "cases_per_seed": 512,
+      "seeds": [
+        20260710,
+        20260711,
+        20260712,
+        20260713
+      ],
+      "reference": "mustache.js"
+    }
+  },
+  "publication": {
+    "mooncakes_version": "0.2.0",
+    "mooncakes_build_status": "success",
+    "mooncakes_downloads": 13,
+    "mooncakes_docs_url": "https://mooncakes.io/docs/bellesz0611/moon-mustache%400.2.0",
+    "latest_github_workflow": {
+      "conclusion": "success",
+      "commit": "6a82c6a",
+      "url": "https://github.com/bellesz0611/moon-mustache/actions/runs/29196857820"
+    }
+  }
+}

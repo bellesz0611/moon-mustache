@@ -16,9 +16,9 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 - `73` automated tests passing locally
 - `194 / 194` imported core and optional `mustache/spec` fixtures passing with zero skips
 - `2048 / 2048` deterministic differential cases passing against `mustache.js`
-- `81.5%` measured core coverage with an enforced `80%` CI gate
+- measured core coverage above the enforced CI gate; exact numerator, denominator, and threshold are generated in `METRICS_SNAPSHOT.md`
 - latest GitHub library CI and playground smoke workflows are green
-- GitHub and GitLink repositories are synchronized
+- GitHub is canonical; the GitLink mirror commit must be verified before submission
 - current public history is already well beyond the required `10-20` meaningful commits
 - `moon run scenario_report` covers end-to-end usage flows
 - `moon run downstream_consumer` proves the public API can be consumed from a separate MoonBit package

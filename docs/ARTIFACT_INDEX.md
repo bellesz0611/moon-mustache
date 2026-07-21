@@ -7,15 +7,19 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | Goal | Command or file | What it proves |
 | --- | --- | --- |
 | Quick project overview | [README.md](../README.md) | Scope, maturity, public links, core capabilities |
+| Special-award evidence | [SPECIAL_AWARD_EVIDENCE.md](SPECIAL_AWARD_EVIDENCE.md) | Testing/documentation claims, boundaries, and shortest reproduction path |
 | Judge-facing summary | [JUDGE_QUICKLOOK.md](JUDGE_QUICKLOOK.md) | Why the project is not a shell repository |
 | Exact current metrics | [METRICS_SNAPSHOT.md](METRICS_SNAPSHOT.md) | Commit count, LOC, test count, workflow state |
+| Machine-readable metrics | [METRICS_SNAPSHOT.json](METRICS_SNAPSHOT.json) | Structured form of the generated evidence |
 | Final acceptance posture | [FINAL_ACCEPTANCE_REPORT.md](FINAL_ACCEPTANCE_REPORT.md) | Completion against final-stage expectations |
 
 ## 2. Fast manual verification
 
 | Command | What it proves |
 | --- | --- |
+| `python scripts/verify.py` | Six-step acceptance run with per-step logs and JSON summary |
 | `moon test --deny-warn` | Regression safety and clean diagnostics |
+| `python scripts/test_cli_integration.py` | Real CLI output, failure exit codes, file IO, lint, and bundle artifacts |
 | `moon run showcase` | Realistic library-level render outputs |
 | `moon run official_spec_report` | Imported upstream `mustache/spec` compatibility evidence |
 | `moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan` | Reference scanning through the CLI |
@@ -39,7 +43,9 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | --- | --- | --- |
 | `benchmarks.json` | `check` workflow on the `wasm-gc` lane | Machine-readable benchmark output |
 | `benchmarks.md` | `check` workflow on the `wasm-gc` lane | Human-readable benchmark summary |
-| `coverage-summary.txt` and `coverage.xml` | `check` workflow on the `wasm-gc` lane | 80% core threshold plus Cobertura evidence |
+| `coverage-summary.txt`, `coverage.xml`, and `coverage.json` | `check` workflow on the `wasm-gc` lane | 88% core threshold plus human, standard, and machine-readable evidence |
+| `cli-integration.json` | `check` workflow on the `js` lane | Machine-readable black-box CLI result |
+| `differential.json` | `playground` workflow | Four fixed seeds, reference version, duration, and replayable failures |
 | `release-readiness-artifacts` | `release-readiness` workflow | Metrics snapshot, reports, demos, and benchmark outputs |
 | GitHub Pages artifact | `deploy-playground` workflow | Runnable Vue UI containing the MoonBit-compiled ESM |
 
@@ -50,6 +56,8 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | [COMPATIBILITY.md](COMPATIBILITY.md) | Supported feature matrix |
 | [OFFICIAL_SPEC.md](OFFICIAL_SPEC.md) | Imported upstream fixture coverage |
 | [DIFFERENTIAL_TESTING.md](DIFFERENTIAL_TESTING.md) | Cross-implementation randomized parity methodology |
+| [../src/README.mbt.md](../src/README.mbt.md) | Executable API examples compiled as tests |
+| [AI_COLLABORATION.md](AI_COLLABORATION.md) | Auditable AI workflow, real defect cases, and evidence boundaries |
 | [BENCHMARK_SNAPSHOT.md](BENCHMARK_SNAPSHOT.md) | Repository-local benchmark snapshot |
 | [ADOPTION_EVIDENCE.md](ADOPTION_EVIDENCE.md) | Why the project is reusable beyond one example |
 | [USE_CASES.md](USE_CASES.md) | Concrete workflow categories |

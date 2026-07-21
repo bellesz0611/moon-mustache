@@ -45,8 +45,8 @@ This document gives a slightly more detailed status view than `PROGRESS.md`.
 - `moon check --deny-warn`: required in CI
 - `moon build --deny-warn`: required in CI
 - `moon test --deny-warn`: required in CI
-- 80% core coverage gate with Cobertura artifact: required in CI
-- 2048-case differential parity: required in playground and Pages workflows
+- 88% core coverage gate with Cobertura artifact: required in CI
+- 2048-case, four-seed differential parity with JSON evidence: required in playground and Pages workflows
 - playground build + Linux/Windows smoke verification: required in dedicated workflow
 
 ## Remaining growth directions

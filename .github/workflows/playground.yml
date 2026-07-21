@@ -41,11 +41,19 @@ jobs:
 
       - name: Run deterministic differential suite
         working-directory: playground
-        run: npm run differential
+        run: npm run differential -- --json-output ../_playground_artifacts/differential.json --failure-output ../_playground_artifacts/differential-failures.json
 
       - name: Smoke test playground API bridge
         working-directory: playground
         run: npm run smoke
+
+      - name: Upload differential evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: differential-evidence-${{ github.sha }}
+          path: _playground_artifacts
+          if-no-files-found: warn
 
   windows-playground-smoke:
     name: Windows browser and API bridge

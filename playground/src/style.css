@@ -80,6 +80,8 @@ textarea {
 .hero-card {
   padding: 24px;
   display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
   gap: 16px;
   background: linear-gradient(180deg, rgba(255, 244, 230, 0.96), rgba(255, 250, 243, 0.96));
   animation: rise 0.7s ease-out both;
@@ -132,6 +134,15 @@ textarea {
   margin-top: 8px;
   color: var(--muted);
   font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.evidence-source {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 4px 2px 0;
+  color: var(--muted);
+  font-size: 0.85rem;
   line-height: 1.6;
 }
 
@@ -438,5 +449,13 @@ pre {
   .shell {
     width: min(100vw - 20px, 1400px);
     padding-top: 20px;
+  }
+
+  .hero-card {
+    grid-template-columns: 1fr;
+  }
+
+  .evidence-source {
+    grid-column: auto;
   }
 }

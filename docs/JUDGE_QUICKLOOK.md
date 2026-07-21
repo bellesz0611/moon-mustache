@@ -18,10 +18,10 @@ The project is intentionally focused on Mustache core semantics and engineering 
 - about `8032` handwritten effective MoonBit LOC, inside the suggested competition band
 - about `2149` imported generated fixture effective lines, disclosed separately
 - public history already exceeds the required `10-20` meaningful commits
-- `85 / 85` automated tests passing
+- automated tests passing; exact current count is generated in `METRICS_SNAPSHOT.md`
 - `194 / 194` imported core and optional `mustache/spec` fixtures passing, zero skipped
 - `2048 / 2048` deterministic differential cases passing against `mustache.js`
-- `81.5%` core coverage with an enforced `80%` CI gate
+- measured core coverage above the enforced CI gate, with exact values in `METRICS_SNAPSHOT.md`
 - latest GitHub library CI and playground smoke workflows are green on the default branch
 
 For the exact current numbers, prefer `docs/METRICS_SNAPSHOT.md`.
@@ -95,7 +95,7 @@ The repository is already in a strong acceptance and release state:
 
 - local `fmt / info / check / test` gates pass
 - latest GitHub CI is green
-- GitHub and GitLink are synchronized
+- GitHub is canonical; verify the GitLink mirror commit before submission
 - mooncakes.io publication for `0.2.0` is complete
 - the browser playground is deployed through GitHub Pages
 

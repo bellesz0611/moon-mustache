@@ -12,6 +12,7 @@ This page groups the most useful links and files for submission and review.
 ## First files to read
 
 - [README.md](../README.md)
+- [SPECIAL_AWARD_EVIDENCE.md](SPECIAL_AWARD_EVIDENCE.md)
 - [ARTIFACT_INDEX.md](ARTIFACT_INDEX.md)
 - [JUDGE_QUICKLOOK.md](JUDGE_QUICKLOOK.md)
 - [EVALUATION_SUMMARY.md](EVALUATION_SUMMARY.md)
@@ -19,6 +20,8 @@ This page groups the most useful links and files for submission and review.
 ## Technical support documents
 
 - [METRICS_SNAPSHOT.md](METRICS_SNAPSHOT.md)
+- [METRICS_SNAPSHOT.json](METRICS_SNAPSHOT.json)
+- [../src/README.mbt.md](../src/README.mbt.md)
 - [API.md](API.md)
 - [COMPATIBILITY.md](COMPATIBILITY.md)
 - [OFFICIAL_SPEC.md](OFFICIAL_SPEC.md)
@@ -32,6 +35,7 @@ This page groups the most useful links and files for submission and review.
 - [ADOPTION_GUIDE.md](ADOPTION_GUIDE.md)
 - [KNOWN_LIMITATIONS.md](KNOWN_LIMITATIONS.md)
 - [DESIGN_CHOICES.md](DESIGN_CHOICES.md)
+- [AI_COLLABORATION.md](AI_COLLABORATION.md)
 
 ## Direct demo entrypoints
 

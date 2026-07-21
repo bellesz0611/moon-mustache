@@ -44,6 +44,10 @@ jobs:
         if: matrix.target == 'wasm-gc'
         run: moon info --target all
 
+      - name: Validate documentation links
+        if: matrix.target == 'wasm-gc'
+        run: python scripts/check_docs.py
+
       - name: Run moon check with deny-warn
         run: moon check --deny-warn --target ${{ matrix.target }}
 
@@ -95,32 +99,17 @@ jobs:
 
       - name: Enforce core coverage gate
         if: matrix.target == 'wasm-gc'
+        run: python scripts/run_coverage.py --minimum 88 --output-dir _ci_artifacts
+
+      - name: Run CLI black-box integration suite
+        if: matrix.target == 'js'
         run: |
-          moon coverage clean
-          moon test --enable-coverage --target wasm-gc
-          moon coverage report -f summary | tee _ci_artifacts/coverage-summary.txt
-          python scripts/check_coverage.py _ci_artifacts/coverage-summary.txt 80
-          moon coverage report -f cobertura -o _ci_artifacts/coverage.xml
-
-      - name: Run CLI file-flow smoke test
-        if: matrix.target == 'js'
-        run: moon run --target js cli --template-file examples/files/template.mustache --json-file examples/files/context.json --partials-json-file examples/files/partials.json
-
-      - name: Run CLI scan smoke test
-        if: matrix.target == 'js'
-        run: moon run --target js cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan
-
-      - name: Run CLI bundle validation smoke test
-        if: matrix.target == 'js'
-        run: moon run --target js cli --bundle-manifest-file examples/bundle/manifest.json --bundle-profile dev --json-file examples/bundle/context.json --bundle-check-only --bundle-validation-file _ci_bundle/validation.md --bundle-plan-file _ci_bundle/plan.md
-
-      - name: Run CLI lint smoke test
-        if: matrix.target == 'js'
-        run: moon run --target js cli --template "Hello {{name}}" --var name=MoonBit --lint
+          mkdir -p _ci_artifacts
+          python scripts/test_cli_integration.py --json-output _ci_artifacts/cli-integration.json
 
       - name: Upload verification artifacts
-        if: matrix.target == 'wasm-gc'
+        if: always() && (matrix.target == 'wasm-gc' || matrix.target == 'js')
         uses: actions/upload-artifact@v4
         with:
-          name: verification-evidence-${{ github.sha }}
+          name: verification-evidence-${{ matrix.target }}-${{ github.sha }}
           path: _ci_artifacts

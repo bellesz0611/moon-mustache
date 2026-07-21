@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue'
+import metrics from '../../docs/METRICS_SNAPSHOT.json'
 import { examples } from './examples'
 import { renderMoonMustache } from './generated/moon_mustache.js'
 
@@ -16,21 +17,32 @@ const missingVariables = ref([])
 const lastError = ref('')
 const copied = ref('')
 
+const verification = metrics.verification
 const proofItems = [
   {
     label: 'Official fixtures',
-    value: '194 / 194',
+    value: `${verification.official_fixtures.passed} / ${verification.official_fixtures.total}`,
     note: 'Core and optional mustache/spec cases passing end to end.',
   },
   {
-    label: 'Automated tests',
-    value: '85',
-    note: 'Library, CLI, bundle, report, and bridge paths covered.',
+    label: 'MoonBit tests',
+    value: `${verification.moon_tests.passed} / ${verification.moon_tests.total}`,
+    note: 'Unit, regression, failure-contract, and executable documentation tests.',
   },
   {
-    label: 'MoonBit package',
-    value: '0.2.0',
-    note: 'Published to mooncakes.io and reusable downstream.',
+    label: 'Core coverage',
+    value: `${verification.core_coverage.percent}%`,
+    note: `${verification.core_coverage.covered} / ${verification.core_coverage.total} instrumentation points; ${verification.core_coverage.gate_percent}% CI gate.`,
+  },
+  {
+    label: 'Differential parity',
+    value: `${verification.differential_policy.cases} / ${verification.differential_policy.cases}`,
+    note: `${verification.differential_policy.seeds.length} fixed seeds against ${verification.differential_policy.reference}.`,
+  },
+  {
+    label: 'CLI integration',
+    value: `${verification.cli_integration.passed} / ${verification.cli_integration.total}`,
+    note: 'Real subprocess output, exit codes, file IO, lint, and bundle artifacts.',
   },
 ]
 
@@ -53,11 +65,11 @@ const useCases = [
   },
 ]
 
-const judgePath = [
-  'moon test --deny-warn',
-  'moon run showcase',
+const verificationPath = [
+  'python scripts/verify.py --profile full',
+  'python scripts/run_coverage.py --minimum 88',
   'moon run official_spec_report',
-  'moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan',
+  'cd playground && npm run differential',
 ]
 
 function applyExample(exampleId) {
@@ -129,8 +141,8 @@ onMounted(() => {
   <div class="shell">
     <header class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">MoonBit Template Infrastructure</p>
-        <h1>Moon Mustache turns template rendering into a reusable MoonBit building block.</h1>
+        <p class="eyebrow">Render · Diagnose · Verify</p>
+        <h1>A compatibility lab for MoonBit template generation.</h1>
         <p class="lead">
           This playground runs the repository's MoonBit engine directly in the browser as a compiled ES module.
           Edit the template, JSON context, and partials, then inspect output, diagnostics, and integration
@@ -143,6 +155,9 @@ onMounted(() => {
           <a class="hero-link" href="https://mooncakes.io/package/bellesz0611/moon-mustache" target="_blank" rel="noreferrer">
             Open mooncakes package
           </a>
+          <a class="hero-link" href="https://github.com/bellesz0611/moon-mustache/blob/main/docs/METRICS_SNAPSHOT.md" target="_blank" rel="noreferrer">
+            Inspect test evidence
+          </a>
         </div>
       </div>
       <div class="hero-card">
@@ -151,15 +166,18 @@ onMounted(() => {
           <span class="metric-label">{{ item.label }}</span>
           <span class="metric-note">{{ item.note }}</span>
         </div>
+        <p class="evidence-source">
+          Metrics are bundled from the repository's generated evidence snapshot, not copied into this page by hand.
+        </p>
       </div>
     </header>
 
     <section class="proof-strip">
       <article class="proof-card">
-        <span class="proof-kicker">Evaluator path</span>
-        <h2>Three-minute verification</h2>
+        <span class="proof-kicker">Reproduce evidence</span>
+        <h2>One-command verification</h2>
         <ol class="command-list">
-          <li v-for="command in judgePath" :key="command">
+          <li v-for="command in verificationPath" :key="command">
             <code>{{ command }}</code>
           </li>
         </ol>
@@ -169,7 +187,7 @@ onMounted(() => {
         <h2>More than a string formatter</h2>
         <p>
           Moon Mustache covers rendering, diagnostics, bundle planning, official compatibility fixtures,
-          CLI usage, downstream embedding, and a browser-facing demo surface.
+          CLI usage, downstream embedding, and machine-readable verification artifacts.
         </p>
       </article>
       <article class="proof-card">
@@ -278,8 +296,9 @@ onMounted(() => {
         <ul class="status-list">
           <li>Shows the project as a usable product surface, not just a CLI transcript.</li>
           <li>Uses the repository's own MoonBit engine through a local render bridge.</li>
-          <li>Makes template, context, output, and diagnostics visible in one glance for judges.</li>
+          <li>Makes template, context, output, and diagnostics visible in one reproducible workflow.</li>
           <li>Gives downstream users a low-friction place to evaluate behavior before adopting the library.</li>
+          <li>Loads test and coverage values from the canonical generated metrics snapshot at build time.</li>
         </ul>
       </article>
     </section>

@@ -34,11 +34,12 @@ This file tracks the current implementation and maturity status of Moon Mustache
 
 | Area | Status | Notes |
 | --- | --- | --- |
-| automated tests | done | `71 / 71` passing |
+| automated tests | done | current count and toolchain are generated in `docs/METRICS_SNAPSHOT.md` |
 | imported official fixtures | done | `194 / 194` passing, zero skipped |
+| CLI black-box integration | done | asserts output, failure exit codes, file IO, lint, and bundle artifacts |
 | benchmark entrypoints | done | repository includes benchmark runs |
 | GitHub CI | done | library and playground workflows present |
-| GitLink synchronization | done | competition mirror maintained |
+| GitLink synchronization | action required | GitHub is canonical; verify and push the mirror before submission |
 | release-readiness artifacts | done | workflow uploads evaluator-facing artifact snapshots |
 
 ## Current emphasis
