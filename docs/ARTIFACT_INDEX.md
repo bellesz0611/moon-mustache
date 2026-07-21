@@ -17,8 +17,9 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 
 | Command | What it proves |
 | --- | --- |
-| `python scripts/verify.py` | Six-step acceptance run with per-step logs and JSON summary |
+| `python scripts/verify.py` | Seven-step acceptance run with per-step logs and JSON summary |
 | `moon test --deny-warn` | Regression safety and clean diagnostics |
+| `python scripts/verify_official_spec_fixtures.py` | Pinned upstream identity, local checksums, case counts, license, and generated-source integrity |
 | `python scripts/test_cli_integration.py` | Real CLI output, failure exit codes, file IO, lint, and bundle artifacts |
 | `moon run showcase` | Realistic library-level render outputs |
 | `moon run official_spec_report` | Imported upstream `mustache/spec` compatibility evidence |
@@ -45,6 +46,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | `benchmarks.md` | `check` workflow on the `wasm-gc` lane | Human-readable benchmark summary |
 | `coverage-summary.txt`, `coverage.xml`, and `coverage.json` | `check` workflow on the `wasm-gc` lane | 88% core threshold plus human, standard, and machine-readable evidence |
 | `cli-integration.json` | `check` workflow on the `js` lane | Machine-readable black-box CLI result |
+| `official-fixture-integrity.json` | `check` workflow on the `wasm-gc` lane | Machine-readable fixture provenance and integrity result |
 | `differential.json` | `playground` workflow | Four fixed seeds, reference version, duration, and replayable failures |
 | `release-readiness-artifacts` | `release-readiness` workflow | Metrics snapshot, reports, demos, and benchmark outputs |
 | GitHub Pages artifact | `deploy-playground` workflow | Runnable Vue UI containing the MoonBit-compiled ESM |

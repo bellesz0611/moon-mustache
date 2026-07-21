@@ -38,6 +38,7 @@ For focused evidence:
 
 ```bash
 python scripts/test_cli_integration.py
+python scripts/verify_official_spec_fixtures.py
 python scripts/run_coverage.py --minimum 88
 cd playground && npm run differential
 ```

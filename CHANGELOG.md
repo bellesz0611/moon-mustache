@@ -8,6 +8,7 @@
 - raise the core coverage gate from 80% to 88% and fix accounting for fully covered files omitted by MoonBit's summary rows
 - split the 2,048 differential cases across four fixed seeds and emit replayable JSON evidence
 - add executable `mbt check` documentation and automated Markdown link validation
+- pin imported `mustache/spec` provenance and enforce fixture, license, case-count, and generated-source integrity offline in CI
 
 ## 0.2.0 - 2026-07-10
 

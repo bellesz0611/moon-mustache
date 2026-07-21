@@ -48,6 +48,10 @@ jobs:
         if: matrix.target == 'wasm-gc'
         run: python scripts/check_docs.py
 
+      - name: Verify pinned official fixture integrity
+        if: matrix.target == 'wasm-gc'
+        run: python scripts/verify_official_spec_fixtures.py --json-output _ci_artifacts/official-fixture-integrity.json
+
       - name: Run moon check with deny-warn
         run: moon check --deny-warn --target ${{ matrix.target }}
 

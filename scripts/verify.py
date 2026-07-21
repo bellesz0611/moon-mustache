@@ -94,6 +94,16 @@ def main() -> int:
     python = sys.executable
     steps: list[tuple[str, list[str], Path]] = [
         ("documentation", [python, "scripts/check_docs.py"], ROOT),
+        (
+            "official fixture integrity",
+            [
+                python,
+                "scripts/verify_official_spec_fixtures.py",
+                "--json-output",
+                str(output_dir / "official-fixture-integrity.json"),
+            ],
+            ROOT,
+        ),
         ("format", [moon, "fmt", "--check"], ROOT),
         ("check wasm-gc", [moon, "check", "--deny-warn", "--target", "wasm-gc"], ROOT),
         ("test wasm-gc", [moon, "test", "--deny-warn", "--target", "wasm-gc"], ROOT),

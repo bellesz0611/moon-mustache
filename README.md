@@ -93,7 +93,7 @@ Moon Mustache 围绕“可复用、可诊断、可验证”设计：
 | 层次 | 回答的问题 | 自动化入口 |
 | --- | --- | --- |
 | 单元与回归 | scanner、parser、renderer 和诊断是否保持行为 | `moon test --deny-warn` |
-| 上游规范 fixture | 是否与 `mustache/spec` 的核心和可选语义一致 | `moon run official_spec_report` |
+| 上游规范 fixture | 是否与固定提交的 `mustache/spec` 核心和可选语义一致，来源是否漂移 | `python scripts/verify_official_spec_fixtures.py && moon run official_spec_report` |
 | 跨实现差分 | 随机组合输入是否与 `mustache.js` 输出一致 | `cd playground && npm run differential` |
 | CLI 黑盒集成 | 退出码、文件 IO、lint 和 Bundle 产物是否正确 | `python scripts/test_cli_integration.py` |
 | 覆盖率门禁 | 核心实现是否出现未测试回退 | `python scripts/run_coverage.py --minimum 88` |
