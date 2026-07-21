@@ -167,6 +167,8 @@ def main() -> int:
                         "scripts/run_coverage.py",
                         "--minimum",
                         "88",
+                        "--cli-core-minimum",
+                        "70",
                         "--output-dir",
                         str(output_dir / "coverage"),
                     ],

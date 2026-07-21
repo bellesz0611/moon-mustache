@@ -37,7 +37,7 @@ moon test --deny-warn --target wasm-gc
 python scripts/verify_official_spec_fixtures.py
 moon run official_spec_report
 python scripts/test_cli_integration.py
-python scripts/run_coverage.py --minimum 88
+python scripts/run_coverage.py --minimum 88 --cli-core-minimum 70
 python scripts/run_fault_injection.py
 python scripts/test_backend_conformance.py
 python scripts/check_docs.py
@@ -87,7 +87,8 @@ CI 会在 `wasm`、`wasm-gc`、`js`、`native` 四个目标执行 check/build/te
 ### 3.4 证据边界
 
 - “核心覆盖率”只统计 `src/`，不冒充整个仓库覆盖率。
-- CLI 与 bridge 主要由黑盒集成和 smoke job 覆盖，与核心单元覆盖率分开陈述。
+- CLI 把纯参数解析、诊断提示、报告选择、路径组合和输出阻断判定拆为 `cli_core/`，单独执行 `70%` 门禁；文件 IO、进程退出码和真实产物仍由 11 项黑盒集成测试负责。两种口径不混算。
+- browser bridge 由 MoonBit 单测、Playground build 和 smoke job 覆盖，与核心单元覆盖率分开陈述。
 - imported fixture 生成代码与手写实现行数分开披露。
 - 固定 seed 组证明可重复性，不等于穷举全部模板空间。
 

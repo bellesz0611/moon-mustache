@@ -19,92 +19,8 @@ fn push_all(target : Array[String], incoming : Array[String]) -> Unit {
 }
 
 ///|
-fn parse_assignment(entry : String) -> (String, String)? {
-  match entry.split_once("=") {
-    Some((name, value)) => Some((name.to_owned(), value.to_owned()))
-    None => None
-  }
-}
-
-///|
-fn unique_diagnostics(errors : Array[String]) -> Array[String] {
-  let unique : Array[String] = []
-  let seen : Map[String, Bool] = {}
-  for error in errors {
-    if !seen.get_or_default(error, false) {
-      seen[error] = true
-      unique.push(error)
-    }
-  }
-  unique
-}
-
-///|
-fn diagnostic_tip(message : String) -> String? {
-  if message.contains("invalid --var assignment") {
-    Some(
-      "Use --var key=value. Dotted keys such as user.name=Alice are supported.",
-    )
-  } else if message.contains("invalid --partial assignment") {
-    Some(
-      "Use --partial name=template, or load multiple partials with --partials-json-file.",
-    )
-  } else if message.contains("missing partial:") {
-    Some(
-      "Add the partial inline with --partial name=..., or load a JSON partial map with --partials-json-file.",
-    )
-  } else if message.contains("missing variable:") {
-    Some(
-      "Provide the value through --var, --json, --json-file, or the selected bundle profile context.",
-    )
-  } else if message.contains("invalid JSON context") {
-    Some(
-      "Check shell quoting first. On PowerShell, --json-base64 is often the easiest way to pass JSON safely.",
-    )
-  } else if message.contains("invalid partials JSON") {
-    Some(
-      "The partials file must be a JSON object that maps partial names to template strings.",
-    )
-  } else if message.contains("failed to read template file") ||
-    message.contains("failed to read JSON context file") ||
-    message.contains("failed to read partials file") ||
-    message.contains("failed to read bundle manifest file") {
-    Some(
-      "Double-check the path, and use --target js for file-backed CLI flows.",
-    )
-  } else if message.contains(
-      "file IO is only supported when running the CLI with --target js",
-    ) {
-    Some(
-      "Re-run the command as moon run --target js cli ... when reading or writing files.",
-    )
-  } else if message.contains("invalid bundle manifest:") {
-    Some(
-      "Validate the manifest shape first, or print the sample manifest with --print-sample-manifest.",
-    )
-  } else if message.contains("unsupported bundle report format") {
-    Some("Use --bundle-report-format markdown or --bundle-report-format json.")
-  } else if message.contains("parent traversal") ||
-    message.contains("invalid-output-path") {
-    Some(
-      "Bundle output paths must stay inside the generated project tree and cannot use parent traversal segments.",
-    )
-  } else if message.contains("unterminated section:") {
-    Some(
-      "Every {{#name}} or {{^name}} block needs a matching closing tag such as {{/name}}.",
-    )
-  } else if message.contains("partial depth limit exceeded:") {
-    Some(
-      "This usually means recursive partial expansion. Check whether a partial includes itself directly or indirectly.",
-    )
-  } else {
-    None
-  }
-}
-
-///|
 fn print_diagnostics(errors : Array[String]) -> Unit {
-  let unique = unique_diagnostics(errors)
+  let unique = @cli_core.unique_diagnostics(errors)
   if unique.length() == 0 {
     return
   }
@@ -113,7 +29,7 @@ fn print_diagnostics(errors : Array[String]) -> Unit {
   )
   for error in unique {
     println("- " + error)
-    match diagnostic_tip(error) {
+    match @cli_core.diagnostic_tip(error) {
       Some(tip) => println("  tip: " + tip)
       None => ()
     }
@@ -183,7 +99,7 @@ fn build_template(matches : @argparse.Matches) -> (String, Array[String]) {
     None =>
       match first_value(matches, "template") {
         Some(value) => (value, [])
-        None => (default_template(), [])
+        None => (@cli_core.default_template(), [])
       }
   }
 }
@@ -240,7 +156,7 @@ fn build_context_from_assignments(
   match matches.values.get("var") {
     Some(values) =>
       for entry in values {
-        match parse_assignment(entry) {
+        match @cli_core.parse_assignment(entry) {
           Some((name, value)) => entries.push((name, value))
           None =>
             errors.push(
@@ -300,7 +216,7 @@ fn build_partials(
   match matches.values.get("partial") {
     Some(values) =>
       for entry in values {
-        match parse_assignment(entry) {
+        match @cli_core.parse_assignment(entry) {
           Some((name, value)) => partials[name] = value
           None =>
             errors.push(
@@ -320,11 +236,6 @@ fn build_render_options(matches : @argparse.Matches) -> @src.RenderOptions {
   } else {
     @src.RenderOptions::default()
   }
-}
-
-///|
-fn default_template() -> String {
-  "Project {{name}} builds a {{role}}.\n{{> footer}}"
 }
 
 ///|
@@ -420,7 +331,7 @@ fn handle_lint_mode(
           Ok(resolved) => {
             let final_bundle = @src.TemplateBundle::new(
               resolved.bundle.files,
-              merge_partial_maps(resolved.bundle.partials, partials),
+              @cli_core.merge_partial_maps(resolved.bundle.partials, partials),
             )
             finish_lint(
               @src.lint_template_bundle(final_bundle, resolved.context),
@@ -460,30 +371,6 @@ fn bundle_manifest_enabled(matches : @argparse.Matches) -> Bool {
 }
 
 ///|
-fn merge_partial_maps(
-  base : Map[String, String],
-  incoming : Map[String, String],
-) -> Map[String, String] {
-  let merged : Map[String, String] = {}
-  for name, template in base {
-    merged[name] = template
-  }
-  for name, template in incoming {
-    merged[name] = template
-  }
-  merged
-}
-
-///|
-fn join_output_path(root : String, relative : String) -> String {
-  if root == "" {
-    relative
-  } else {
-    root + "/" + relative
-  }
-}
-
-///|
 fn print_generated_file(file : @src.GeneratedFile) -> Unit {
   println("== " + file.path + " ==")
   println(file.output)
@@ -510,48 +397,6 @@ fn build_bundle_manifest(
 }
 
 ///|
-fn build_bundle_report_output(
-  format : String,
-  bundle_name : String,
-  result : @src.BundleRenderResult,
-) -> (String, String)? {
-  if format == "json" {
-    Some(("json", @src.format_bundle_result_json(bundle_name, result)))
-  } else if format == "markdown" {
-    Some(("markdown", @src.format_bundle_result_markdown(bundle_name, result)))
-  } else {
-    None
-  }
-}
-
-///|
-fn build_bundle_plan_output(
-  bundle_name : String,
-  render_result : @src.BundleRenderResult,
-  validation_result : @src.BundleValidationResult,
-) -> String {
-  @src.format_bundle_plan_markdown(
-    @src.build_bundle_plan(bundle_name, render_result, validation_result),
-  )
-}
-
-///|
-fn validation_issue_diagnostic(issue : @src.BundleValidationIssue) -> String {
-  let severity = match issue.severity {
-    Error => "error"
-    Warning => "warning"
-  }
-  "bundle " +
-  severity +
-  " [" +
-  issue.code +
-  "] " +
-  issue.target +
-  ": " +
-  issue.message
-}
-
-///|
 fn handle_bundle_mode(
   matches : @argparse.Matches,
   context : @src.Value,
@@ -574,7 +419,7 @@ fn handle_bundle_mode(
   }
   let validation_result = @src.validate_bundle_manifest(manifest)
   for issue in validation_result.issues {
-    all_errors.push(validation_issue_diagnostic(issue))
+    all_errors.push(@cli_core.validation_issue_diagnostic(issue))
   }
   let profile_name = match first_value(matches, "bundle-profile") {
     Some(value) => value
@@ -589,7 +434,10 @@ fn handle_bundle_mode(
       return
     }
   }
-  let merged_partials = merge_partial_maps(resolved.bundle.partials, partials)
+  let merged_partials = @cli_core.merge_partial_maps(
+    resolved.bundle.partials,
+    partials,
+  )
   let final_bundle = @src.TemplateBundle::new(
     resolved.bundle.files,
     merged_partials,
@@ -608,9 +456,11 @@ fn handle_bundle_mode(
   }
   if all_errors.length() > 0 {
     print_diagnostics(all_errors)
-    if flag_enabled(matches, "strict") ||
-      result.errors.length() > 0 ||
-      @src.validation_has_errors(validation_result) {
+    if @cli_core.should_block_bundle(
+        flag_enabled(matches, "strict"),
+        result.errors.length(),
+        @src.validation_has_errors(validation_result),
+      ) {
       println(
         "No bundle files were written because strict mode, render errors, or validation errors blocked output.",
       )
@@ -622,7 +472,7 @@ fn handle_bundle_mode(
     match first_value(matches, "bundle-output-dir") {
       Some(root) =>
         for file in result.files {
-          let path = join_output_path(root, file.path)
+          let path = @cli_core.join_output_path(root, file.path)
           match write_text_file(path, file.output) {
             Ok(_) => ()
             Err(message) => {
@@ -645,7 +495,8 @@ fn handle_bundle_mode(
         Some(value) => value
         None => "markdown"
       }
-      match build_bundle_report_output(format, manifest.name, result) {
+      match
+        @cli_core.build_bundle_report_output(format, manifest.name, result) {
         Some((_, content)) =>
           match write_text_file(path, content) {
             Ok(_) => println("Wrote bundle report to " + path)
@@ -687,7 +538,11 @@ fn handle_bundle_mode(
       match
         write_text_file(
           path,
-          build_bundle_plan_output(manifest.name, result, validation_result),
+          @cli_core.build_bundle_plan_output(
+            manifest.name,
+            result,
+            validation_result,
+          ),
         ) {
         Ok(_) => println("Wrote bundle generation plan to " + path)
         Err(message) => {
@@ -740,7 +595,10 @@ fn handle_single_template_mode(
 
   if all_errors.length() > 0 {
     print_diagnostics(all_errors)
-    if flag_enabled(matches, "strict") {
+    if @cli_core.should_block_single_template(
+        flag_enabled(matches, "strict"),
+        all_errors.length(),
+      ) {
       println("No rendered output was produced because strict mode is enabled.")
       set_process_exit_code(1)
       return
@@ -910,7 +768,7 @@ fn main {
     return
   }
   if flag_enabled(matches, "print-default-template") {
-    println(default_template())
+    println(@cli_core.default_template())
     return
   }
   if flag_enabled(matches, "print-sample-manifest") {

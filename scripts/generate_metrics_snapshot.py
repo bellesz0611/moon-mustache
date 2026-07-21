@@ -11,7 +11,6 @@ from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DOC_PATH = ROOT / "docs" / "METRICS_SNAPSHOT.md"
 JSON_PATH = ROOT / "docs" / "METRICS_SNAPSHOT.json"
@@ -22,6 +21,7 @@ MOON_MOD_PATH = ROOT / "moon.mod"
 COUNT_DIRS = [
     "src",
     "cli",
+    "cli_core",
     "benchmarks",
     "showcase",
     "scaffold_demo",
@@ -244,7 +244,34 @@ def main() -> int:
     run([moon, "test", "--enable-coverage", "--target", "wasm-gc"])
     coverage_output = run([moon, "coverage", "report", "-f", "summary"])
     repository_covered, repository_total, repository_percent = parse_repository_coverage(coverage_output)
-    coverage_covered, coverage_total, coverage_percent = parse_core_coverage(coverage_output)
+    core_coverage_output = run(
+        [
+            moon,
+            "coverage",
+            "report",
+            "-f",
+            "summary",
+            "-p",
+            "bellesz0611/moon-mustache/src",
+        ]
+    )
+    coverage_covered, coverage_total, coverage_percent = parse_repository_coverage(
+        core_coverage_output
+    )
+    cli_core_coverage_output = run(
+        [
+            moon,
+            "coverage",
+            "report",
+            "-f",
+            "summary",
+            "-p",
+            "bellesz0611/moon-mustache/cli_core",
+        ]
+    )
+    cli_core_covered, cli_core_total, cli_core_percent = parse_repository_coverage(
+        cli_core_coverage_output
+    )
     with tempfile.TemporaryDirectory(prefix="moon-mustache-metrics-") as directory:
         cli_json_path = Path(directory) / "cli-integration.json"
         run([sys.executable, "scripts/test_cli_integration.py", "--json-output", str(cli_json_path)])
@@ -300,6 +327,7 @@ python scripts/generate_metrics_snapshot.py
 - imported official fixture cases: `{official_total - official_failures} / {official_total}` passing, `{official_skips}` skipped
 - core library coverage: `{coverage_covered} / {coverage_total}` (`{coverage_percent:.1f}%`)
 - coverage policy: at least `88.0%`, enforced in CI with summary and Cobertura artifacts
+- CLI testable-core coverage: `{cli_core_covered} / {cli_core_total}` (`{cli_core_percent:.1f}%`), with a `70.0%` CI gate; filesystem and process behavior remains covered by black-box integration
 - repository-wide instrumented lines: `{repository_covered} / {repository_total}` (`{repository_percent:.1f}%`, informational; CLI, bridges, and demos are verified by integration/smoke jobs rather than this unit-coverage gate)
 - CLI black-box integration: `{cli_payload['passed']} / {cli_payload['total']}` passing
 - controlled fault injection: `{fault_payload['killed']} / {fault_payload['total']}` mutants killed, `{fault_payload['survived']}` survived, `{fault_payload['invalid']}` invalid
@@ -356,6 +384,13 @@ python scripts/generate_metrics_snapshot.py
                 "total": coverage_total,
                 "percent": round(coverage_percent, 1),
                 "gate_percent": 88.0,
+            },
+            "cli_core_coverage": {
+                "covered": cli_core_covered,
+                "total": cli_core_total,
+                "percent": round(cli_core_percent, 1),
+                "gate_percent": 70.0,
+                "scope": "pure CLI parsing, diagnostics, report selection, path composition, and output-blocking decisions",
             },
             "repository_coverage": {
                 "covered": repository_covered,

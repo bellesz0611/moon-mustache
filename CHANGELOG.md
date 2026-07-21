@@ -15,6 +15,7 @@
 - expand executable documentation across sections, arrays, partials, strict diagnostics, and multi-file generation
 - turn the browser playground into a bilingual compatibility lab with live reference comparison, pinned conformance details, and real five-file starter generation
 - minimize differential failures automatically under a bounded evaluation budget and preserve reduced reproducers in JSON and JUnit evidence
+- extract a side-effect-free CLI core, cover it independently, and enforce a separate 70% coverage gate alongside CLI black-box contracts
 
 ## 0.2.0 - 2026-07-10
 

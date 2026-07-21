@@ -5,6 +5,7 @@ import {
   "moonbitlang/core/encoding/base64",
   "moonbitlang/core/encoding/utf8",
   "bellesz0611/moon-mustache/src",
+  "bellesz0611/moon-mustache/cli_core",
 }
 
 options(

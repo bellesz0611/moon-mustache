@@ -24,6 +24,7 @@ Moon Mustache is built around a small, explicit pipeline:
 - `bundle*.mbt`: multi-file rendering, manifest parsing, validation, and plan output
 - `official_spec_*.mbt`: imported upstream fixture execution and reporting
 - `scenario_report.mbt`: workflow-level scenario execution
+- `cli_core/`: side-effect-free CLI parsing, diagnostics, report selection, path composition, and output-blocking decisions
 - `cli/node_fs.mbt`: Node.js-backed file bridge for CLI file workflows
 - `browser_bridge`: exported MoonBit ES module used directly by the Vue playground
 

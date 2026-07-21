@@ -59,6 +59,13 @@ def main() -> int:
                 f"CLI black-box integration: `{verification['cli_integration']['passed']} / {verification['cli_integration']['total']}` passing",
             ),
             (
+                "CLI testable-core coverage",
+                "CLI testable-core coverage: "
+                f"`{verification['cli_core_coverage']['covered']} / "
+                f"{verification['cli_core_coverage']['total']}` "
+                f"(`{verification['cli_core_coverage']['percent']:.1f}%`)",
+            ),
+            (
                 "fault-injection count",
                 f"controlled fault injection: `{verification['fault_injection']['killed']} / {verification['fault_injection']['total']}` mutants killed",
             ),

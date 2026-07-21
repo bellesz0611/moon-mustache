@@ -128,7 +128,7 @@ const useCases = [
 
 const verificationPath = [
   'python scripts/verify.py --profile full',
-  'python scripts/run_coverage.py --minimum 88',
+  'python scripts/run_coverage.py --minimum 88 --cli-core-minimum 70',
   'moon run official_spec_report',
   'cd playground && npm run differential',
 ]

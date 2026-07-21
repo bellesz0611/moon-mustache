@@ -39,7 +39,7 @@ For focused evidence:
 ```bash
 python scripts/test_cli_integration.py
 python scripts/verify_official_spec_fixtures.py
-python scripts/run_coverage.py --minimum 88
+python scripts/run_coverage.py --minimum 88 --cli-core-minimum 70
 python scripts/run_fault_injection.py
 python scripts/test_backend_conformance.py
 cd playground && npm run differential
