@@ -12,6 +12,7 @@
     "preview": "vite preview --host",
     "api": "node server.mjs",
     "smoke": "node smoke.mjs",
+    "test:differential-minimizer": "node --test scripts/differential-minimizer.test.mjs scripts/differential-pipeline.test.mjs",
     "differential": "npm run moon-engine && node scripts/differential-test.mjs --cases-per-seed 1536 --seeds 20260710,20260711,20260712,20260713"
   },
   "dependencies": {

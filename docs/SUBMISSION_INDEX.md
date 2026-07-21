@@ -12,6 +12,8 @@ This page groups the most useful links and files for submission and review.
 ## First files to read
 
 - [README.md](../README.md)
+- [SPECIAL_AWARD_SUBMISSION.md](SPECIAL_AWARD_SUBMISSION.md)
+- [DEMO_SCRIPT_3_MINUTES.md](DEMO_SCRIPT_3_MINUTES.md)
 - [SPECIAL_AWARD_EVIDENCE.md](SPECIAL_AWARD_EVIDENCE.md)
 - [ARTIFACT_INDEX.md](ARTIFACT_INDEX.md)
 - [JUDGE_QUICKLOOK.md](JUDGE_QUICKLOOK.md)

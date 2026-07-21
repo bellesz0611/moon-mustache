@@ -49,6 +49,10 @@ jobs:
         working-directory: playground
         run: npm ci
 
+      - name: Test differential failure minimization
+        working-directory: playground
+        run: npm run test:differential-minimizer
+
       - name: Verify MoonBit differential parity
         working-directory: playground
         run: npm run differential

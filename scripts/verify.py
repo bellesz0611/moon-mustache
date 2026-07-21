@@ -183,6 +183,11 @@ def main() -> int:
                     ROOT,
                 ),
                 (
+                    "differential minimizer",
+                    [npm, "run", "test:differential-minimizer"],
+                    ROOT / "playground",
+                ),
+                (
                     "differential",
                     [
                         npm,

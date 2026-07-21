@@ -14,6 +14,7 @@
 - expand deterministic differential parity to 6,144 cases and publish per-case JUnit XML
 - expand executable documentation across sections, arrays, partials, strict diagnostics, and multi-file generation
 - turn the browser playground into a bilingual compatibility lab with live reference comparison, pinned conformance details, and real five-file starter generation
+- minimize differential failures automatically under a bounded evaluation budget and preserve reduced reproducers in JSON and JUnit evidence
 
 ## 0.2.0 - 2026-07-10
 

@@ -10,7 +10,7 @@ npm ci
 npm run differential
 ```
 
-The command compiles `browser_bridge` from MoonBit to an ES module, generates 1,536 cases for each of four fixed seeds (`20260710` through `20260713`), renders all 6,144 cases with both implementations in one Node.js process, and exits non-zero when a mismatch is found.
+The command compiles `browser_bridge` from MoonBit to an ES module, generates 1,536 cases for each of four fixed seeds (`20260710` through `20260713`), renders all 6,144 cases with both implementations in one Node.js process, and exits non-zero when a mismatch is found. Before writing a failure, it automatically minimizes the template, context, and partial map while preserving the same failure category.
 
 ## Generated coverage
 
@@ -25,7 +25,19 @@ npm run differential -- \
   --junit-output ../_artifacts/differential.junit.xml
 ```
 
-The JSON report keeps seeds, inputs, outputs, diagnostics, and exact replay commands. The JUnit XML exposes every generated case to CI test-report viewers without changing the deterministic corpus.
+The JSON report keeps seeds, inputs, outputs, diagnostics, exact replay commands, and the minimized reproducer. Each minimized record contains the preserved failure category, reduction evaluation count, JSON size before and after reduction, minimized expected/actual output, and diagnostics. The JUnit XML exposes every generated case and embeds the same failure detail for CI test-report viewers without changing the deterministic corpus.
+
+The minimizer has its own deterministic tests:
+
+```bash
+npm run test:differential-minimizer
+```
+
+It uses a bounded evaluation budget so a pathological failure cannot stall CI. Disable reduction only when diagnosing the reducer itself:
+
+```bash
+node scripts/differential-test.mjs --seed 20260710 --cases 8 --no-minimize
+```
 
 Replay one generated case:
 
@@ -42,4 +54,4 @@ The first differential run found that HTML escaping used single-occurrence strin
 
 ## CI policy
 
-The same fixed corpus runs in the playground workflow and before GitHub Pages packaging. The four baseline seeds remain stable for reproducibility; future seeds can broaden coverage without weakening the existing regression set. The playground workflow uploads the JSON report even when a later step fails.
+The same fixed corpus and minimizer tests run in the playground workflow and before GitHub Pages packaging. The four baseline seeds remain stable for reproducibility; future seeds can broaden coverage without weakening the existing regression set. The playground workflow uploads the JSON report even when a later step fails.

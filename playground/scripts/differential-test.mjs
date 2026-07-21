@@ -1,7 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import Mustache from 'mustache'
-import { renderMoonMustache } from '../src/generated/moon_mustache.js'
+import { minimizeFailure } from './differential-minimizer.mjs'
 
 function option(name) {
   const index = process.argv.lastIndexOf(name)
@@ -25,6 +26,15 @@ function seedList() {
     throw new Error('--seeds must be a comma-separated list of integers')
   }
   return seeds
+}
+
+const engineModule = option('--engine-module')
+const engineUrl = engineModule
+  ? pathToFileURL(path.resolve(engineModule)).href
+  : new URL('../src/generated/moon_mustache.js', import.meta.url).href
+const { renderMoonMustache } = await import(engineUrl)
+if (typeof renderMoonMustache !== 'function') {
+  throw new Error(`engine module does not export renderMoonMustache: ${engineUrl}`)
 }
 
 function writeJson(filePath, payload) {
@@ -79,6 +89,8 @@ const maxFailures = numberOption('--max-failures', 10)
 const jsonOutput = option('--json-output')
 const failureOutput = option('--failure-output')
 const junitOutput = option('--junit-output')
+const minimizeFailures = !process.argv.includes('--no-minimize')
+const maxMinimizerEvaluations = numberOption('--max-minimizer-evaluations', 250)
 const words = ['MoonBit', 'Mustache', 'template', 'release', 'alpha', 'beta', '<tag>', 'A&B']
 
 function fixture(index, random) {
@@ -143,8 +155,18 @@ function fixture(index, random) {
   }
 }
 
-function evaluate(seed, index, test) {
-  const expected = Mustache.render(test.template, test.context, test.partials)
+function compare(test) {
+  let expected
+  try {
+    expected = Mustache.render(test.template, test.context, test.partials)
+  } catch (error) {
+    return {
+      kind: 'reference-error',
+      expected: '',
+      actual: '',
+      errors: [error instanceof Error ? error.message : String(error)],
+    }
+  }
   const response = JSON.parse(
     renderMoonMustache(
       test.template,
@@ -153,14 +175,53 @@ function evaluate(seed, index, test) {
       false,
     ),
   )
-  if (response.errors.length === 0 && response.output === expected) return undefined
+  if (response.errors.length > 0) {
+    return {
+      kind: 'moon-diagnostic',
+      expected,
+      actual: response.output,
+      errors: response.errors,
+    }
+  }
+  if (response.output !== expected) {
+    return {
+      kind: 'output-mismatch',
+      expected,
+      actual: response.output,
+      errors: [],
+    }
+  }
+  return undefined
+}
+
+function evaluate(seed, index, test) {
+  const comparison = compare(test)
+  if (!comparison) return undefined
+  let minimized
+  if (minimizeFailures) {
+    const result = minimizeFailure(
+      test,
+      (candidate) => compare(candidate)?.kind === comparison.kind,
+      { maxEvaluations: maxMinimizerEvaluations },
+    )
+    const minimizedComparison = compare(result.fixture)
+    minimized = {
+      ...result,
+      failure_kind: minimizedComparison.kind,
+      expected: minimizedComparison.expected,
+      actual: minimizedComparison.actual,
+      errors: minimizedComparison.errors,
+    }
+  }
   return {
     seed,
     index,
+    failure_kind: comparison.kind,
     fixture: test,
-    expected,
-    actual: response.output,
-    errors: response.errors,
+    expected: comparison.expected,
+    actual: comparison.actual,
+    errors: comparison.errors,
+    minimized,
     reproduce: `node scripts/differential-test.mjs --seed ${seed} --cases ${index + 1} --case-index ${index}`,
   }
 }
@@ -185,12 +246,16 @@ for (const seed of seeds) {
 }
 
 const report = {
-  schema_version: 1,
+  schema_version: 2,
   suite: 'moon-mustache differential parity',
   reference: `mustache.js ${Mustache.version ?? 'unknown'}`,
   seeds,
   cases_per_seed: casesPerSeed,
   requested_case_index: caseIndex ?? null,
+  minimization: {
+    enabled: minimizeFailures,
+    max_evaluations_per_failure: maxMinimizerEvaluations,
+  },
   passed: executed - failures.length,
   total: executed,
   duration_ms: Math.round(performance.now() - started),
@@ -205,6 +270,12 @@ if (failures.length > 0) {
   for (const failure of failures) {
     console.error(`- seed ${failure.seed}, case ${failure.index}`)
     console.error(`  reproduce: ${failure.reproduce}`)
+    if (failure.minimized) {
+      console.error(
+        `  minimized: ${failure.minimized.original_size} -> ${failure.minimized.minimized_size} JSON chars ` +
+          `in ${failure.minimized.evaluations} evaluations`,
+      )
+    }
   }
   process.exitCode = 1
 } else {
