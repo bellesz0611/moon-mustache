@@ -124,7 +124,7 @@ pub fn generate_starter_bridge(
       ),
       @src.TemplateFile::new("src/moon.pkg", ""),
       @src.TemplateFile::new(
-        ".github/workflows/ci.yml", "name: check\n\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v5\n      - uses: moonbitlang/setup-moonbit@v1\n      - run: moon test --deny-warn\n",
+        ".github/workflows/ci.yml", "name: check\n\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v7\n      - uses: moonbitlang/setup-moonbit@v1\n      - run: moon test --deny-warn\n",
       ),
     ],
     {},

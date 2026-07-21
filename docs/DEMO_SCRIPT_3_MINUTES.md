@@ -20,6 +20,7 @@
 python scripts/check_docs.py
 python scripts/check_metrics_freshness.py
 python scripts/verify.py --profile full
+python scripts/check_submission_readiness.py
 ```
 
 - 确认在线 Playground 对应最终提交，而不是本地领先版本。

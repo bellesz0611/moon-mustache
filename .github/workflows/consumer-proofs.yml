@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
 
       - name: Set up pinned MoonBit
         uses: ./.github/actions/setup-moonbit
@@ -39,7 +39,7 @@ jobs:
           moon run starter_repo_demo > _consumer_artifacts/starter_repo_demo.txt
 
       - name: Upload consumer proof artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: consumer-proof-artifacts
           path: _consumer_artifacts

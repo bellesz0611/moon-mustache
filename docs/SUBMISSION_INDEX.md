@@ -23,12 +23,14 @@ This page groups the most useful links and files for submission and review.
 
 - [METRICS_SNAPSHOT.md](METRICS_SNAPSHOT.md)
 - [METRICS_SNAPSHOT.json](METRICS_SNAPSHOT.json)
+- [`scripts/check_submission_readiness.py`](../scripts/check_submission_readiness.py)
 - [../src/README.mbt.md](../src/README.mbt.md)
 - [API.md](API.md)
 - [COMPATIBILITY.md](COMPATIBILITY.md)
 - [OFFICIAL_SPEC.md](OFFICIAL_SPEC.md)
 - [STABILITY.md](STABILITY.md)
 - [BENCHMARK_SNAPSHOT.md](BENCHMARK_SNAPSHOT.md)
+- [DEPENDENCY_REVIEW.md](DEPENDENCY_REVIEW.md)
 
 ## Project maturity documents
 

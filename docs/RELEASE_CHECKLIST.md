@@ -1,5 +1,13 @@
 # Release Checklist
 
+Run the final public-state gate after pushing both mirrors and waiting for CI:
+
+```bash
+python scripts/check_submission_readiness.py --json-output _artifacts/submission-readiness.json
+```
+
+This requires a clean local `main`, fresh generated metrics, matching GitHub and GitLink `main` commits, GitHub's default branch set to `main`, successful `check`, `playground`, and `deploy-playground` push runs for the exact local commit, and GitLink's default branch set to `main`. Open pull requests are reported for review but do not automatically fail the gate.
+
 ## Before tagging
 
 - `moon check`
@@ -15,6 +23,7 @@
 - refresh compatibility notes if behavior changed
 - update README examples if CLI flags changed
 - update `CHANGELOG.md`
+- review [DEPENDENCY_REVIEW.md](DEPENDENCY_REVIEW.md) and rerun `npm audit --audit-level=high`
 - confirm `release-readiness` workflow artifacts still make sense
 
 ## Before competition submission update
