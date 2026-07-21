@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-21T09:33:45+00:00",
+  "generated_at": "2026-07-21T09:53:27+00:00",
   "repository": {
-    "commit": "6a82c6a",
-    "working_tree_dirty": true,
-    "commit_count": 60
+    "commit": "c2821b6",
+    "working_tree_dirty": false,
+    "commit_count": 61
   },
   "package": {
     "name": "bellesz0611/moon-mustache",
@@ -47,27 +47,27 @@
         {
           "name": "inline render",
           "status": "passed",
-          "duration_ms": 1545
+          "duration_ms": 1292
         },
         {
           "name": "file-backed render",
           "status": "passed",
-          "duration_ms": 746
+          "duration_ms": 597
         },
         {
           "name": "strict failure exit code",
           "status": "passed",
-          "duration_ms": 658
+          "duration_ms": 537
         },
         {
           "name": "lint failure exit code",
           "status": "passed",
-          "duration_ms": 605
+          "duration_ms": 652
         },
         {
           "name": "bundle generation",
           "status": "passed",
-          "duration_ms": 836
+          "duration_ms": 644
         }
       ]
     },
