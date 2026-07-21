@@ -94,6 +94,7 @@ def main() -> int:
     python = sys.executable
     steps: list[tuple[str, list[str], Path]] = [
         ("documentation", [python, "scripts/check_docs.py"], ROOT),
+        ("metrics freshness", [python, "scripts/check_metrics_freshness.py"], ROOT),
         (
             "official fixture integrity",
             [
@@ -153,6 +154,16 @@ def main() -> int:
                         "88",
                         "--output-dir",
                         str(output_dir / "coverage"),
+                    ],
+                    ROOT,
+                ),
+                (
+                    "fault injection",
+                    [
+                        python,
+                        "scripts/run_fault_injection.py",
+                        "--json-output",
+                        str(output_dir / "fault-injection.json"),
                     ],
                     ROOT,
                 ),

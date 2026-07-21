@@ -78,6 +78,13 @@ test "truthy section renders children once" {
 }
 
 ///|
+test "true boolean section renders children" {
+  let context = make_object([("enabled", Value::bool(true))])
+  let actual = render("{{#enabled}}enabled{{/enabled}}", context)
+  inspect(actual, content="enabled")
+}
+
+///|
 test "inverted section renders when value is false" {
   let context = make_object([("enabled", Value::bool(false))])
   let actual = render("{{^enabled}}disabled{{/enabled}}", context)
@@ -901,6 +908,23 @@ test "render resource budget limits total render steps" {
   let result = render_checked_with_options("A{{name}}B", context, options)
   inspect(result.output, content="AMoonBit")
   inspect(result.errors[0].contains("MST-LIMIT-003"), content="true")
+}
+
+///|
+test "render resource budget limits partial depth" {
+  let options = RenderOptions::default().with_partial_depth_limit(1)
+  let result = render_with_partials_checked_with_options(
+    "{{> first}}",
+    Value::empty_object(),
+    { "first": "{{> second}}", "second": "should-not-render" },
+    options,
+  )
+  inspect(result.output, content="")
+  inspect(result.errors.length(), content="1")
+  inspect(
+    result.errors[0].contains("partial depth limit exceeded"),
+    content="true",
+  )
 }
 
 ///|

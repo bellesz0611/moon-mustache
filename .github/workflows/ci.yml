@@ -48,6 +48,10 @@ jobs:
         if: matrix.target == 'wasm-gc'
         run: python scripts/check_docs.py
 
+      - name: Reject stale generated metrics
+        if: matrix.target == 'wasm-gc'
+        run: python scripts/check_metrics_freshness.py
+
       - name: Verify pinned official fixture integrity
         if: matrix.target == 'wasm-gc'
         run: python scripts/verify_official_spec_fixtures.py --json-output _ci_artifacts/official-fixture-integrity.json
@@ -104,6 +108,10 @@ jobs:
       - name: Enforce core coverage gate
         if: matrix.target == 'wasm-gc'
         run: python scripts/run_coverage.py --minimum 88 --output-dir _ci_artifacts
+
+      - name: Prove focused tests reject controlled faults
+        if: matrix.target == 'wasm-gc'
+        run: python scripts/run_fault_injection.py --json-output _ci_artifacts/fault-injection.json
 
       - name: Run CLI black-box integration suite
         if: matrix.target == 'js'

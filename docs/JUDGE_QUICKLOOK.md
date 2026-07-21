@@ -15,8 +15,7 @@ The project is intentionally focused on Mustache core semantics and engineering 
 
 ## 2. Why it is not a shell repository
 
-- about `8032` handwritten effective MoonBit LOC, inside the suggested competition band
-- about `2149` imported generated fixture effective lines, disclosed separately
+- handwritten MoonBit and imported generated fixture LOC are disclosed separately in `METRICS_SNAPSHOT.md`
 - public history already exceeds the required `10-20` meaningful commits
 - automated tests passing; exact current count is generated in `METRICS_SNAPSHOT.md`
 - `194 / 194` imported core and optional `mustache/spec` fixtures passing, zero skipped

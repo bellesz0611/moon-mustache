@@ -71,6 +71,21 @@ def test_file_render() -> None:
         expect(line in result.stdout, f"file-backed output is missing {line!r}", result)
 
 
+def test_output_file() -> None:
+    with tempfile.TemporaryDirectory(prefix="moon-mustache-cli-output-") as directory:
+        output = Path(directory) / "rendered.txt"
+        result = run_cli(
+            "--template",
+            "Hello {{name}}",
+            "--var",
+            "name=MoonBit",
+            "--output",
+            str(output),
+        )
+        expect(result.returncode == 0, "output-file render should succeed", result)
+        expect(output.read_text(encoding="utf-8") == "Hello MoonBit", "output file content changed", result)
+
+
 def test_strict_failure_exit_code() -> None:
     result = run_cli(
         "--template",
@@ -81,6 +96,24 @@ def test_strict_failure_exit_code() -> None:
     expect(result.returncode != 0, "strict diagnostics must return a non-zero exit code", result)
     expect("missing variable: missing" in result.stdout, "missing-variable diagnostic disappeared", result)
     expect("No rendered output was produced" in result.stdout, "strict mode should explain why output was blocked", result)
+
+
+def test_invalid_json_exit_code() -> None:
+    result = run_cli(
+        "--template",
+        "Hello {{name}}",
+        "--json",
+        "{broken",
+        "--strict",
+    )
+    expect(result.returncode != 0, "invalid JSON must return a non-zero exit code", result)
+    expect("invalid JSON context" in result.stdout, "invalid-JSON diagnostic disappeared", result)
+
+
+def test_missing_partial_exit_code() -> None:
+    result = run_cli("--template", "{{> missing}}", "--strict")
+    expect(result.returncode != 0, "missing partial must return a non-zero exit code", result)
+    expect("missing partial: missing" in result.stdout, "missing-partial diagnostic disappeared", result)
 
 
 def test_lint_failure_exit_code() -> None:
@@ -120,6 +153,71 @@ def test_bundle_generation() -> None:
         expect("validation errors: 0" in (output / "plan.md").read_text(encoding="utf-8"), "plan is not clean", result)
 
 
+def write_manifest(directory: Path, files: list[dict[str, str]]) -> Path:
+    manifest = directory / "manifest.json"
+    manifest.write_text(
+        json.dumps({"name": "cli-contract-test", "files": files}),
+        encoding="utf-8",
+    )
+    return manifest
+
+
+def test_bundle_check_only_writes_no_generated_files() -> None:
+    with tempfile.TemporaryDirectory(prefix="moon-mustache-cli-check-") as directory:
+        root = Path(directory)
+        output = root / "generated"
+        manifest = write_manifest(root, [{"path": "README.md", "template": "# checked"}])
+        result = run_cli(
+            "--bundle-manifest-file",
+            str(manifest),
+            "--bundle-output-dir",
+            str(output),
+            "--bundle-check-only",
+        )
+        expect(result.returncode == 0, "bundle check-only should succeed", result)
+        expect("without writing generated files" in result.stdout, "check-only confirmation disappeared", result)
+        expect(not output.exists(), "bundle check-only wrote generated files", result)
+
+
+def test_bundle_parent_traversal_is_blocked() -> None:
+    with tempfile.TemporaryDirectory(prefix="moon-mustache-cli-traversal-") as directory:
+        root = Path(directory)
+        output = root / "generated"
+        escaped = root / "escape.txt"
+        manifest = write_manifest(root, [{"path": "../escape.txt", "template": "blocked"}])
+        result = run_cli(
+            "--bundle-manifest-file",
+            str(manifest),
+            "--bundle-output-dir",
+            str(output),
+        )
+        expect(result.returncode != 0, "parent traversal must return a non-zero exit code", result)
+        expect("parent traversal" in result.stdout, "parent-traversal diagnostic disappeared", result)
+        expect(not escaped.exists(), "parent traversal escaped the output directory", result)
+
+
+def test_bundle_duplicate_paths_are_blocked() -> None:
+    with tempfile.TemporaryDirectory(prefix="moon-mustache-cli-duplicate-") as directory:
+        root = Path(directory)
+        output = root / "generated"
+        manifest = write_manifest(
+            root,
+            [
+                {"path": "deploy\\config.toml", "template": "first"},
+                {"path": "deploy/config.toml", "template": "second"},
+            ],
+        )
+        result = run_cli(
+            "--bundle-manifest-file",
+            str(manifest),
+            "--bundle-output-dir",
+            str(output),
+        )
+        expect(result.returncode != 0, "duplicate output paths must return a non-zero exit code", result)
+        expect("duplicate-output-path" in result.stdout, "duplicate-path diagnostic disappeared", result)
+        expect(not output.exists(), "invalid duplicate-path bundle wrote files", result)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Black-box integration tests for the Moon Mustache CLI")
     parser.add_argument("--json-output", type=Path, help="optional path for a machine-readable result")
@@ -128,9 +226,15 @@ def main() -> int:
     tests = [
         ("inline render", test_inline_render),
         ("file-backed render", test_file_render),
+        ("output file", test_output_file),
         ("strict failure exit code", test_strict_failure_exit_code),
+        ("invalid JSON exit code", test_invalid_json_exit_code),
+        ("missing partial exit code", test_missing_partial_exit_code),
         ("lint failure exit code", test_lint_failure_exit_code),
         ("bundle generation", test_bundle_generation),
+        ("bundle check-only writes no generated files", test_bundle_check_only_writes_no_generated_files),
+        ("bundle parent traversal is blocked", test_bundle_parent_traversal_is_blocked),
+        ("bundle duplicate paths are blocked", test_bundle_duplicate_paths_are_blocked),
     ]
     results: list[dict[str, object]] = []
     try:

@@ -33,10 +33,8 @@
 
 ## Current release-quality evidence
 
-- `85` automated tests passing
-- `194` imported core and optional `mustache/spec` fixtures passing
-- `2048` deterministic differential cases passing against `mustache.js`
-- `8032` handwritten effective MoonBit lines, with generated fixtures disclosed separately
+- automated tests, imported fixtures, and deterministic differential cases are recorded separately in `METRICS_SNAPSHOT.md`
+- handwritten effective MoonBit lines and generated fixtures are disclosed separately in `METRICS_SNAPSHOT.md`
 - core coverage above the enforced CI gate, with exact values generated in `METRICS_SNAPSHOT.md`
 - downstream consumer package smoke-tested
 - bundle validation / plan mode available for CI preflight

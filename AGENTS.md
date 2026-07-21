@@ -40,12 +40,14 @@ For focused evidence:
 python scripts/test_cli_integration.py
 python scripts/verify_official_spec_fixtures.py
 python scripts/run_coverage.py --minimum 88
+python scripts/run_fault_injection.py
 cd playground && npm run differential
 ```
 
 ## Documentation and evidence
 
 - Run `python scripts/check_docs.py` after changing Markdown links.
+- Run `python scripts/check_metrics_freshness.py` after regenerating the canonical metrics snapshot.
 - Keep README product-oriented. Competition-specific claims belong in `docs/SPECIAL_AWARD_EVIDENCE.md`.
 - Link to the canonical metrics snapshot instead of copying volatile counts into multiple documents.
 - Machine-readable evidence belongs in ignored `_artifacts/` locally and uploaded CI artifacts remotely.

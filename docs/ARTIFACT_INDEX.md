@@ -17,10 +17,12 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 
 | Command | What it proves |
 | --- | --- |
-| `python scripts/verify.py` | Seven-step acceptance run with per-step logs and JSON summary |
+| `python scripts/verify.py` | Acceptance run with per-step logs and JSON summary |
+| `python scripts/check_metrics_freshness.py` | Canonical Markdown/JSON agreement and snapshot commit freshness |
 | `moon test --deny-warn` | Regression safety and clean diagnostics |
 | `python scripts/verify_official_spec_fixtures.py` | Pinned upstream identity, local checksums, case counts, license, and generated-source integrity |
 | `python scripts/test_cli_integration.py` | Real CLI output, failure exit codes, file IO, lint, and bundle artifacts |
+| `python scripts/run_fault_injection.py` | Five controlled faults must each trigger a focused test failure |
 | `moon run showcase` | Realistic library-level render outputs |
 | `moon run official_spec_report` | Imported upstream `mustache/spec` compatibility evidence |
 | `moon run cli --template "{{#user}}{{name}}{{/user}}{{> footer}}" --scan` | Reference scanning through the CLI |
@@ -47,6 +49,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | `coverage-summary.txt`, `coverage.xml`, and `coverage.json` | `check` workflow on the `wasm-gc` lane | 88% core threshold plus human, standard, and machine-readable evidence |
 | `cli-integration.json` | `check` workflow on the `js` lane | Machine-readable black-box CLI result |
 | `official-fixture-integrity.json` | `check` workflow on the `wasm-gc` lane | Machine-readable fixture provenance and integrity result |
+| `fault-injection.json` | `check` workflow on the `wasm-gc` lane | Killed, survived, and invalid controlled-fault results |
 | `differential.json` | `playground` workflow | Four fixed seeds, reference version, duration, and replayable failures |
 | `release-readiness-artifacts` | `release-readiness` workflow | Metrics snapshot, reports, demos, and benchmark outputs |
 | GitHub Pages artifact | `deploy-playground` workflow | Runnable Vue UI containing the MoonBit-compiled ESM |
@@ -58,6 +61,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | [COMPATIBILITY.md](COMPATIBILITY.md) | Supported feature matrix |
 | [OFFICIAL_SPEC.md](OFFICIAL_SPEC.md) | Imported upstream fixture coverage |
 | [DIFFERENTIAL_TESTING.md](DIFFERENTIAL_TESTING.md) | Cross-implementation randomized parity methodology |
+| [FAULT_INJECTION.md](FAULT_INJECTION.md) | Controlled fault set, detection policy, and evidence boundaries |
 | [../src/README.mbt.md](../src/README.mbt.md) | Executable API examples compiled as tests |
 | [AI_COLLABORATION.md](AI_COLLABORATION.md) | Auditable AI workflow, real defect cases, and evidence boundaries |
 | [BENCHMARK_SNAPSHOT.md](BENCHMARK_SNAPSHOT.md) | Repository-local benchmark snapshot |

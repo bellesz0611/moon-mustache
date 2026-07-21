@@ -31,9 +31,8 @@ The final project deliverable includes:
 
 Satisfied.
 
-- handwritten effective MoonBit code: about `8032` lines
-- generated official-fixture effective code, disclosed separately: about `2149` lines
-- total effective MoonBit proof surface: about `10181` lines
+- handwritten effective MoonBit code and generated official-fixture code are disclosed separately in `METRICS_SNAPSHOT.md`
+- the generated snapshot is the sole source for exact current line counts
 
 ### 2. Public repositories and clear history
 

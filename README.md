@@ -97,6 +97,7 @@ Moon Mustache 围绕“可复用、可诊断、可验证”设计：
 | 跨实现差分 | 随机组合输入是否与 `mustache.js` 输出一致 | `cd playground && npm run differential` |
 | CLI 黑盒集成 | 退出码、文件 IO、lint 和 Bundle 产物是否正确 | `python scripts/test_cli_integration.py` |
 | 覆盖率门禁 | 核心实现是否出现未测试回退 | `python scripts/run_coverage.py --minimum 88` |
+| 可控故障注入 | 关键测试能否识别转义、truthiness、路径、深度与父上下文故障 | `python scripts/run_fault_injection.py` |
 | 多后端矩阵 | MoonBit 各编译目标是否一致通过 | GitHub Actions `ci.yml` |
 
 官方 fixture 的来源和许可证保留在 `third_party/mustache-spec/`；差分测试使用固定 seed，可重复运行。精确测试数、fixture 通过数和核心覆盖率只在自动生成的 [Metrics Snapshot](docs/METRICS_SNAPSHOT.md) 中维护，避免多处手工数字互相冲突。

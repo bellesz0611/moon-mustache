@@ -4,7 +4,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 ## Why the project is now competitive
 
-- competition-relevant handwritten effective scale is about `8032` MoonBit lines, inside the suggested `4k-10k` band
+- handwritten and generated MoonBit scale is disclosed separately in `METRICS_SNAPSHOT.md`
 - imported generated fixture code is disclosed separately (`2149` effective lines) and is not used to inflate the handwritten figure
 - the project is not just a parser demo; it already covers reusable library APIs, a CLI, bundle generation, validation, reporting, and realistic scaffolding workflows
 - compatibility work is evidence-based instead of self-claimed, combining hand-written spec-style suites with imported upstream `mustache/spec` fixtures
@@ -13,7 +13,7 @@ This document summarizes the current competition-facing strengths of Moon Mustac
 
 ## Hard evidence
 
-- `73` automated tests passing locally
+- automated tests passing locally; the exact current count is generated in `METRICS_SNAPSHOT.md`
 - `194 / 194` imported core and optional `mustache/spec` fixtures passing with zero skips
 - `2048 / 2048` deterministic differential cases passing against `mustache.js`
 - measured core coverage above the enforced CI gate; exact numerator, denominator, and threshold are generated in `METRICS_SNAPSHOT.md`

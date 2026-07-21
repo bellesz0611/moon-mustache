@@ -248,6 +248,9 @@ def main() -> int:
         cli_json_path = Path(directory) / "cli-integration.json"
         run([sys.executable, "scripts/test_cli_integration.py", "--json-output", str(cli_json_path)])
         cli_payload = json.loads(cli_json_path.read_text(encoding="utf-8"))
+        fault_json_path = Path(directory) / "fault-injection.json"
+        run([sys.executable, "scripts/run_fault_injection.py", "--json-output", str(fault_json_path)])
+        fault_payload = json.loads(fault_json_path.read_text(encoding="utf-8"))
     workflow_conclusion, workflow_sha, workflow_url = latest_workflow_status()
     mooncakes_build_status, mooncakes_version, mooncakes_downloads, mooncakes_docs_url = mooncakes_status()
 
@@ -288,6 +291,7 @@ python scripts/generate_metrics_snapshot.py
 - coverage policy: at least `88.0%`, enforced in CI with summary and Cobertura artifacts
 - repository-wide instrumented lines: `{repository_covered} / {repository_total}` (`{repository_percent:.1f}%`, informational; CLI, bridges, and demos are verified by integration/smoke jobs rather than this unit-coverage gate)
 - CLI black-box integration: `{cli_payload['passed']} / {cli_payload['total']}` passing
+- controlled fault injection: `{fault_payload['killed']} / {fault_payload['total']}` mutants killed, `{fault_payload['survived']}` survived, `{fault_payload['invalid']}` invalid
 - local verification command: `moon test --deny-warn --target wasm-gc`
 - deterministic differential policy: `2048` generated cases across four fixed seeds (`20260710` through `20260713`) against `mustache.js`
 - latest GitHub library workflow conclusion: {workflow_summary}
@@ -348,6 +352,7 @@ python scripts/generate_metrics_snapshot.py
                 "policy": "informational",
             },
             "cli_integration": cli_payload,
+            "fault_injection": fault_payload,
             "differential_policy": {
                 "cases": 2048,
                 "cases_per_seed": 512,
