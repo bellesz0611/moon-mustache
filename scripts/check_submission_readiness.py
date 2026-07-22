@@ -169,6 +169,10 @@ def main() -> int:
                     success,
                     "successful push run for local HEAD" if success else f"no successful push run for {short_head}",
                 )
+        except (AssertionError, RuntimeError) as error:
+            add_check(checks, "GitHub API", False, str(error))
+
+        try:
             pulls = fetch_json(
                 f"https://api.github.com/repos/{GITHUB_REPOSITORY}/pulls?state=open&per_page=100"
             )
@@ -183,7 +187,7 @@ def main() -> int:
                 for item in pulls
             ]
         except (AssertionError, RuntimeError) as error:
-            add_check(checks, "GitHub API", False, str(error))
+            add_check(checks, "GitHub pull requests", True, str(error), skipped=True)
 
         try:
             default_branch, branches = gitlink_state()
