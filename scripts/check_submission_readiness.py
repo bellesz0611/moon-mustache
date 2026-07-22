@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -35,22 +36,38 @@ def git(*args: str) -> str:
     return completed.stdout.strip()
 
 
+def git_ls_remote(*args: str) -> str:
+    last_error = "unknown error"
+    for attempt in range(5):
+        completed = run("git", "ls-remote", *args)
+        if completed.returncode == 0:
+            return completed.stdout.strip()
+        last_error = completed.stderr.strip() or completed.stdout.strip()
+        if attempt < 4:
+            time.sleep(1 + attempt)
+    raise RuntimeError(f"git ls-remote {' '.join(args)} failed: {last_error}")
+
+
 def fetch_json(url: str) -> object:
+    headers = {
+        "User-Agent": "moon-mustache-submission-readiness",
+        "Accept": "application/vnd.github+json",
+    }
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
     request = Request(
         url,
-        headers={
-            "User-Agent": "moon-mustache-submission-readiness",
-            "Accept": "application/vnd.github+json",
-        },
+        headers=headers,
     )
     last_error: Exception | None = None
-    for attempt in range(3):
+    for attempt in range(5):
         try:
             with urlopen(request, timeout=30) as response:
                 return json.load(response)
         except (HTTPError, URLError, OSError) as error:
             last_error = error
-            if attempt < 2:
+            if attempt < 4:
                 time.sleep(1 + attempt)
     raise RuntimeError(f"failed to fetch {url}: {last_error}")
 
@@ -73,7 +90,9 @@ def add_check(
 
 
 def gitlink_state() -> tuple[str, dict[str, str]]:
-    output = git("ls-remote", "--symref", "gitlink", "HEAD", "refs/heads/main", "refs/heads/master")
+    output = git_ls_remote(
+        "--symref", "gitlink", "HEAD", "refs/heads/main", "refs/heads/master"
+    )
     default_branch = ""
     branches: dict[str, str] = {}
     for line in output.splitlines():
@@ -87,7 +106,7 @@ def gitlink_state() -> tuple[str, dict[str, str]]:
 
 
 def remote_branch_sha(remote: str, branch: str) -> str:
-    output = git("ls-remote", remote, f"refs/heads/{branch}")
+    output = git_ls_remote(remote, f"refs/heads/{branch}")
     fields = output.split()
     return fields[0] if len(fields) == 2 else ""
 
