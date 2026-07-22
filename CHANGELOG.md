@@ -17,6 +17,7 @@
 - minimize differential failures automatically under a bounded evaluation budget and preserve reduced reproducers in JSON and JUnit evidence
 - extract a side-effect-free CLI core, cover it independently, and enforce a separate 70% coverage gate alongside CLI black-box contracts
 - update the playground to Vite 8, plugin-vue 6.0.8, and concurrently 9.2.4, and refresh maintained GitHub Actions to their Dependabot-proposed major versions; defer concurrently 10.0.3 because its pinned shell-quote version still triggers a high-severity advisory
+- deploy the playground on every maintained-branch push so the published site and final submission evidence always identify the exact reviewed commit
 
 ## 0.2.0 - 2026-07-10
 
