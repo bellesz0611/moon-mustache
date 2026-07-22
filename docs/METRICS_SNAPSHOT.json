@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-22T07:42:34+00:00",
+  "generated_at": "2026-07-22T07:56:35+00:00",
   "repository": {
-    "commit": "6f7b3db",
+    "commit": "445b01a",
     "working_tree_dirty": false,
-    "commit_count": 84
+    "commit_count": 86
   },
   "package": {
     "name": "bellesz0611/moon-mustache",
@@ -54,57 +54,57 @@
         {
           "name": "inline render",
           "status": "passed",
-          "duration_ms": 561
+          "duration_ms": 723
         },
         {
           "name": "file-backed render",
           "status": "passed",
-          "duration_ms": 506
+          "duration_ms": 885
         },
         {
           "name": "output file",
           "status": "passed",
-          "duration_ms": 485
+          "duration_ms": 739
         },
         {
           "name": "strict failure exit code",
           "status": "passed",
-          "duration_ms": 460
+          "duration_ms": 784
         },
         {
           "name": "invalid JSON exit code",
           "status": "passed",
-          "duration_ms": 426
+          "duration_ms": 854
         },
         {
           "name": "missing partial exit code",
           "status": "passed",
-          "duration_ms": 434
+          "duration_ms": 768
         },
         {
           "name": "lint failure exit code",
           "status": "passed",
-          "duration_ms": 442
+          "duration_ms": 795
         },
         {
           "name": "bundle generation",
           "status": "passed",
-          "duration_ms": 451
+          "duration_ms": 801
         },
         {
           "name": "bundle check-only writes no generated files",
           "status": "passed",
-          "duration_ms": 450
+          "duration_ms": 714
         },
         {
           "name": "bundle parent traversal is blocked",
           "status": "passed",
-          "duration_ms": 484
+          "duration_ms": 876
         },
         {
           "name": "bundle duplicate paths are blocked",
           "status": "passed",
-          "duration_ms": 467
+          "duration_ms": 970
         }
       ]
     },
@@ -125,9 +125,9 @@
           "test_filter": "*escape_html handles reserved characters*",
           "status": "killed",
           "exit_code": 2,
-          "duration_ms": 965,
+          "duration_ms": 1918,
           "test_summary": "Total tests: 1, passed: 0, failed: 1.",
-          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:23 (\"escape_html handles reserved characters\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\mustache_test.mbt:25:3-28:4\nDiff: (- expected, + actual)\n----\n-&lt;tag&gt;&amp;&quot;&#39;&#x2F;&#x60;&#x3D;&lt;tag&gt;&amp;\n+&lt;tag&gt;&&quot;&#39;&#x2F;&#x60;&#x3D;&lt;tag&gt;&\n----\n\nTotal tests: 1, passed: 0, failed: 1."
+          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:23 (\"escape_html handles reserved characters\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\mustache_test.mbt:25:3-28:4\nDiff: (- expected, + actual)\n----\n-&lt;tag&gt;&amp;&quot;&#39;&#x2F;&#x60;&#x3D;&lt;tag&gt;&amp;\n+&lt;tag&gt;&&quot;&#39;&#x2F;&#x60;&#x3D;&lt;tag&gt;&\n----\n\nTotal tests: 1, passed: 0, failed: 1."
         },
         {
           "name": "make true booleans falsey",
@@ -137,9 +137,9 @@
           "test_filter": "*true boolean section renders children*",
           "status": "killed",
           "exit_code": 2,
-          "duration_ms": 870,
+          "duration_ms": 1350,
           "test_summary": "Total tests: 1, passed: 0, failed: 1.",
-          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:81 (\"true boolean section renders children\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\mustache_test.mbt:84:3-84:37\nDiff: (- expected, + actual)\n----\n-enabled\n----\n\nTotal tests: 1, passed: 0, failed: 1."
+          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:81 (\"true boolean section renders children\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\mustache_test.mbt:84:3-84:37\nDiff: (- expected, + actual)\n----\n-enabled\n----\n\nTotal tests: 1, passed: 0, failed: 1."
         },
         {
           "name": "allow parent-directory traversal",
@@ -149,9 +149,9 @@
           "test_filter": "*normalize_bundle_path rewrites separators and rejects traversal*",
           "status": "killed",
           "exit_code": 2,
-          "duration_ms": 990,
+          "duration_ms": 3039,
           "test_summary": "Total tests: 1, passed: 0, failed: 1.",
-          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:687 (\"normalize_bundle_path rewrites separators and rejects traversal\") failed: Error\n    at throw\n    at @bellesz0611/moon-mustache/src_blackbox_test.__test_6d757374616368655f746573742e6d6274_47 C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\mustache_test.mbt:692\n    at @bellesz0611/moon-mustache/src_blackbox_test.__test_6d757374616368655f746573742e6d6274_47.dyncall\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_catch_error C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\__generated_driver_for_blackbox_test.mbt:384\n    at impl @bellesz0611/moon-mustache/src_blackbox_test.MoonBit_Test_Driver for @bellesz0611/moon-mustache/src_blackbox_test.MoonBit_Test_Driver_Internal_No_Args with run_test C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\__generated_driver_for_blackbox_test.mbt:592\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_do_execute C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\__generated_driver_for_blackbox_test.mbt:762\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_execute C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\__generated_driver_for_blackbox_test.mbt:698\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_execute_wrapper/6992 C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\__generated_driver_for_blackbox_test.mbt:715\n    at __$moonrun_v8_builtin_script$__wasm_mode_entry:1233:34\nTotal tests: 1, passed: 0, failed: 1."
+          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:687 (\"normalize_bundle_path rewrites separators and rejects traversal\") failed: Error\n    at throw\n    at @bellesz0611/moon-mustache/src_blackbox_test.__test_6d757374616368655f746573742e6d6274_47 C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\mustache_test.mbt:692\n    at @bellesz0611/moon-mustache/src_blackbox_test.__test_6d757374616368655f746573742e6d6274_47.dyncall\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_catch_error C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\__generated_driver_for_blackbox_test.mbt:384\n    at impl @bellesz0611/moon-mustache/src_blackbox_test.MoonBit_Test_Driver for @bellesz0611/moon-mustache/src_blackbox_test.MoonBit_Test_Driver_Internal_No_Args with run_test C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\__generated_driver_for_blackbox_test.mbt:592\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_do_execute C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\__generated_driver_for_blackbox_test.mbt:762\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_execute C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\__generated_driver_for_blackbox_test.mbt:698\n    at @bellesz0611/moon-mustache/src_blackbox_test.moonbit_test_driver_internal_execute_wrapper/6992 C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\__generated_driver_for_blackbox_test.mbt:715\n    at __$moonrun_v8_builtin_script$__wasm_mode_entry:1233:34\nTotal tests: 1, passed: 0, failed: 1."
         },
         {
           "name": "disable partial-depth guard",
@@ -161,9 +161,9 @@
           "test_filter": "*render resource budget limits partial depth*",
           "status": "killed",
           "exit_code": 2,
-          "duration_ms": 887,
+          "duration_ms": 3255,
           "test_summary": "Total tests: 1, passed: 0, failed: 1.",
-          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:914 (\"render resource budget limits partial depth\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\mustache_test.mbt:922:3-922:37\nDiff: (- expected, + actual)\n----\n+should-not-render\n----\n\nTotal tests: 1, passed: 0, failed: 1."
+          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:914 (\"render resource budget limits partial depth\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\mustache_test.mbt:922:3-922:37\nDiff: (- expected, + actual)\n----\n+should-not-render\n----\n\nTotal tests: 1, passed: 0, failed: 1."
         },
         {
           "name": "disable parent-context fallback",
@@ -173,9 +173,9 @@
           "test_filter": "*array section can still read parent scope values*",
           "status": "killed",
           "exit_code": 2,
-          "duration_ms": 880,
+          "duration_ms": 1609,
           "test_summary": "Total tests: 1, passed: 0, failed: 1.",
-          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:107 (\"array section can still read parent scope values\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-snzdjf9k\\src\\mustache_test.mbt:119:3-119:57\nDiff: (- expected, + actual)\n----\n-core/scanner;core/renderer;\n+/scanner;/renderer;\n----\n\nTotal tests: 1, passed: 0, failed: 1."
+          "output_tail": "[bellesz0611/moon-mustache] test src/mustache_test.mbt:107 (\"array section can still read parent scope values\") failed\nexpect test failed at C:\\Users\\29685\\AppData\\Local\\Temp\\moon-mustache-faults-m7d2wsqp\\src\\mustache_test.mbt:119:3-119:57\nDiff: (- expected, + actual)\n----\n-core/scanner;core/renderer;\n+/scanner;/renderer;\n----\n\nTotal tests: 1, passed: 0, failed: 1."
         }
       ]
     },
@@ -195,7 +195,7 @@
           "target": "wasm",
           "status": "passed",
           "exit_code": 0,
-          "duration_ms": 397,
+          "duration_ms": 666,
           "sha256": "7d661668f12c3747e91c14cfe9cb3acb6343d08a4c4bf8b2b79dce808a742a23",
           "matches_golden": true,
           "stderr": "",
@@ -205,7 +205,7 @@
           "target": "wasm-gc",
           "status": "passed",
           "exit_code": 0,
-          "duration_ms": 360,
+          "duration_ms": 758,
           "sha256": "7d661668f12c3747e91c14cfe9cb3acb6343d08a4c4bf8b2b79dce808a742a23",
           "matches_golden": true,
           "stderr": "",
@@ -215,7 +215,7 @@
           "target": "js",
           "status": "passed",
           "exit_code": 0,
-          "duration_ms": 462,
+          "duration_ms": 2942,
           "sha256": "7d661668f12c3747e91c14cfe9cb3acb6343d08a4c4bf8b2b79dce808a742a23",
           "matches_golden": true,
           "stderr": "",
@@ -242,8 +242,8 @@
     "mooncakes_docs_url": "https://mooncakes.io/docs/bellesz0611/moon-mustache%400.2.0",
     "latest_github_workflow": {
       "conclusion": "success",
-      "commit": "bac4241",
-      "url": "https://github.com/bellesz0611/moon-mustache/actions/runs/29900944086"
+      "commit": "99c58f9",
+      "url": "https://github.com/bellesz0611/moon-mustache/actions/runs/29901274666"
     }
   }
 }
