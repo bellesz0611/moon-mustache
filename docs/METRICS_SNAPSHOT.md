@@ -8,10 +8,10 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
-- generated at: `2026-07-22T07:32:49+00:00`
-- generated at commit: `4cafb33`
+- generated at: `2026-07-22T07:36:39+00:00`
+- generated at commit: `e33d197`
 - working tree: `clean`
-- public commit count: `80`
+- public commit count: `82`
 - MoonBit package: `bellesz0611/moon-mustache`
 - MoonBit toolchain used for the local verification snapshot: `moon 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moon.exe | moonc v0.10.3+16975d007 (2026-07-03) ~\moon-toolchain\bin\moonc.exe | moonrun 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moonrun.exe | Feature flags enabled: rr_moon_mod,rr_moon_pkg`
 
@@ -35,8 +35,8 @@ python scripts/generate_metrics_snapshot.py
 - local backend golden conformance: `3 / 3` available targets match, with four targets required in Linux CI
 - local verification command: `moon test --deny-warn --target wasm-gc`
 - deterministic differential policy: `6144` generated cases across four fixed seeds (`20260710` through `20260713`) against `mustache.js`
-- latest GitHub library workflow conclusion: `failure` for commit `aaa310e`
-- latest GitHub library workflow URL: <https://github.com/bellesz0611/moon-mustache/actions/runs/29900496309>
+- latest GitHub library workflow conclusion: `failure` for commit `a714537`
+- latest GitHub library workflow URL: <https://github.com/bellesz0611/moon-mustache/actions/runs/29900679454>
 
 ## Publication snapshot
 
