@@ -8,10 +8,10 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
-- generated at: `2026-07-21T15:14:09+00:00`
-- generated at commit: `4ec7b97`
+- generated at: `2026-07-22T06:49:20+00:00`
+- generated at commit: `998ded8`
 - working tree: `clean`
-- public commit count: `74`
+- public commit count: `76`
 - MoonBit package: `bellesz0611/moon-mustache`
 - MoonBit toolchain used for the local verification snapshot: `moon 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moon.exe | moonc v0.10.3+16975d007 (2026-07-03) ~\moon-toolchain\bin\moonc.exe | moonrun 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moonrun.exe | Feature flags enabled: rr_moon_mod,rr_moon_pkg`
 
