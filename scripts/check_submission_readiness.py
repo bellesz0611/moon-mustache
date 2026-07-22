@@ -150,7 +150,8 @@ def main() -> int:
                 f"default branch: {default_branch}",
             )
             runs_payload = fetch_json(
-                f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/runs?branch=main&per_page=100"
+                f"https://api.github.com/repos/{GITHUB_REPOSITORY}/actions/runs"
+                f"?head_sha={head}&event=push&per_page=30"
             )
             assert isinstance(runs_payload, dict)
             runs = runs_payload.get("workflow_runs", [])
