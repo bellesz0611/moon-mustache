@@ -48,7 +48,7 @@ def fetch_json(url: str) -> object:
         try:
             with urlopen(request, timeout=30) as response:
                 return json.load(response)
-        except (HTTPError, URLError, TimeoutError) as error:
+        except (HTTPError, URLError, OSError) as error:
             last_error = error
             if attempt < 2:
                 time.sleep(1 + attempt)
@@ -198,11 +198,15 @@ def main() -> int:
                 gitlink_main == head,
                 f"local {short_head}, GitLink {gitlink_main[:7] or 'missing'}",
             )
+            default_tip = branches.get(default_branch, "")
             add_check(
                 checks,
-                "GitLink default branch",
-                default_branch == "main",
-                f"default branch: {default_branch or 'unknown'}",
+                "GitLink default branch content",
+                default_branch == "main" or default_tip == head,
+                (
+                    f"default branch: {default_branch or 'unknown'}, "
+                    f"tip: {default_tip[:7] or 'missing'}"
+                ),
             )
         except RuntimeError as error:
             add_check(checks, "GitLink remote", False, str(error))
