@@ -175,12 +175,19 @@ def main() -> int:
                     ROOT,
                 ),
                 (
+                    "fault-injection reporting",
+                    [python, "scripts/test_fault_injection_reporting.py"],
+                    ROOT,
+                ),
+                (
                     "fault injection",
                     [
                         python,
                         "scripts/run_fault_injection.py",
                         "--json-output",
                         str(output_dir / "fault-injection.json"),
+                        "--junit-output",
+                        str(output_dir / "fault-injection.junit.xml"),
                     ],
                     ROOT,
                 ),

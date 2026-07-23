@@ -113,7 +113,9 @@ jobs:
 
       - name: Prove focused tests reject controlled faults
         if: matrix.target == 'wasm-gc'
-        run: python scripts/run_fault_injection.py --json-output _ci_artifacts/fault-injection.json
+        run: |
+          python scripts/test_fault_injection_reporting.py
+          python scripts/run_fault_injection.py --json-output _ci_artifacts/fault-injection.json --junit-output _ci_artifacts/fault-injection.junit.xml
 
       - name: Compare the golden corpus across all backends
         if: matrix.target == 'wasm-gc'

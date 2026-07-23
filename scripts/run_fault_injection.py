@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -74,6 +75,36 @@ MUTATIONS = [
         risk="unbounded recursive partial expansion",
     ),
     Mutation(
+        name="disable output-length guard",
+        file="src/renderer.mbt",
+        old="if text.length() <= remaining {",
+        new="if true {",
+        expected_occurrences=1,
+        test_file="src/mustache_test.mbt",
+        test_filter="*render resource budget limits output length*",
+        risk="unbounded generated output exhausting memory or downstream storage",
+    ),
+    Mutation(
+        name="disable section-iteration guard",
+        file="src/renderer.mbt",
+        old="if budget.section_iterations[0] > options.max_section_iterations {",
+        new="if false {",
+        expected_occurrences=1,
+        test_file="src/mustache_test.mbt",
+        test_filter="*render resource budget limits section iterations*",
+        risk="unbounded collection expansion consuming time and output budget",
+    ),
+    Mutation(
+        name="disable render-step guard",
+        file="src/renderer.mbt",
+        old="if budget.steps[0] > options.max_render_steps {",
+        new="if false {",
+        expected_occurrences=1,
+        test_file="src/mustache_test.mbt",
+        test_filter="*render resource budget limits total render steps*",
+        risk="complex templates bypassing deterministic work limits",
+    ),
+    Mutation(
         name="disable parent-context fallback",
         file="src/context.mbt",
         old="while index > 0 {",
@@ -84,6 +115,57 @@ MUTATIONS = [
         risk="nested sections losing values from their parent context",
     ),
 ]
+
+
+def write_junit(path: Path, results: list[dict[str, object]]) -> None:
+    survived = sum(result["status"] == "survived" for result in results)
+    invalid = sum(result["status"] == "invalid" for result in results)
+    duration_seconds = sum(int(result["duration_ms"]) for result in results) / 1000
+    suite = ET.Element(
+        "testsuite",
+        {
+            "name": "moon-mustache controlled fault injection",
+            "tests": str(len(results)),
+            "failures": str(survived),
+            "errors": str(invalid),
+            "time": f"{duration_seconds:.3f}",
+        },
+    )
+    for result in results:
+        case = ET.SubElement(
+            suite,
+            "testcase",
+            {
+                "classname": str(result["file"]),
+                "name": str(result["name"]),
+                "time": f"{int(result['duration_ms']) / 1000:.3f}",
+            },
+        )
+        status = result["status"]
+        if status == "survived":
+            failure = ET.SubElement(
+                case,
+                "failure",
+                {"type": "survived", "message": str(result["risk"])},
+            )
+            failure.text = str(result["output_tail"])
+        elif status == "invalid":
+            error = ET.SubElement(
+                case,
+                "error",
+                {"type": "invalid", "message": "mutation result was not a test failure"},
+            )
+            error.text = str(result["output_tail"])
+        output = ET.SubElement(case, "system-out")
+        output.text = (
+            f"risk: {result['risk']}\n"
+            f"detector: {result['test_file']} {result['test_filter']}\n"
+            f"status: {status}\n{result['output_tail']}"
+        )
+    tree = ET.ElementTree(suite)
+    ET.indent(tree, space="  ")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tree.write(path, encoding="utf-8", xml_declaration=True)
 
 
 def moon_command() -> str:
@@ -208,6 +290,7 @@ def main() -> int:
         description="Prove that focused Moon Mustache regression tests reject controlled faults"
     )
     parser.add_argument("--json-output", type=Path)
+    parser.add_argument("--junit-output", type=Path)
     args = parser.parse_args()
 
     moon = moon_command()
@@ -232,6 +315,8 @@ def main() -> int:
     if args.json_output:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)
         args.json_output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if args.junit_output:
+        write_junit(args.junit_output, results)
 
     for result in results:
         print(f"{result['status'].upper():8} {result['name']} ({result['duration_ms']} ms)")

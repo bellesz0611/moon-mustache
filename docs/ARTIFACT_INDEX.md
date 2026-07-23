@@ -22,7 +22,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | `moon test --deny-warn` | Regression safety and clean diagnostics |
 | `python scripts/verify_official_spec_fixtures.py` | Pinned upstream identity, local checksums, case counts, license, and generated-source integrity |
 | `python scripts/test_cli_integration.py` | Real CLI output, failure exit codes, file IO, lint, and bundle artifacts |
-| `python scripts/run_fault_injection.py` | Five controlled faults must each trigger a focused test failure |
+| `python scripts/run_fault_injection.py` | Every reviewed controlled fault must trigger its focused test failure |
 | `python scripts/test_backend_conformance.py` | One golden output and diagnostics corpus compared directly across MoonBit targets |
 | `moon run showcase` | Realistic library-level render outputs |
 | `moon run official_spec_report` | Imported upstream `mustache/spec` compatibility evidence |
@@ -50,7 +50,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | `coverage-summary.txt`, `coverage.xml`, and `coverage.json` | `check` workflow on the `wasm-gc` lane | 88% core threshold plus human, standard, and machine-readable evidence |
 | `cli-integration.json` | `check` workflow on the `js` lane | Machine-readable black-box CLI result |
 | `official-fixture-integrity.json` | `check` workflow on the `wasm-gc` lane | Machine-readable fixture provenance and integrity result |
-| `fault-injection.json` | `check` workflow on the `wasm-gc` lane | Killed, survived, and invalid controlled-fault results |
+| `fault-injection.json` and `fault-injection.junit.xml` | `check` workflow on the `wasm-gc` lane | Per-mutant risk, detector, killed/survived/invalid status, and CI-native testcases |
 | `backend-conformance.json` | `check` workflow on the `wasm-gc` lane | Per-target golden hashes, equality result, and failure diffs |
 | `differential.json` and `differential.junit.xml` | `playground` workflow | 6,144 cases across four fixed seeds, reference version, duration, and replayable failures |
 | `release-readiness-artifacts` | `release-readiness` workflow | Metrics snapshot, reports, demos, and benchmark outputs |

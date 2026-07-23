@@ -10,7 +10,7 @@
 | `1:05–1:25` | 切 Compare，再切 Conformance | “Compare 对当前输入即时调用 `mustache.js`；Conformance 的 suite、case 数和哈希直接读取锁定的上游 manifest，不是页面手填。” |
 | `1:25–1:50` | 切 Generate，点击 Generate project，滚动五个 artifact | “这不是字符串玩具。真实 `TemplateBundle` 一次生成 `moon.mod`、README、源码、包配置和 CI，浏览器只预览、不写磁盘。” |
 | `1:50–2:10` | 打开 Metrics Snapshot 的 Verification 段 | “精确测试数和覆盖率只维护在生成快照。官方 fixture、单测、差分输入互不混算，避免虚高指标。” |
-| `2:10–2:35` | 打开 `DIFFERENTIAL_TESTING.md` 和 `FAULT_INJECTION.md` | “固定 seed 差分提供逐 case JUnit、精确重放，并自动缩小失败模板、上下文和 Partial。五类受控故障必须让对应测试失败，证明测试有辨别力。” |
+| `2:10–2:35` | 打开 `DIFFERENTIAL_TESTING.md` 和 `FAULT_INJECTION.md` | “固定 seed 差分提供逐 case JUnit、精确重放，并自动缩小失败模板、上下文和 Partial。受控故障矩阵覆盖语义、安全路径与四种资源边界，每个 mutant 都必须让对应测试失败，并作为独立 JUnit testcase 展示。” |
 | `2:35–2:50` | 终端展示 `python scripts/verify.py --profile full` 的最终摘要 | “一条命令串起文档、fixture 完整性、后端、CLI、覆盖率、Mutation、差分和 Playground build，并输出机器可读证据。” |
 | `2:50–3:00` | 回到一页申报稿结论 | “因此主申报最佳测试，辅申报最佳文档：重点不是测试多，而是每个风险都有独立、可重放、能发现故障的证据。” |
 
