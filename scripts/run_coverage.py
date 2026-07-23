@@ -44,7 +44,7 @@ def run(command: list[str]) -> subprocess.CompletedProcess[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Collect and enforce Moon Mustache core coverage")
-    parser.add_argument("--minimum", type=float, default=88.0)
+    parser.add_argument("--minimum", type=float, default=90.0)
     parser.add_argument("--cli-core-minimum", type=float, default=70.0)
     parser.add_argument("--output-dir", type=Path, default=ROOT / "_artifacts" / "coverage")
     args = parser.parse_args()

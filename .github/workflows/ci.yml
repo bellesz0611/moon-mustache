@@ -109,7 +109,7 @@ jobs:
 
       - name: Enforce core coverage gate
         if: matrix.target == 'wasm-gc'
-        run: python scripts/run_coverage.py --minimum 88 --cli-core-minimum 70 --output-dir _ci_artifacts
+        run: python scripts/run_coverage.py --minimum 90 --cli-core-minimum 70 --output-dir _ci_artifacts
 
       - name: Prove focused tests reject controlled faults
         if: matrix.target == 'wasm-gc'

@@ -37,7 +37,7 @@ moon test --deny-warn --target wasm-gc
 python scripts/verify_official_spec_fixtures.py
 moon run official_spec_report
 python scripts/test_cli_integration.py
-python scripts/run_coverage.py --minimum 88 --cli-core-minimum 70
+python scripts/run_coverage.py --minimum 90 --cli-core-minimum 70
 python scripts/run_fault_injection.py
 python scripts/test_backend_conformance.py
 python scripts/check_docs.py

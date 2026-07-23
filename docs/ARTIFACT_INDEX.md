@@ -47,7 +47,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | --- | --- | --- |
 | `benchmarks.json` | `check` workflow on the `wasm-gc` lane | Machine-readable benchmark output |
 | `benchmarks.md` | `check` workflow on the `wasm-gc` lane | Human-readable benchmark summary |
-| `coverage-summary.txt`, `coverage.xml`, and `coverage.json` | `check` workflow on the `wasm-gc` lane | 88% core threshold plus human, standard, and machine-readable evidence |
+| `coverage-summary.txt`, `coverage.xml`, and `coverage.json` | `check` workflow on the `wasm-gc` lane | 90% core threshold plus human, standard, and machine-readable evidence |
 | `cli-integration.json` | `check` workflow on the `js` lane | Machine-readable black-box CLI result |
 | `official-fixture-integrity.json` | `check` workflow on the `wasm-gc` lane | Machine-readable fixture provenance and integrity result |
 | `fault-injection.json` and `fault-injection.junit.xml` | `check` workflow on the `wasm-gc` lane | Per-mutant risk, detector, killed/survived/invalid status, and CI-native testcases |

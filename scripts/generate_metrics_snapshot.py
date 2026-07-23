@@ -326,7 +326,7 @@ python scripts/generate_metrics_snapshot.py
 - automated tests passing: `{test_passed} / {test_total}`
 - imported official fixture cases: `{official_total - official_failures} / {official_total}` passing, `{official_skips}` skipped
 - core library coverage: `{coverage_covered} / {coverage_total}` (`{coverage_percent:.1f}%`)
-- coverage policy: at least `88.0%`, enforced in CI with summary and Cobertura artifacts
+- coverage policy: at least `90.0%`, enforced in CI with summary and Cobertura artifacts
 - CLI testable-core coverage: `{cli_core_covered} / {cli_core_total}` (`{cli_core_percent:.1f}%`), with a `70.0%` CI gate; filesystem and process behavior remains covered by black-box integration
 - repository-wide instrumented lines: `{repository_covered} / {repository_total}` (`{repository_percent:.1f}%`, informational; CLI, bridges, and demos are verified by integration/smoke jobs rather than this unit-coverage gate)
 - CLI black-box integration: `{cli_payload['passed']} / {cli_payload['total']}` passing
@@ -383,7 +383,7 @@ python scripts/generate_metrics_snapshot.py
                 "covered": coverage_covered,
                 "total": coverage_total,
                 "percent": round(coverage_percent, 1),
-                "gate_percent": 88.0,
+                "gate_percent": 90.0,
             },
             "cli_core_coverage": {
                 "covered": cli_core_covered,
