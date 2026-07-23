@@ -50,7 +50,10 @@ jobs:
           python scripts/check_docs.py
           python scripts/check_metrics_freshness.py
           python scripts/verify_official_spec_fixtures.py --json-output _artifacts/official-fixture-integrity.json
-          python scripts/test_cli_integration.py --json-output _artifacts/cli-integration.json
+          python scripts/test_cli_integration.py \
+            --json-output _artifacts/cli-integration.json \
+            --junit-output _artifacts/cli-integration.junit.xml
+          python scripts/test_cli_integration_reporting.py
           python scripts/test_fault_injection_reporting.py
           python scripts/run_fault_injection.py --json-output _artifacts/fault-injection.json --junit-output _artifacts/fault-injection.junit.xml
           python scripts/test_backend_conformance.py --targets wasm,wasm-gc,js,native --require-native --json-output _artifacts/backend-conformance.json
