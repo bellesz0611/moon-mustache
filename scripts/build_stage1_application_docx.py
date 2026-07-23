@@ -92,8 +92,8 @@ def add_title(doc):
 def add_metadata(doc):
     lines = [
         "项目名称：Moon Mustache：Mustache 模板引擎的 MoonBit 实现",
-        "参赛者：左嘉倩",
-        "联系方式：15929201039",
+        "参赛者：请在提交前填写",
+        "联系方式：请在提交前填写",
         "GitHub 仓库链接：https://github.com/bellesz0611/moon-mustache",
         "Gitlink 仓库链接：https://www.gitlink.org.cn/miemie0619/moon-mustache-mbt",
         "项目方向：MoonBit 模板渲染基础库 / 工程基础设施",

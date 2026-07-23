@@ -62,6 +62,10 @@ jobs:
         if: matrix.target == 'wasm-gc'
         run: python scripts/test_upstream_fixture_sync.py
 
+      - name: Scan public text files for personal identifiers
+        if: matrix.target == 'wasm-gc'
+        run: python scripts/check_public_pii.py
+
       - name: Run moon check with deny-warn
         run: moon check --deny-warn --target ${{ matrix.target }}
 

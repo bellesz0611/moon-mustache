@@ -110,6 +110,11 @@ def main() -> int:
             [python, "scripts/test_upstream_fixture_sync.py"],
             ROOT,
         ),
+        (
+            "public PII scan",
+            [python, "scripts/check_public_pii.py"],
+            ROOT,
+        ),
         ("format", [moon, "fmt", "--check"], ROOT),
         ("check wasm-gc", [moon, "check", "--deny-warn", "--target", "wasm-gc"], ROOT),
         ("test wasm-gc", [moon, "test", "--deny-warn", "--target", "wasm-gc"], ROOT),
