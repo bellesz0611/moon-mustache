@@ -704,22 +704,30 @@ test "normalize_bundle_path rejects absolute and drive-qualified paths" {
   match normalize_bundle_path("/etc/passwd") {
     Ok(_) => panic()
     Err(message) =>
-      inspect(message.contains("absolute paths are not allowed"), content="true")
+      inspect(
+        message.contains("absolute paths are not allowed"),
+        content="true",
+      )
   }
   match normalize_bundle_path("\\windows\\system32") {
     Ok(_) => panic()
     Err(message) =>
-      inspect(message.contains("absolute paths are not allowed"), content="true")
+      inspect(
+        message.contains("absolute paths are not allowed"),
+        content="true",
+      )
   }
   match normalize_bundle_path("C:\\temp\\output.txt") {
     Ok(_) => panic()
     Err(message) =>
-      inspect(message.contains("drive-qualified paths are not allowed"), content="true")
+      inspect(
+        message.contains("drive-qualified paths are not allowed"),
+        content="true",
+      )
   }
   match normalize_bundle_path("././") {
     Ok(_) => panic()
-    Err(message) =>
-      inspect(message.contains("empty location"), content="true")
+    Err(message) => inspect(message.contains("empty location"), content="true")
   }
 }
 
@@ -729,11 +737,9 @@ test "dynamic partial selects a partial from the current context" {
     ("which", Value::string("card")),
     ("name", Value::string("MoonBit")),
   ])
-  let result = render_with_partials_checked(
-    "{{>*which}}",
-    context,
-    { "card": "Hello {{name}}" },
-  )
+  let result = render_with_partials_checked("{{>*which}}", context, {
+    "card": "Hello {{name}}",
+  })
   inspect(result.output, content="Hello MoonBit")
   inspect(result.errors.length(), content="0")
 }
@@ -744,15 +750,10 @@ test "parent templates apply block overrides and preserve indentation" {
   let result = render_with_partials_checked(
     "{{<layout}}{{$body}}\n    Project: {{name}}\n    Ready\n{{/body}}{{/layout}}\n",
     context,
-    {
-      "layout": "Layout:\n  {{$body}}\n  Default\n  {{/body}}\n",
-    },
+    { "layout": "Layout:\n  {{$body}}\n  Default\n  {{/body}}\n" },
   )
   inspect(result.errors.length(), content="0")
-  inspect(
-    result.output,
-    content="Layout:\n  Project: MoonBit\n  Ready\n",
-  )
+  inspect(result.output, content="Layout:\n  Project: MoonBit\n  Ready\n")
 }
 
 ///|
@@ -794,11 +795,17 @@ test "diagnostic helpers clamp spans and format severity labels" {
   inspect(warning.severity.label(), content="warning")
   inspect(warning.span.line, content="1")
   inspect(warning.span.column, content="1")
-  inspect(format_diagnostic(warning).contains("demo.mustache:1:1: warning"), content="true")
+  inspect(
+    format_diagnostic(warning).contains("demo.mustache:1:1: warning"),
+    content="true",
+  )
 
   let info = make_info_diagnostic("", "MST-INFO", "done", 10, 2)
   inspect(info.severity.label(), content="info")
-  inspect(format_diagnostic(info), content="<template>:1:1: info [MST-INFO] done")
+  inspect(
+    format_diagnostic(info),
+    content="<template>:1:1: info [MST-INFO] done",
+  )
 }
 
 ///|
@@ -808,7 +815,7 @@ test "context lookup handles current values and empty stacks" {
   inspect(lookup_name([value], ".") is Some(_), content="true")
   inspect(
     lookup_name([Value::object({ "name": Value::string("MoonBit") })], "name..")
-      is Some(_),
+    is Some(_),
     content="true",
   )
 }
