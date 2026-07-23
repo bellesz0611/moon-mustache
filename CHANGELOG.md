@@ -20,6 +20,7 @@
 - deploy the playground on every maintained-branch push so the published site and final submission evidence always identify the exact reviewed commit
 - fetch full Git history in the main CI job so metrics provenance can verify its implementation commit instead of failing under a shallow checkout
 - turn the Compatibility Lab Evidence view into a generated testing dashboard with layered metrics and per-mutant risk, detector, and status rows backed by a unit-tested view model
+- update Vue to 3.5.40 after Evidence view-model, production-build, browser-smoke, differential, and dependency-audit validation
 
 ## 0.2.0 - 2026-07-10
 

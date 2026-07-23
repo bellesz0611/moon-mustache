@@ -1,6 +1,6 @@
 # Dependency Review
 
-Reviewed on 2026-07-21 for the competition submission branch.
+Reviewed on 2026-07-23 for the competition submission branch.
 
 ## Accepted updates
 
@@ -11,6 +11,7 @@ Reviewed on 2026-07-21 for the competition submission branch.
 | `actions/upload-artifact` | `v7` | CI, consumer proof, playground, and release artifacts updated |
 | `vite` | `8.1.5` | production build and browser smoke test pass |
 | `@vitejs/plugin-vue` | `6.0.8` | production build and browser smoke test pass |
+| `vue` | `3.5.40` | Evidence view-model tests, production build, and browser smoke test pass |
 | `concurrently` | `9.2.4` | retained on the secure Node 18-compatible major |
 
 ## Deliberate exception
