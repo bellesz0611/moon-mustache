@@ -39,6 +39,10 @@ jobs:
         working-directory: playground
         run: npm run build
 
+      - name: Test generated evidence view model
+        working-directory: playground
+        run: npm run test:evidence
+
       - name: Test differential failure minimization
         working-directory: playground
         run: npm run test:differential-minimizer
@@ -105,6 +109,10 @@ jobs:
         working-directory: playground
         run: |
           npm run build
+
+      - name: Test generated evidence view model on Windows
+        working-directory: playground
+        run: npm run test:evidence
 
       - name: Test differential failure minimization on Windows
         working-directory: playground

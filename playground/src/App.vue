@@ -3,10 +3,22 @@ import { computed, onMounted, ref, watch } from 'vue'
 import Mustache from 'mustache'
 import metrics from '../../docs/METRICS_SNAPSHOT.json'
 import fixtureManifest from '../../third_party/mustache-spec/MANIFEST.json'
+import { buildEvidenceLayers, buildMutationRows } from './evidence.js'
 import { examples } from './examples'
 import { generateMoonStarter, renderMoonMustache } from './generated/moon_mustache.js'
 
-const activeTab = ref('render')
+const routeToTab = {
+  render: 'render',
+  diagnose: 'diagnose',
+  compare: 'compare',
+  evidence: 'conformance',
+  generate: 'generate',
+}
+const tabToRoute = Object.fromEntries(
+  Object.entries(routeToTab).map(([route, tab]) => [tab, route]),
+)
+const initialRoute = window.location.hash.slice(1)
+const activeTab = ref(routeToTab[initialRoute] || 'render')
 const locale = ref('zh')
 const selectedId = ref(examples[0].id)
 const template = ref(examples[0].template)
@@ -38,13 +50,13 @@ const isGenerating = ref(false)
 
 const copy = {
   zh: {
-    eyebrow: '渲染 · 诊断 · 对比 · 规范',
+    eyebrow: '渲染 · 诊断 · 对比 · 证据',
     title: 'MoonBit 模板生成兼容性实验室',
     lead: '直接在浏览器运行仓库编译出的 MoonBit 引擎，编辑模板、JSON 上下文和 Partial，并在同一条可复现流程中检查输出、诊断、参考实现差异和官方规范证据。',
     render: '渲染 Render',
     diagnose: '诊断 Diagnose',
     compare: '对比 Compare',
-    conformance: '规范 Conformance',
+    conformance: '证据 Evidence',
     generate: '生成 Generate',
     renderNow: '立即渲染',
     rendering: '渲染中…',
@@ -53,13 +65,13 @@ const copy = {
     noDiagnostics: '没有诊断信息，当前渲染结果正常。',
   },
   en: {
-    eyebrow: 'Render · Diagnose · Compare · Conformance',
+    eyebrow: 'Render · Diagnose · Compare · Evidence',
     title: 'A compatibility lab for MoonBit template generation',
     lead: 'Run the repository’s compiled MoonBit engine directly in the browser. Edit templates, JSON context, and partials, then inspect output, diagnostics, reference parity, and official conformance evidence in one reproducible flow.',
     render: 'Render',
     diagnose: 'Diagnose',
     compare: 'Compare',
-    conformance: 'Conformance',
+    conformance: 'Evidence',
     generate: 'Generate',
     renderNow: 'Render now',
     rendering: 'Rendering…',
@@ -79,6 +91,8 @@ const tabs = computed(() => [
 ])
 
 const verification = metrics.verification
+const evidenceLayers = buildEvidenceLayers(verification)
+const mutationRows = buildMutationRows(verification.fault_injection)
 const proofItems = [
   {
     label: 'Official fixtures',
@@ -104,6 +118,11 @@ const proofItems = [
     label: 'CLI integration',
     value: `${verification.cli_integration.passed} / ${verification.cli_integration.total}`,
     note: 'Real subprocess output, exit codes, file IO, lint, and bundle artifacts.',
+  },
+  {
+    label: 'Controlled faults',
+    value: `${verification.fault_injection.killed} / ${verification.fault_injection.total}`,
+    note: `${verification.fault_injection.survived} survived and ${verification.fault_injection.invalid} invalid; JSON plus per-mutant JUnit.`,
   },
 ]
 
@@ -174,6 +193,11 @@ watch([template, contextJson, partialsJson, strictMissing, autoRender], () => {
   debounceTimer = setTimeout(() => {
     renderNow()
   }, 220)
+})
+
+watch(activeTab, tab => {
+  const route = tabToRoute[tab] || 'render'
+  window.history.replaceState(null, '', `#${route}`)
 })
 
 async function copyOutput() {
@@ -458,6 +482,51 @@ onMounted(() => {
       <section v-else-if="activeTab === 'conformance'" class="conformance-view">
         <div class="conformance-summary">
           <div>
+            <span class="proof-kicker">Generated testing evidence</span>
+            <h2>Evidence source <code>{{ metrics.repository.commit }}</code></h2>
+            <p>
+              Every value below is bundled from the canonical generated metrics snapshot. Official fixtures,
+              generated differential cases, MoonBit tests, and controlled mutants remain separate evidence units.
+            </p>
+          </div>
+          <a class="hero-link primary" href="https://github.com/bellesz0611/moon-mustache/blob/main/docs/SPECIAL_AWARD_EVIDENCE.md" target="_blank" rel="noreferrer">
+            Inspect award evidence
+          </a>
+        </div>
+        <div class="evidence-grid">
+          <article v-for="item in evidenceLayers" :key="item.id" class="evidence-card">
+            <span class="evidence-label">{{ item.label }}</span>
+            <strong>{{ item.value }}</strong>
+            <p>{{ item.note }}</p>
+          </article>
+        </div>
+        <details class="mutation-matrix" open>
+          <summary>
+            Controlled fault matrix · {{ verification.fault_injection.killed }} / {{ verification.fault_injection.total }} killed
+          </summary>
+          <div class="table-wrap">
+            <table class="conformance-table mutation-table">
+              <thead>
+                <tr>
+                  <th>Injected fault</th>
+                  <th>Risk represented</th>
+                  <th>Focused detector</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="mutation in mutationRows" :key="mutation.name">
+                  <td>{{ mutation.name }}</td>
+                  <td>{{ mutation.risk }}</td>
+                  <td><code>{{ mutation.detector }}</code></td>
+                  <td><span :class="['mutation-status', mutation.status]">{{ mutation.status }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <div class="conformance-summary fixture-summary">
+          <div>
             <span class="proof-kicker">Pinned official corpus</span>
             <h2>{{ verification.official_fixtures.passed }} / {{ verification.official_fixtures.total }} passing</h2>
             <p>
@@ -466,8 +535,8 @@ onMounted(() => {
               loaded from the repository manifest at build time.
             </p>
           </div>
-          <a class="hero-link primary" href="https://github.com/bellesz0611/moon-mustache/blob/main/docs/OFFICIAL_SPEC.md" target="_blank" rel="noreferrer">
-            Inspect reproduction guide
+          <a class="hero-link" href="https://github.com/bellesz0611/moon-mustache/blob/main/docs/OFFICIAL_SPEC.md" target="_blank" rel="noreferrer">
+            Official corpus guide
           </a>
         </div>
         <div class="table-wrap">

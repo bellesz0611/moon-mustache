@@ -575,6 +575,89 @@ pre {
   line-height: 1.7;
 }
 
+.evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  padding: 0 26px 26px;
+}
+
+.evidence-card {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(255, 252, 247, 0.72);
+}
+
+.evidence-label {
+  display: block;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.evidence-card strong {
+  display: block;
+  color: var(--ink);
+  font-size: 1.35rem;
+}
+
+.evidence-card p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.mutation-matrix {
+  border-top: 1px solid var(--line);
+}
+
+.mutation-matrix summary {
+  padding: 18px 26px;
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 750;
+}
+
+.mutation-table td {
+  max-width: 34ch;
+  vertical-align: top;
+  line-height: 1.45;
+}
+
+.mutation-table td:nth-child(2) {
+  font-weight: 400;
+}
+
+.mutation-status {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.mutation-status.killed {
+  color: var(--ok);
+  background: rgba(47, 122, 89, 0.12);
+}
+
+.mutation-status.survived,
+.mutation-status.invalid {
+  color: var(--accent-dark);
+  background: rgba(189, 93, 45, 0.12);
+}
+
+.fixture-summary {
+  border-top: 1px solid var(--line);
+}
+
 .table-wrap {
   overflow-x: auto;
   border-top: 1px solid var(--line);
@@ -704,6 +787,10 @@ pre {
   .generator-control {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .evidence-grid {
+    grid-template-columns: 1fr;
   }
 
   .artifact-card:last-child:nth-child(odd) {

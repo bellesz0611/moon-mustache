@@ -192,6 +192,11 @@ def main() -> int:
                     ROOT,
                 ),
                 (
+                    "playground evidence",
+                    [npm, "run", "test:evidence"],
+                    ROOT / "playground",
+                ),
+                (
                     "differential minimizer",
                     [npm, "run", "test:differential-minimizer"],
                     ROOT / "playground",

@@ -101,7 +101,7 @@ CI 会在 `wasm`、`wasm-gc`、`js`、`native` 四个目标执行 check/build/te
 - 指标集中在生成文件，其他文档引用它而不复制易过期数字。
 - API、兼容性、架构、稳定性和已知限制各有明确入口。
 
-在线 Compatibility Lab 不是静态截图：Render、Diagnose 和 Generate 直接调用编译后的 MoonBit bridge；Compare 使用 `mustache.js` 对当前输入即时对比；Conformance 从锁定的 `mustache/spec` manifest 加载 suite 数、case 数和哈希。Generate 会通过真实 `TemplateBundle` 生成 `moon.mod`、README、源码、包配置与 CI 五个内存 artifact，便于评审验证实际任务而不会写入本机文件。界面默认中文并提供英文切换。
+在线 [Compatibility Lab Evidence](https://bellesz0611.github.io/moon-mustache/#evidence) 不是静态截图：Render、Diagnose 和 Generate 直接调用编译后的 MoonBit bridge；Compare 使用 `mustache.js` 对当前输入即时对比；Evidence 从生成指标快照加载分层测试证据并展开逐 mutant 风险、检测器和状态，同时从锁定的 `mustache/spec` manifest 加载 suite 数、case 数和哈希。Generate 会通过真实 `TemplateBundle` 生成 `moon.mod`、README、源码、包配置与 CI 五个内存 artifact，便于评审验证实际任务而不会写入本机文件。界面默认中文并提供英文切换。
 
 ## 5. AI 协作证据边界
 

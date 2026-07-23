@@ -11,6 +11,7 @@ Moon Mustache is a reusable Mustache template engine and safe multi-file generat
 它把结构化数据可靠地转换为配置、文档、通知和项目文件，并提供解析诊断、严格模式、Bundle 校验、资源限制与跨实现一致性测试。核心库可嵌入 MoonBit 项目；CLI 和浏览器 Playground 用于直接运行同一套 MoonBit 引擎。
 
 - [在线 Playground](https://bellesz0611.github.io/moon-mustache/)
+- [测试证据面板](https://bellesz0611.github.io/moon-mustache/#evidence)
 - [Mooncakes 0.2.0](https://mooncakes.io/docs/bellesz0611/moon-mustache%400.2.0)
 - [5 分钟上手](docs/QUICKSTART.md)
 - [API 指南](docs/API.md)
@@ -170,7 +171,7 @@ npm ci
 npm run dev
 ```
 
-Playground 构建时编译仓库中的 MoonBit browser bridge，不依赖在线后端，也不以 `mustache.js` 代替产品实现。界面提供 Render、Diagnose、Compare、Conformance、Generate 五个视图：Compare 明确把 `mustache.js` 标为参考实现；Generate 则通过真实 `TemplateBundle` API 预览 `moon.mod`、README、源码、包配置和 CI 五个文件。入口默认中文并可切换英文。
+Playground 构建时编译仓库中的 MoonBit browser bridge，不依赖在线后端，也不以 `mustache.js` 代替产品实现。界面提供 Render、Diagnose、Compare、Evidence、Generate 五个视图：Compare 明确把 `mustache.js` 标为参考实现；Evidence 从生成指标快照展示规范、差分、Mutation、后端和 CLI 分层证据，并展开逐 mutant 检测器；Generate 则通过真实 `TemplateBundle` API 预览 `moon.mod`、README、源码、包配置和 CI 五个文件。入口默认中文并可切换英文。
 
 ## 架构
 

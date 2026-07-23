@@ -7,7 +7,7 @@
 | `0:00–0:20` | Playground 首页，停留在中文标题和五个页签 | “Moon Mustache 是 MoonBit 原生 Mustache 引擎和安全多文件生成器。今天不展示堆功能，而展示它如何证明自己可靠。” |
 | `0:20–0:45` | Render 选择 Welcome，再切 Missing Variable | “浏览器直接运行编译后的 MoonBit 引擎。模板、JSON、Partial 和输出在同一流程里；严格模式不会隐藏缺失数据。” |
 | `0:45–1:05` | 切到 Diagnose，指出诊断数和 missing variable | “输出与诊断分离，库调用者可以预览结果，同时让 CI 或编辑器阻断不完整输入。” |
-| `1:05–1:25` | 切 Compare，再切 Conformance | “Compare 对当前输入即时调用 `mustache.js`；Conformance 的 suite、case 数和哈希直接读取锁定的上游 manifest，不是页面手填。” |
+| `1:05–1:25` | 切 Compare，再切 Evidence | “Compare 对当前输入即时调用 `mustache.js`；Evidence 的规范、差分、Mutation、后端和 CLI 数据来自生成指标，suite、case 数和哈希来自锁定 manifest，不是页面手填。” |
 | `1:25–1:50` | 切 Generate，点击 Generate project，滚动五个 artifact | “这不是字符串玩具。真实 `TemplateBundle` 一次生成 `moon.mod`、README、源码、包配置和 CI，浏览器只预览、不写磁盘。” |
 | `1:50–2:10` | 打开 Metrics Snapshot 的 Verification 段 | “精确测试数和覆盖率只维护在生成快照。官方 fixture、单测、差分输入互不混算，避免虚高指标。” |
 | `2:10–2:35` | 打开 `DIFFERENTIAL_TESTING.md` 和 `FAULT_INJECTION.md` | “固定 seed 差分提供逐 case JUnit、精确重放，并自动缩小失败模板、上下文和 Partial。受控故障矩阵覆盖语义、安全路径与四种资源边界，每个 mutant 都必须让对应测试失败，并作为独立 JUnit testcase 展示。” |

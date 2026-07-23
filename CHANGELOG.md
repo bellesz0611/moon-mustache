@@ -19,6 +19,7 @@
 - update the playground to Vite 8, plugin-vue 6.0.8, and concurrently 9.2.4, and refresh maintained GitHub Actions to their Dependabot-proposed major versions; defer concurrently 10.0.3 because its pinned shell-quote version still triggers a high-severity advisory
 - deploy the playground on every maintained-branch push so the published site and final submission evidence always identify the exact reviewed commit
 - fetch full Git history in the main CI job so metrics provenance can verify its implementation commit instead of failing under a shallow checkout
+- turn the Compatibility Lab Evidence view into a generated testing dashboard with layered metrics and per-mutant risk, detector, and status rows backed by a unit-tested view model
 
 ## 0.2.0 - 2026-07-10
 
