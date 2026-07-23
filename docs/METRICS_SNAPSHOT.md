@@ -8,18 +8,18 @@ python scripts/generate_metrics_snapshot.py
 
 ## Repository state
 
-- generated at: `2026-07-23T09:08:43+00:00`
-- generated at commit: `9f352f8`
+- generated at: `2026-07-23T09:15:33+00:00`
+- generated at commit: `e665208`
 - working tree: `clean`
-- public commit count: `94`
+- public commit count: `96`
 - MoonBit package: `bellesz0611/moon-mustache`
 - MoonBit toolchain used for the local verification snapshot: `moon 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moon.exe | moonc v0.10.3+16975d007 (2026-07-03) ~\moon-toolchain\bin\moonc.exe | moonrun 0.1.20260703 (6fbf8c3 2026-07-03) ~\moon-toolchain\bin\moonrun.exe | Feature flags enabled: rr_moon_mod,rr_moon_pkg`
 
 ## Code scale
 
-- physical MoonBit source lines across library, CLI, demos, reports, benchmarks, consumer proofs, and bridges: `11929`
-- effective MoonBit source lines after excluding blank and comment-only lines: `10876`
-- handwritten effective MoonBit lines: `8727`
+- physical MoonBit source lines across library, CLI, demos, reports, benchmarks, consumer proofs, and bridges: `11936`
+- effective MoonBit source lines after excluding blank and comment-only lines: `10883`
+- handwritten effective MoonBit lines: `8734`
 - imported generated official-fixture effective lines, disclosed separately: `2149`
 
 ## Verification snapshot
