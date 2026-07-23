@@ -158,9 +158,10 @@ pub fn validation_issue_diagnostic(
 ///|
 pub fn should_block_single_template(
   strict : Bool,
-  diagnostic_count : Int,
+  fatal_error_count : Int,
+  missing_variable_count : Int,
 ) -> Bool {
-  strict && diagnostic_count > 0
+  fatal_error_count > 0 || (strict && missing_variable_count > 0)
 }
 
 ///|

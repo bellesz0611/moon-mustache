@@ -116,6 +116,58 @@ def test_missing_partial_exit_code() -> None:
     expect("missing partial: missing" in result.stdout, "missing-partial diagnostic disappeared", result)
 
 
+def test_missing_input_file_exit_code() -> None:
+    result = run_cli(
+        "--template-file",
+        "examples/files/does-not-exist.mustache",
+    )
+    expect(result.returncode != 0, "missing template file must return a non-zero exit code", result)
+    expect("failed to read template file" in result.stdout, "missing-file diagnostic disappeared", result)
+
+
+def test_invalid_bundle_manifest_exit_code() -> None:
+    with tempfile.TemporaryDirectory(prefix="moon-mustache-cli-invalid-manifest-") as directory:
+        manifest = Path(directory) / "manifest.json"
+        manifest.write_text("{broken", encoding="utf-8")
+        result = run_cli("--bundle-manifest-file", str(manifest))
+        expect(result.returncode != 0, "invalid bundle manifest must return a non-zero exit code", result)
+        expect("invalid bundle manifest" in result.stdout, "manifest diagnostic disappeared", result)
+
+
+def test_unsupported_bundle_report_format_exit_code() -> None:
+    with tempfile.TemporaryDirectory(prefix="moon-mustache-cli-report-format-") as directory:
+        root = Path(directory)
+        manifest = write_manifest(root, [{"path": "README.md", "template": "# report"}])
+        report = root / "report.txt"
+        result = run_cli(
+            "--bundle-manifest-file",
+            str(manifest),
+            "--bundle-report-file",
+            str(report),
+            "--bundle-report-format",
+            "yaml",
+        )
+        expect(result.returncode != 0, "unsupported report format must return a non-zero exit code", result)
+        expect("unsupported bundle report format" in result.stdout, "report-format diagnostic disappeared", result)
+        expect(not report.exists(), "unsupported report format wrote an output file", result)
+
+
+def test_output_file_write_failure_exit_code() -> None:
+    with tempfile.TemporaryDirectory(prefix="moon-mustache-cli-output-failure-") as directory:
+        output_directory = Path(directory) / "existing-directory"
+        output_directory.mkdir()
+        result = run_cli(
+            "--template",
+            "Hello {{name}}",
+            "--var",
+            "name=MoonBit",
+            "--output",
+            str(output_directory),
+        )
+        expect(result.returncode != 0, "output write failure must return a non-zero exit code", result)
+        expect("failed to write output file" in result.stdout, "output-write diagnostic disappeared", result)
+
+
 def test_lint_failure_exit_code() -> None:
     result = run_cli("--template", "{{#open}}", "--lint")
     expect(result.returncode != 0, "lint errors must return a non-zero exit code", result)
@@ -230,6 +282,10 @@ def main() -> int:
         ("strict failure exit code", test_strict_failure_exit_code),
         ("invalid JSON exit code", test_invalid_json_exit_code),
         ("missing partial exit code", test_missing_partial_exit_code),
+        ("missing input file exit code", test_missing_input_file_exit_code),
+        ("invalid bundle manifest exit code", test_invalid_bundle_manifest_exit_code),
+        ("unsupported bundle report format exit code", test_unsupported_bundle_report_format_exit_code),
+        ("output file write failure exit code", test_output_file_write_failure_exit_code),
         ("lint failure exit code", test_lint_failure_exit_code),
         ("bundle generation", test_bundle_generation),
         ("bundle check-only writes no generated files", test_bundle_check_only_writes_no_generated_files),

@@ -125,9 +125,10 @@ test "CLI core gives stable warning and error validation diagnostics" {
 
 ///|
 test "CLI core centralizes output blocking decisions" {
-  inspect(should_block_single_template(false, 3), content="false")
-  inspect(should_block_single_template(true, 0), content="false")
-  inspect(should_block_single_template(true, 1), content="true")
+  inspect(should_block_single_template(false, 0, 3), content="false")
+  inspect(should_block_single_template(true, 0, 0), content="false")
+  inspect(should_block_single_template(true, 0, 1), content="true")
+  inspect(should_block_single_template(false, 1, 0), content="true")
   inspect(should_block_bundle(false, 0, false), content="false")
   inspect(should_block_bundle(true, 0, false), content="true")
   inspect(should_block_bundle(false, 1, false), content="true")

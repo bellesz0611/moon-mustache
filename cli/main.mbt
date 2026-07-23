@@ -597,7 +597,11 @@ fn handle_single_template_mode(
     print_diagnostics(all_errors)
     if @cli_core.should_block_single_template(
         flag_enabled(matches, "strict"),
-        all_errors.length(),
+        template_errors.length() +
+        context_errors.length() +
+        partial_errors.length() +
+        result.errors.length(),
+        result.missing_variables.length(),
       ) {
       println("No rendered output was produced because strict mode is enabled.")
       set_process_exit_code(1)
