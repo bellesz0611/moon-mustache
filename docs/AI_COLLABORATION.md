@@ -33,7 +33,7 @@ The correction followed an evidence-first sequence:
 5. run the MoonBit matrix, CLI integration suite, differential suite, coverage gate, and Playground build;
 6. leave the final commit and push decision to the repository owner.
 
-The regression suite is [`scripts/test_cli_integration.py`](../scripts/test_cli_integration.py). Its JSON output is uploaded by the JS CI lane.
+The regression suite is [`scripts/test_cli_integration.py`](../scripts/test_cli_integration.py). Its JSON and JUnit outputs are uploaded by the JS CI lane.
 
 ## Real case: coverage accounting
 

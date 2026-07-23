@@ -111,7 +111,19 @@ def main() -> int:
         ("official spec", [moon, "run", "--target", "wasm-gc", "official_spec_report"], ROOT),
         (
             "CLI integration",
-            [python, "scripts/test_cli_integration.py", "--json-output", str(output_dir / "cli-integration.json")],
+            [
+                python,
+                "scripts/test_cli_integration.py",
+                "--json-output",
+                str(output_dir / "cli-integration.json"),
+                "--junit-output",
+                str(output_dir / "cli-integration.junit.xml"),
+            ],
+            ROOT,
+        ),
+        (
+            "CLI integration reporting",
+            [python, "scripts/test_cli_integration_reporting.py"],
             ROOT,
         ),
     ]

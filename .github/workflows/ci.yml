@@ -125,7 +125,9 @@ jobs:
         if: matrix.target == 'js'
         run: |
           mkdir -p _ci_artifacts
-          python scripts/test_cli_integration.py --json-output _ci_artifacts/cli-integration.json
+          python scripts/test_cli_integration.py \
+            --json-output _ci_artifacts/cli-integration.json \
+            --junit-output _ci_artifacts/cli-integration.junit.xml
 
       - name: Upload verification artifacts
         if: always() && (matrix.target == 'wasm-gc' || matrix.target == 'js')

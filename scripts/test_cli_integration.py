@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -44,6 +45,43 @@ def case(name: str, test) -> dict[str, object]:
     started = time.perf_counter()
     test()
     return {"name": name, "status": "passed", "duration_ms": round((time.perf_counter() - started) * 1000)}
+
+
+def write_junit(path: Path, results: list[dict[str, object]], test_names: list[str]) -> None:
+    """Write one testcase per planned check, preserving skipped checks after a failure."""
+    result_by_name = {str(item["name"]): item for item in results}
+    total_duration_ms = sum(int(item.get("duration_ms", 0)) for item in results)
+    failures = sum(item.get("status") == "failed" for item in results)
+    skipped = len(test_names) - len(results)
+    suite = ET.Element(
+        "testsuite",
+        {
+            "name": "moon-mustache CLI integration",
+            "tests": str(len(test_names)),
+            "failures": str(failures),
+            "errors": "0",
+            "skipped": str(skipped),
+            "time": f"{total_duration_ms / 1000:.3f}",
+        },
+    )
+    for name in test_names:
+        item = result_by_name.get(name)
+        testcase = ET.SubElement(
+            suite,
+            "testcase",
+            {
+                "name": name,
+                "time": f"{int(item.get('duration_ms', 0)) / 1000:.3f}" if item else "0.000",
+            },
+        )
+        if item and item.get("status") == "failed":
+            failure = ET.SubElement(testcase, "failure", {"type": "assertion"})
+            failure.text = str(item.get("error", "CLI integration assertion failed"))
+        elif item is None:
+            skipped_node = ET.SubElement(testcase, "skipped")
+            skipped_node.text = "not run after an earlier failure"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    ET.ElementTree(suite).write(path, encoding="utf-8", xml_declaration=True)
 
 
 def test_inline_render() -> None:
@@ -273,6 +311,7 @@ def test_bundle_duplicate_paths_are_blocked() -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Black-box integration tests for the Moon Mustache CLI")
     parser.add_argument("--json-output", type=Path, help="optional path for a machine-readable result")
+    parser.add_argument("--junit-output", type=Path, help="optional path for a JUnit result")
     args = parser.parse_args()
 
     tests = [
@@ -292,6 +331,7 @@ def main() -> int:
         ("bundle parent traversal is blocked", test_bundle_parent_traversal_is_blocked),
         ("bundle duplicate paths are blocked", test_bundle_duplicate_paths_are_blocked),
     ]
+    test_names = [name for name, _ in tests]
     results: list[dict[str, object]] = []
     try:
         for name, test in tests:
@@ -314,6 +354,8 @@ def main() -> int:
     if args.json_output:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)
         args.json_output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    if args.junit_output:
+        write_junit(args.junit_output, results, test_names)
     print(f"CLI integration: {payload['passed']} / {payload['total']} passed")
     return status
 
