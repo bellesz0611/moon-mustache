@@ -50,6 +50,7 @@ This page is the fastest evaluator-facing map of what Moon Mustache produces, wh
 | `coverage-summary.txt`, `coverage.xml`, and `coverage.json` | `check` workflow on the `wasm-gc` lane | 90% core threshold plus human, standard, and machine-readable evidence |
 | `cli-integration.json` and `cli-integration.junit.xml` | `check` workflow on the `js` lane | Machine-readable and CI-native black-box CLI results |
 | `official-fixture-integrity.json` | `check` workflow on the `wasm-gc` lane | Machine-readable fixture provenance and integrity result |
+| `upstream-fixture-sync.json` and `upstream-fixture-sync.txt` | scheduled `upstream fixture sync` workflow | Detects newer commits touching upstream `specs/` without changing the pinned corpus |
 | `fault-injection.json` and `fault-injection.junit.xml` | `check` workflow on the `wasm-gc` lane | Per-mutant risk, detector, killed/survived/invalid status, and CI-native testcases |
 | `backend-conformance.json` | `check` workflow on the `wasm-gc` lane | Per-target golden hashes, equality result, and failure diffs |
 | `differential.json` and `differential.junit.xml` | `playground` workflow | 6,144 cases across four fixed seeds, reference version, duration, and replayable failures |

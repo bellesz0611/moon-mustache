@@ -51,7 +51,7 @@ This document gives a slightly more detailed status view than `PROGRESS.md`.
 
 ## Remaining growth directions
 
-- automated upstream fixture sync
+- scheduled upstream fixture drift detection with machine-readable evidence
 - richer benchmark snapshots across versions
 - independent adopters beyond the maintained proof repository
 - follow-up releases after `0.2.0`

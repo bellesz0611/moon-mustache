@@ -34,9 +34,9 @@ Moon Mustache does not try to become:
 
 That narrower boundary is intentional, but it also means some users will still need higher-level tooling on top.
 
-## 6. Upstream fixture sync is not fully automated yet
+## 6. Upstream fixture regeneration remains deliberate
 
-All current core and optional `mustache/spec` fixtures are imported and validated, but pulling future upstream changes remains a maintainer-triggered regeneration step.
+All current core and optional `mustache/spec` fixtures are imported and validated. A scheduled workflow now detects newer commits that touch `specs/` and publishes a machine-readable report; regeneration remains a maintainer-triggered review step so upstream changes are not imported blindly.
 
 ## 7. JSON cannot represent executable lambdas
 

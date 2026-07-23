@@ -105,6 +105,11 @@ def main() -> int:
             ],
             ROOT,
         ),
+        (
+            "upstream fixture sync reporting",
+            [python, "scripts/test_upstream_fixture_sync.py"],
+            ROOT,
+        ),
         ("format", [moon, "fmt", "--check"], ROOT),
         ("check wasm-gc", [moon, "check", "--deny-warn", "--target", "wasm-gc"], ROOT),
         ("test wasm-gc", [moon, "test", "--deny-warn", "--target", "wasm-gc"], ROOT),

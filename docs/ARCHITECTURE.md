@@ -65,5 +65,5 @@ Moon Mustache is built around a small, explicit pipeline:
 接下来会继续补强：
 
 - file-oriented adapters on top of the core string API
-- automated synchronization against upstream Mustache fixtures
+- scheduled detection of upstream Mustache fixture updates, with deliberate regeneration
 - independent third-party adoption and release-over-release performance history
