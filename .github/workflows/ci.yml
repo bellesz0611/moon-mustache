@@ -113,6 +113,7 @@ jobs:
         run: |
           mkdir -p _ci_artifacts
           moon run --target ${{ matrix.target }} benchmarks > _ci_artifacts/benchmarks.json
+          python scripts/check_benchmark_contract.py _ci_artifacts/benchmarks.json --json-output _ci_artifacts/benchmark-contract.json
           python scripts/summarize_benchmarks.py _ci_artifacts/benchmarks.json > _ci_artifacts/benchmarks.md
 
       - name: Enforce core coverage gate

@@ -115,6 +115,11 @@ def main() -> int:
             [python, "scripts/check_public_pii.py"],
             ROOT,
         ),
+        (
+            "benchmark contract reporting",
+            [python, "scripts/test_benchmark_contract.py"],
+            ROOT,
+        ),
         ("format", [moon, "fmt", "--check"], ROOT),
         ("check wasm-gc", [moon, "check", "--deny-warn", "--target", "wasm-gc"], ROOT),
         ("test wasm-gc", [moon, "test", "--deny-warn", "--target", "wasm-gc"], ROOT),

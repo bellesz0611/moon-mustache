@@ -13,7 +13,9 @@ moon run --target wasm-gc benchmarks
 - plain render
 - section-heavy render
 - partial-heavy render
+- prepared partial render
 - JSON bundle render
+- strict missing-variable diagnostics
 
 These workloads are intended to cover the major execution paths a reusable template engine hits in practice.
 
@@ -22,6 +24,7 @@ These workloads are intended to cover the major execution paths a reusable templ
 - compare workloads against each other on the same machine first
 - use repeated runs to watch for regressions after parser or renderer changes
 - do not compare raw numbers across different operating systems, MoonBit versions, or hardware without noting the environment
+- CI validates the exact workload set and rejects duplicate names, missing fields, non-finite metrics, invalid ranges, and non-positive run or batch counts without imposing a cross-machine timing threshold
 
 ## What the benchmark data is good for
 
